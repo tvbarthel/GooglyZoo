@@ -1,22 +1,22 @@
 package fr.tvbarthel.attempt.googlyzooapp;
 
-import android.app.Activity;
-
 import android.app.ActionBar;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.content.Context;
-import android.os.Build;
+import android.app.Activity;
+import android.hardware.Camera;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.view.Surface;
 import android.view.ViewGroup;
-import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
+
+import fr.tvbarthel.attempt.googlyzooapp.model.Eye;
+import fr.tvbarthel.attempt.googlyzooapp.ui.GooglyPet;
 
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -31,10 +31,28 @@ public class MainActivity extends Activity
      */
     private CharSequence mTitle;
 
+    private GooglyPet mPet;
+    private Eye mLeftEye;
+    private Eye mRightEye;
+    private FrameLayout.LayoutParams mPetParams;
+    private FrameLayout mPreview;
+    private FacePreviewDetection mFaceDetectionPreview;
+    private Camera mCamera;
+
+    private static final String TAG = MainActivity.class.getName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mPet = new GooglyPet(this, getResources().getDrawable(R.drawable.zebra));
+        mPetParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        mPetParams.gravity = Gravity.CENTER;
+
+        mLeftEye = new Eye(0.40f, 0.35f, 15f);
+        mRightEye = new Eye(0.60f, 0.35f, 15f);
+        mPet.setEyesModel(mLeftEye, mRightEye);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -47,12 +65,25 @@ public class MainActivity extends Activity
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        new CameraAsyncTask().execute();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        releasePreview();
+        releaseCamera();
+    }
+
+    @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                .commit();
+//        FragmentManager fragmentManager = getFragmentManager();
+//        fragmentManager.beginTransaction()
+//                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+//                .commit();
     }
 
     public void onSectionAttached(int number) {
@@ -102,45 +133,121 @@ public class MainActivity extends Activity
         return super.onOptionsItemSelected(item);
     }
 
+
     /**
-     * A placeholder fragment containing a simple view.
+     * Camera part
      */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
 
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
+    /**
+     * used to adapt camera preview to the current device orientation
+     *
+     * @param camera
+     */
+    public void setCameraDisplayOrientation(android.hardware.Camera camera) {
+        android.hardware.Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
+        android.hardware.Camera.getCameraInfo(Camera.CameraInfo.CAMERA_FACING_FRONT, info);
+        int degrees = 0;
+        int currentRotation = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay().getRotation();
+        switch (currentRotation) {
+            case Surface.ROTATION_0:
+                degrees = 0;
+                break;
+            case Surface.ROTATION_90:
+                degrees = 90;
+                break;
+            case Surface.ROTATION_180:
+                degrees = 180;
+                break;
+            case Surface.ROTATION_270:
+                degrees = 270;
+                break;
         }
 
-        public PlaceholderFragment() {
+        int result;
+        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            result = (info.orientation + degrees) % 360;
+            result = (360 - result) % 360;  // compensate the mirror
+        } else {  // back-facing
+            result = (info.orientation - degrees + 360) % 360;
+        }
+        camera.setDisplayOrientation(result);
+    }
+
+    /**
+     * A safe way to get an instance of the front camera
+     */
+    private static Camera getCameraInstance() {
+        Camera c = null;
+        try {
+            c = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+
+        }
+        return c;
+    }
+
+    /**
+     * remove the preview
+     */
+    private void releasePreview() {
+        if (mFaceDetectionPreview != null) {
+            mPreview.removeView(mFaceDetectionPreview);
+        }
+        mPreview.removeView(mPet);
+    }
+
+    /**
+     * release the camera for the other app
+     */
+    private void releaseCamera() {
+        if (mCamera != null) {
+            mCamera.release();
+            mCamera = null;
+            FrameLayout preview = (FrameLayout) findViewById(R.id.container);
+            preview.removeView(mFaceDetectionPreview);
+        }
+    }
+
+    private class CameraAsyncTask extends AsyncTask<Void, Void, Camera> {
+
+        @Override
+        protected Camera doInBackground(Void... params) {
+            return getCameraInstance();
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
-            return rootView;
-        }
+        protected void onPostExecute(Camera camera) {
+            super.onPostExecute(camera);
 
-        @Override
-        public void onAttach(Activity activity) {
-            super.onAttach(activity);
-            ((MainActivity) activity).onSectionAttached(
-                    getArguments().getInt(ARG_SECTION_NUMBER));
+            mCamera = camera;
+
+            if (mCamera == null) {
+                MainActivity.this.finish();
+            }
+
+            mFaceDetectionPreview = new FacePreviewDetection(MainActivity.this, mCamera);
+            mPreview = (FrameLayout) findViewById(R.id.container);
+
+            mPreview.addView(mFaceDetectionPreview);
+            mPreview.addView(mPet, mPetParams);
+            mCamera.setFaceDetectionListener(new Camera.FaceDetectionListener() {
+                @Override
+                public void onFaceDetection(Camera.Face[] faces, Camera camera) {
+                    if (faces.length > 0) {
+                        float relativeY = -((float) faces[0].rect.centerX()) / ((float) mFaceDetectionPreview.getMeasuredWidth());
+                        float relativeX = -((float) faces[0].rect.centerY()) / ((float) mFaceDetectionPreview.getMeasuredHeight() / 2);
+                        Log.d("FaceDetection", "face detected: " + faces.length +
+                                " Face 1 Location X: " + relativeX + "Y: " + relativeY);
+                        mLeftEye.addOrientation(relativeX, relativeY);
+                        mRightEye.addOrientation(relativeX, relativeY);
+                    }
+                    mPet.invalidate();
+                }
+            });
+
+
+            setCameraDisplayOrientation(mCamera);
         }
     }
 
