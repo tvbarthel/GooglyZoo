@@ -15,9 +15,9 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import fr.tvbarthel.attempt.googlyzooapp.model.GooglyEye;
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPet;
 import fr.tvbarthel.attempt.googlyzooapp.ui.GooglyPetView;
+import fr.tvbarthel.attempt.googlyzooapp.utils.FaceDetectionUtils;
 
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -38,6 +38,7 @@ public class MainActivity extends Activity
     private FrameLayout mPreview;
     private FacePreviewDetection mFaceDetectionPreview;
     private Camera mCamera;
+    private int mCurrentRotation;
 
     private static final String TAG = MainActivity.class.getName();
 
@@ -146,8 +147,8 @@ public class MainActivity extends Activity
         android.hardware.Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
         android.hardware.Camera.getCameraInfo(Camera.CameraInfo.CAMERA_FACING_FRONT, info);
         int degrees = 0;
-        int currentRotation = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay().getRotation();
-        switch (currentRotation) {
+        mCurrentRotation = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay().getRotation();
+        switch (mCurrentRotation) {
             case Surface.ROTATION_0:
                 degrees = 0;
                 break;
@@ -234,12 +235,9 @@ public class MainActivity extends Activity
                 @Override
                 public void onFaceDetection(Camera.Face[] faces, Camera camera) {
                     if (faces.length > 0) {
-                        //TODO x , y depending on the current rotation value
-                        float relativeY = -((float) faces[0].rect.centerX()) / ((float) mFaceDetectionPreview.getMeasuredWidth());
-                        float relativeX = -((float) faces[0].rect.centerY()) / ((float) mFaceDetectionPreview.getMeasuredHeight());
-                        Log.d("FaceDetection", "face detected: " + faces.length +
-                                " Face 1 Location X: " + relativeX + "Y: " + relativeY);
-                        mGooglyPet.setEyeOrientation(relativeX, relativeY);
+                        final float[] relativePosition = FaceDetectionUtils.getRelativeHeadPosition(
+                                faces[0], mFaceDetectionPreview, mCurrentRotation);
+                        mGooglyPet.setEyeOrientation(relativePosition[0], relativePosition[1]);
                     }
                     mPet.invalidate();
                 }
