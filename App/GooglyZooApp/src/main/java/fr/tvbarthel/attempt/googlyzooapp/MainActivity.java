@@ -194,7 +194,9 @@ public class MainActivity extends Activity
         if (mFaceDetectionPreview != null) {
             mPreview.removeView(mFaceDetectionPreview);
         }
-        mPreview.removeView(mPet);
+        if(mPreview != null){
+            mPreview.removeView(mPet);
+        }
     }
 
     /**
