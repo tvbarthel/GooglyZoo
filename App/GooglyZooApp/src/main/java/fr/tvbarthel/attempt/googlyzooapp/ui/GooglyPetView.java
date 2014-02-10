@@ -18,6 +18,8 @@ public class GooglyPetView extends ImageView {
 
     private static final String TAG = GooglyPetView.class.getName();
 
+    private static final float EYE_RADIUS = 10f;
+
     private Paint mPaint;
     private GooglyPet mGooglyPet;
 
@@ -57,14 +59,16 @@ public class GooglyPetView extends ImageView {
 
         if (leftEye != null) {
             //draw left eye
-            canvas.drawPoint(leftEye.getCenterX() * middleW + leftEye.getOrientationX(),
-                    leftEye.getCenterY() * middleH + leftEye.getOrientationY(), mPaint);
+            canvas.drawCircle(leftEye.getCenterX() * middleW + leftEye.getOrientationX(),
+                    leftEye.getCenterY() * middleH + leftEye.getOrientationY(),
+                    EYE_RADIUS, mPaint);
         }
 
         if (rightEye != null) {
             //draw right eye
-            canvas.drawPoint(rightEye.getCenterX() * middleW + rightEye.getOrientationX(),
-                    rightEye.getCenterY() * middleH + rightEye.getOrientationY(), mPaint);
+            canvas.drawCircle(rightEye.getCenterX() * middleW + rightEye.getOrientationX(),
+                    rightEye.getCenterY() * middleH + rightEye.getOrientationY(),
+                    EYE_RADIUS, mPaint);
         }
 
     }
