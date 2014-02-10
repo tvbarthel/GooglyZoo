@@ -35,8 +35,8 @@ public class GooglyPet {
      * @param rightRelativeY right eye relative Y
      * @param eyeDiameter    diameter for both eye
      */
-    public GooglyPet(int petResId, int leftRelativeX, int leftRelativeY, int rightRelativeX,
-                     int rightRelativeY, int eyeDiameter) {
+    public GooglyPet(int petResId, float leftRelativeX, float leftRelativeY, float rightRelativeX,
+                     float rightRelativeY, float eyeDiameter) {
         mPetRes = petResId;
         mLeftEye = new GooglyEye(leftRelativeX, leftRelativeY, eyeDiameter);
         mRightEye = new GooglyEye(rightRelativeX, rightRelativeY, eyeDiameter);
@@ -48,7 +48,7 @@ public class GooglyPet {
      * @param xOrientation
      * @param yOrientation
      */
-    public void setEyeOrientation(int xOrientation, int yOrientation) {
+    public void setEyeOrientation(float xOrientation, float yOrientation) {
         mLeftEye.addOrientation(xOrientation, yOrientation);
         mRightEye.addOrientation(xOrientation, yOrientation);
     }

@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyEye;
+import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPet;
 import fr.tvbarthel.attempt.googlyzooapp.ui.GooglyPetView;
 
 public class MainActivity extends Activity
@@ -32,8 +33,7 @@ public class MainActivity extends Activity
     private CharSequence mTitle;
 
     private GooglyPetView mPet;
-    private GooglyEye mLeftEye;
-    private GooglyEye mRightEye;
+    private GooglyPet mGooglyPet;
     private FrameLayout.LayoutParams mPetParams;
     private FrameLayout mPreview;
     private FacePreviewDetection mFaceDetectionPreview;
@@ -50,9 +50,8 @@ public class MainActivity extends Activity
         mPetParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         mPetParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
 
-        mLeftEye = new GooglyEye(0.40f, 0.35f, 15f);
-        mRightEye = new GooglyEye(0.60f, 0.35f, 15f);
-        mPet.setEyesModel(mLeftEye, mRightEye);
+        mGooglyPet = new GooglyPet(R.drawable.zebra, 0.40f, 0.35f, 0.60f, 0.35f, 15f);
+        mPet.setEyesModel(mGooglyPet);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -240,8 +239,7 @@ public class MainActivity extends Activity
                         float relativeX = -((float) faces[0].rect.centerY()) / ((float) mFaceDetectionPreview.getMeasuredHeight());
                         Log.d("FaceDetection", "face detected: " + faces.length +
                                 " Face 1 Location X: " + relativeX + "Y: " + relativeY);
-                        mLeftEye.addOrientation(relativeX, relativeY);
-                        mRightEye.addOrientation(relativeX, relativeY);
+                        mGooglyPet.setEyeOrientation(relativeX, relativeY);
                     }
                     mPet.invalidate();
                 }

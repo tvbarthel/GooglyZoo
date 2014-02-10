@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyEye;
+import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPet;
 
 /**
  * Created by tbarthel on 06/02/14.
@@ -18,8 +19,7 @@ public class GooglyPetView extends ImageView {
     private static final String TAG = GooglyPetView.class.getName();
 
     private Paint mPaint;
-    private GooglyEye mLeftEye;
-    private GooglyEye mRightEye;
+    private GooglyPet mGooglyPet;
 
 
     public GooglyPetView(Context context, Drawable drawable) {
@@ -32,9 +32,8 @@ public class GooglyPetView extends ImageView {
         this.setImageDrawable(drawable);
     }
 
-    public void setEyesModel(GooglyEye left, GooglyEye right) {
-        mLeftEye = left;
-        mRightEye = right;
+    public void setEyesModel(GooglyPet pet) {
+        mGooglyPet = pet;
     }
 
     @Override
@@ -53,16 +52,19 @@ public class GooglyPetView extends ImageView {
         float middleW = canvas.getWidth();
         float middleH = canvas.getHeight();
 
-        if (mLeftEye != null) {
+        final GooglyEye leftEye = mGooglyPet.getLeftEye();
+        final GooglyEye rightEye = mGooglyPet.getRightEye();
+
+        if (leftEye != null) {
             //draw left eye
-            canvas.drawPoint(mLeftEye.getCenterX() * middleW + mLeftEye.getOrientationX(),
-                    mLeftEye.getCenterY() * middleH + mRightEye.getOrientationY(), mPaint);
+            canvas.drawPoint(leftEye.getCenterX() * middleW + leftEye.getOrientationX(),
+                    leftEye.getCenterY() * middleH + leftEye.getOrientationY(), mPaint);
         }
 
-        if (mRightEye != null) {
+        if (rightEye != null) {
             //draw right eye
-            canvas.drawPoint(mRightEye.getCenterX() * middleW + mRightEye.getOrientationX(),
-                    mRightEye.getCenterY() * middleH + mRightEye.getOrientationY(), mPaint);
+            canvas.drawPoint(rightEye.getCenterX() * middleW + rightEye.getOrientationX(),
+                    rightEye.getCenterY() * middleH + rightEye.getOrientationY(), mPaint);
         }
 
     }
