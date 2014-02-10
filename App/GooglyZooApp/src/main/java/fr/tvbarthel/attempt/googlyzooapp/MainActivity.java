@@ -48,7 +48,7 @@ public class MainActivity extends Activity
 
         mPet = new GooglyPet(this, getResources().getDrawable(R.drawable.zebra));
         mPetParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        mPetParams.gravity = Gravity.CENTER;
+        mPetParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
 
         mLeftEye = new Eye(0.40f, 0.35f, 15f);
         mRightEye = new Eye(0.60f, 0.35f, 15f);
@@ -235,8 +235,9 @@ public class MainActivity extends Activity
                 @Override
                 public void onFaceDetection(Camera.Face[] faces, Camera camera) {
                     if (faces.length > 0) {
+                        //TODO x , y depending on the current rotation value
                         float relativeY = -((float) faces[0].rect.centerX()) / ((float) mFaceDetectionPreview.getMeasuredWidth());
-                        float relativeX = -((float) faces[0].rect.centerY()) / ((float) mFaceDetectionPreview.getMeasuredHeight() / 2);
+                        float relativeX = -((float) faces[0].rect.centerY()) / ((float) mFaceDetectionPreview.getMeasuredHeight());
                         Log.d("FaceDetection", "face detected: " + faces.length +
                                 " Face 1 Location X: " + relativeX + "Y: " + relativeY);
                         mLeftEye.addOrientation(relativeX, relativeY);
