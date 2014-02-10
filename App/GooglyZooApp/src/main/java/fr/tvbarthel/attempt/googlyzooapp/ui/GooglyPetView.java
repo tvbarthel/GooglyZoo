@@ -8,21 +8,21 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.widget.ImageView;
 
-import fr.tvbarthel.attempt.googlyzooapp.model.Eye;
+import fr.tvbarthel.attempt.googlyzooapp.model.GooglyEye;
 
 /**
  * Created by tbarthel on 06/02/14.
  */
-public class GooglyPet extends ImageView {
+public class GooglyPetView extends ImageView {
 
-    private static final String TAG = GooglyPet.class.getName();
+    private static final String TAG = GooglyPetView.class.getName();
 
     private Paint mPaint;
-    private Eye mLeftEye;
-    private Eye mRightEye;
+    private GooglyEye mLeftEye;
+    private GooglyEye mRightEye;
 
 
-    public GooglyPet(Context context, Drawable drawable) {
+    public GooglyPetView(Context context, Drawable drawable) {
         super(context);
 
         mPaint = new Paint();
@@ -32,7 +32,7 @@ public class GooglyPet extends ImageView {
         this.setImageDrawable(drawable);
     }
 
-    public void setEyesModel(Eye left, Eye right) {
+    public void setEyesModel(GooglyEye left, GooglyEye right) {
         mLeftEye = left;
         mRightEye = right;
     }

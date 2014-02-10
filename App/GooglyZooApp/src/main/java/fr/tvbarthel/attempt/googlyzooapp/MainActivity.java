@@ -15,8 +15,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import fr.tvbarthel.attempt.googlyzooapp.model.Eye;
-import fr.tvbarthel.attempt.googlyzooapp.ui.GooglyPet;
+import fr.tvbarthel.attempt.googlyzooapp.model.GooglyEye;
+import fr.tvbarthel.attempt.googlyzooapp.ui.GooglyPetView;
 
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -31,9 +31,9 @@ public class MainActivity extends Activity
      */
     private CharSequence mTitle;
 
-    private GooglyPet mPet;
-    private Eye mLeftEye;
-    private Eye mRightEye;
+    private GooglyPetView mPet;
+    private GooglyEye mLeftEye;
+    private GooglyEye mRightEye;
     private FrameLayout.LayoutParams mPetParams;
     private FrameLayout mPreview;
     private FacePreviewDetection mFaceDetectionPreview;
@@ -46,12 +46,12 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mPet = new GooglyPet(this, getResources().getDrawable(R.drawable.zebra));
+        mPet = new GooglyPetView(this, getResources().getDrawable(R.drawable.zebra));
         mPetParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         mPetParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
 
-        mLeftEye = new Eye(0.40f, 0.35f, 15f);
-        mRightEye = new Eye(0.60f, 0.35f, 15f);
+        mLeftEye = new GooglyEye(0.40f, 0.35f, 15f);
+        mRightEye = new GooglyEye(0.60f, 0.35f, 15f);
         mPet.setEyesModel(mLeftEye, mRightEye);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)

@@ -3,7 +3,7 @@ package fr.tvbarthel.attempt.googlyzooapp.model;
 /**
  * Created by tbarthel on 06/02/14.
  */
-public class Eye {
+public class GooglyEye {
 
     private float mCenterX;
     private float mCenterY;
@@ -11,7 +11,7 @@ public class Eye {
     private float mOrientationX;
     private float mOrientationY;
 
-    public Eye(float centerX, float centerY, float diameter) {
+    public GooglyEye(float centerX, float centerY, float diameter) {
         mCenterX = centerX;
         mCenterY = centerY;
         mDiameter = diameter;
