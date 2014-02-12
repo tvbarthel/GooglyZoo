@@ -105,7 +105,7 @@ public class GooglyEye {
 
         //throw open event
         if (mListener != null) {
-            mListener.onOpened();
+            mListener.onOpened(this);
         }
     }
 
@@ -121,7 +121,7 @@ public class GooglyEye {
 
         //throw blink event
         if (mListener != null) {
-            mListener.onBlinked();
+            mListener.onBlinked(this);
         }
     }
 
@@ -133,7 +133,7 @@ public class GooglyEye {
 
         //throw close event
         if (mListener != null) {
-            mListener.onClosed();
+            mListener.onClosed(this);
         }
     }
 
@@ -155,6 +155,10 @@ public class GooglyEye {
 
     public boolean isOpened() {
         return mIsOpened;
+    }
+
+    public boolean isClosed(){
+        return !mIsOpened;
     }
 
     public float getCenterX() {
