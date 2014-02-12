@@ -1,32 +1,34 @@
 package fr.tvbarthel.attempt.googlyzooapp.model;
 
+import fr.tvbarthel.attempt.googlyzooapp.listener.GooglyEyeListener;
+
 /**
  * Created by tbarthel on 10/02/14.
  */
 public class GooglyPet {
 
-    //left eye
+    /**
+     * pet's left eye
+     */
     private GooglyEye mLeftEye;
 
-    //righ eye
+    /**
+     * pet's right eye
+     */
     private GooglyEye mRightEye;
 
-    //pet resource
+    /**
+     * eyes event listener
+     */
+    private GooglyEyeListener mEyesListener;
+
+    /**
+     * pet resource
+     */
     private int mPetRes;
 
     /**
-     * Pet constructor
-     *
-     * @param petResId
-     */
-    public GooglyPet(int petResId) {
-        mPetRes = petResId;
-        mLeftEye = null;
-        mRightEye = null;
-    }
-
-    /**
-     * Pet constructor
+     * Pet with two eyes
      *
      * @param petResId       res id
      * @param leftRelativeX  left eye relative X
@@ -38,8 +40,43 @@ public class GooglyPet {
     public GooglyPet(int petResId, float leftRelativeX, float leftRelativeY, float rightRelativeX,
                      float rightRelativeY, float eyeDiameter) {
         mPetRes = petResId;
+
+        //init pet's eyes
         mLeftEye = new GooglyEye(leftRelativeX, leftRelativeY, eyeDiameter);
         mRightEye = new GooglyEye(rightRelativeX, rightRelativeY, eyeDiameter);
+
+        //init eyes event listener
+        mEyesListener = new GooglyEyeListener() {
+            @Override
+            public void onOpened(GooglyEye src) {
+                GooglyEye otherEye = getSecondEye(src);
+                if (otherEye.isOpened()) {
+                    //pet awakes
+                }
+
+            }
+
+            @Override
+            public void onBlinked(GooglyEye src) {
+                if (src.equals(mLeftEye)) {
+                    //pet's left eye blink
+                } else if (src.equals(mRightEye)) {
+                    //pet's right eye blink
+                }
+            }
+
+            @Override
+            public void onClosed(GooglyEye src) {
+                GooglyEye otherEye = getSecondEye(src);
+                if (otherEye.isClosed()) {
+                    //pet fall asleep
+                }
+            }
+        };
+
+        //set listener
+        mLeftEye.setListener(mEyesListener);
+        mRightEye.setListener(mEyesListener);
     }
 
     /**
@@ -61,6 +98,16 @@ public class GooglyPet {
 
     public GooglyEye getRightEye() {
         return mRightEye;
+    }
+
+    /**
+     * retrieve the second eye of the pet
+     *
+     * @param eye first eye
+     * @return second eye
+     */
+    private GooglyEye getSecondEye(GooglyEye eye) {
+        return eye.equals(mLeftEye) ? mLeftEye : mRightEye;
     }
 
 
