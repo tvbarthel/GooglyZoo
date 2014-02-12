@@ -1,6 +1,7 @@
 package fr.tvbarthel.attempt.googlyzooapp.model;
 
 import fr.tvbarthel.attempt.googlyzooapp.listener.GooglyEyeListener;
+import fr.tvbarthel.attempt.googlyzooapp.listener.GooglyPetListener;
 
 /**
  * Created by tbarthel on 10/02/14.
@@ -28,6 +29,11 @@ public class GooglyPet {
     private int mPetRes;
 
     /**
+     * pet listener
+     */
+    private GooglyPetListener mListener;
+
+    /**
      * Pet with two eyes
      *
      * @param petResId       res id
@@ -52,6 +58,9 @@ public class GooglyPet {
                 GooglyEye otherEye = getSecondEye(src);
                 if (otherEye.isOpened()) {
                     //pet awakes
+                    if(mListener!=null){
+                        mListener.onAwake();
+                    }
                 }
 
             }
@@ -70,6 +79,9 @@ public class GooglyPet {
                 GooglyEye otherEye = getSecondEye(src);
                 if (otherEye.isClosed()) {
                     //pet fall asleep
+                    if(mListener!=null){
+                        mListener.onFallAsleep();
+                    }
                 }
             }
         };
@@ -77,6 +89,16 @@ public class GooglyPet {
         //set listener
         mLeftEye.setListener(mEyesListener);
         mRightEye.setListener(mEyesListener);
+
+    }
+
+    /**
+     * set listener to catch pet event
+     *
+     * @param listener
+     */
+    public void setListener(GooglyPetListener listener) {
+        mListener = listener;
     }
 
     /**
