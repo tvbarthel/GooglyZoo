@@ -49,8 +49,10 @@ public class GooglyPet {
      * @param yOrientation
      */
     public void setEyeOrientation(float xOrientation, float yOrientation) {
-        mLeftEye.addOrientation(xOrientation, yOrientation);
-        mRightEye.addOrientation(xOrientation, yOrientation);
+        mLeftEye.setOrientationX(xOrientation);
+        mLeftEye.setOrientationY(yOrientation);
+        mRightEye.setOrientationX(xOrientation);
+        mRightEye.setOrientationY(yOrientation);
     }
 
     public GooglyEye getLeftEye() {

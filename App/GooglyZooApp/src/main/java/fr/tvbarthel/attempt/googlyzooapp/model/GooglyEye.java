@@ -19,16 +19,6 @@ public class GooglyEye {
         mOrientationY = 0;
     }
 
-    /**
-     * used to add eye orientation
-     *
-     * @param x
-     * @param y
-     */
-    public void addOrientation(float x, float y) {
-        mOrientationX = x * mDiameter;
-        mOrientationY = y * mDiameter;
-    }
 
     //////////////////////////////////
     //////////SETTER&GETTER///////////
@@ -63,5 +53,21 @@ public class GooglyEye {
 
     public float getOrientationY(){
         return mOrientationY;
+    }
+
+    /**
+     * set x eye orientation
+     * @param x
+     */
+    public void setOrientationX(float x){
+        mOrientationX = x * mDiameter;
+    }
+
+    /**
+     * set y eye orientation
+     * @param y
+     */
+    public void setOrientationY(float y){
+        mOrientationY = y * mDiameter;
     }
 }

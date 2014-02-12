@@ -16,11 +16,24 @@ import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPet;
  */
 public class GooglyPetView extends ImageView {
 
+    /**
+     * Log cat
+     */
     private static final String TAG = GooglyPetView.class.getName();
 
+    /**
+     * radius used for eye navigation
+     */
     private static final float EYE_RADIUS = 10f;
 
+    /**
+     * Paint used to draw eyes
+     */
     private Paint mPaint;
+
+    /**
+     * View model
+     */
     private GooglyPet mGooglyPet;
 
 

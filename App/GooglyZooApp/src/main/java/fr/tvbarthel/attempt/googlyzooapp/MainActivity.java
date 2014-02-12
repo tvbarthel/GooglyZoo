@@ -1,5 +1,8 @@
 package fr.tvbarthel.attempt.googlyzooapp;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.hardware.Camera;
@@ -15,12 +18,19 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
+import fr.tvbarthel.attempt.googlyzooapp.model.GooglyEye;
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPet;
 import fr.tvbarthel.attempt.googlyzooapp.ui.GooglyPetView;
 import fr.tvbarthel.attempt.googlyzooapp.utils.FaceDetectionUtils;
 
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+
+
+    /**
+     * duration of eye transition between two known position
+     */
+    private static final int EYE_ANIMATION_DURATION_IN_MILLI = 300;
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -40,6 +50,14 @@ public class MainActivity extends Activity
     private Camera mCamera;
     private int mCurrentRotation;
 
+    /**
+     * eye animator
+     */
+    private AnimatorSet mEyeAnimator;
+    private float mLastOrientationX;
+    private float mLastOrientationY;
+
+
     private static final String TAG = MainActivity.class.getName();
 
     @Override
@@ -57,6 +75,10 @@ public class MainActivity extends Activity
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
+
+        mEyeAnimator = new AnimatorSet();
+        mLastOrientationX = 0;
+        mLastOrientationY = 0;
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
@@ -194,7 +216,7 @@ public class MainActivity extends Activity
         if (mFaceDetectionPreview != null) {
             mPreview.removeView(mFaceDetectionPreview);
         }
-        if(mPreview != null){
+        if (mPreview != null) {
             mPreview.removeView(mPet);
         }
     }
@@ -210,6 +232,50 @@ public class MainActivity extends Activity
             preview.removeView(mFaceDetectionPreview);
         }
     }
+
+    /**
+     * update pet model with gradually and invalidate pet view to redraw the model
+     *
+     * @param relativeFaceX
+     * @param relativeFaceY
+     */
+    private void animateEye(float relativeFaceX, float relativeFaceY) {
+        final GooglyEye leftEye = mGooglyPet.getLeftEye();
+        final GooglyEye rightEye = mGooglyPet.getRightEye();
+
+        if (mEyeAnimator.isRunning()) {
+            mEyeAnimator.end();
+        }
+
+        ObjectAnimator leftEyeX =
+                ObjectAnimator.ofFloat(leftEye, "orientationX", mLastOrientationX, relativeFaceX);
+        leftEyeX.setDuration(EYE_ANIMATION_DURATION_IN_MILLI);
+
+        ObjectAnimator leftEyeY =
+                ObjectAnimator.ofFloat(leftEye, "orientationY", mLastOrientationY, relativeFaceY);
+        leftEyeY.setDuration(EYE_ANIMATION_DURATION_IN_MILLI);
+        leftEyeX.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                mPet.invalidate();
+            }
+        });
+
+        ObjectAnimator rightEyeX =
+                ObjectAnimator.ofFloat(rightEye, "orientationX", mLastOrientationX, relativeFaceX);
+        rightEyeX.setDuration(EYE_ANIMATION_DURATION_IN_MILLI);
+
+        ObjectAnimator rightEyeY =
+                ObjectAnimator.ofFloat(rightEye, "orientationY", mLastOrientationY, relativeFaceY);
+        rightEyeY.setDuration(EYE_ANIMATION_DURATION_IN_MILLI);
+
+        mEyeAnimator.playTogether(leftEyeX, leftEyeY, rightEyeX, rightEyeY);
+        mEyeAnimator.start();
+
+        mLastOrientationX = relativeFaceX;
+        mLastOrientationY = relativeFaceY;
+    }
+
 
     private class CameraAsyncTask extends AsyncTask<Void, Void, Camera> {
 
@@ -239,9 +305,8 @@ public class MainActivity extends Activity
                     if (faces.length > 0) {
                         final float[] relativePosition = FaceDetectionUtils.getRelativeHeadPosition(
                                 faces[0], mFaceDetectionPreview, mCurrentRotation);
-                        mGooglyPet.setEyeOrientation(relativePosition[0], relativePosition[1]);
+                        animateEye(relativePosition[0], relativePosition[1]);
                     }
-                    mPet.invalidate();
                 }
             });
 
