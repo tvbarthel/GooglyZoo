@@ -1,10 +1,11 @@
 package fr.tvbarthel.attempt.googlyzooapp.ui;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 
 import fr.tvbarthel.attempt.googlyzooapp.listener.GooglyPetListener;
@@ -58,14 +59,12 @@ public class GooglyPetView extends ImageView {
 
             @Override
             public void onAwake() {
-                //TODO animate pet
-                GooglyPetView.this.invalidate();
+                moveUp();
             }
 
             @Override
             public void onFallAsleep() {
-                //TODO animate pet
-                GooglyPetView.this.invalidate();
+                moveDown();
             }
         };
 
@@ -73,15 +72,6 @@ public class GooglyPetView extends ImageView {
         mGooglyPetModel.addListener(mListener);
 
         this.setImageDrawable(getResources().getDrawable(mGooglyPetModel.getPetRes()));
-    }
-
-    @Override
-    protected void onDisplayHint(int hint) {
-        super.onDisplayHint(hint);
-
-        if (hint == VISIBLE) {
-            Log.e(TAG, "VISIBLE");
-        }
     }
 
     @Override
@@ -110,9 +100,37 @@ public class GooglyPetView extends ImageView {
 
     }
 
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        moveDown();
+    }
+
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mGooglyPetModel.removeListener(mListener);
+    }
+
+    /**
+     * animate the view to move down from 70% of its height
+     */
+    private void moveDown() {
+        ObjectAnimator trans = ObjectAnimator.ofFloat(GooglyPetView.this, "translationY", GooglyPetView.this.getHeight() * 0.70f);
+        trans.setInterpolator(new DecelerateInterpolator());
+        trans.setDuration(300);
+        trans.start();
+    }
+
+
+    /**
+     * animate the view to move up to 25% of its height
+     */
+    private void moveUp() {
+        ObjectAnimator trans = ObjectAnimator.ofFloat(GooglyPetView.this, "translationY", GooglyPetView.this.getHeight() * 0.25f);
+        trans.setInterpolator(new DecelerateInterpolator());
+        trans.setDuration(300);
+        trans.start();
     }
 }
