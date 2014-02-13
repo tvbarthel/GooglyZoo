@@ -25,7 +25,7 @@ public class GooglyPetView extends ImageView {
     /**
      * radius used for eye navigation
      */
-    private static final float EYE_RADIUS = 10f;
+    private static final float EYE_RADIUS = 15f;
 
     /**
      * Paint used to draw eyes

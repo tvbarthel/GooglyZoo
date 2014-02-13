@@ -97,7 +97,7 @@ public class MainActivity extends Activity
         setContentView(R.layout.activity_main);
 
         //create pet model
-        mGooglyPet = new GooglyPet(R.drawable.zebra, 0.40f, 0.35f, 0.60f, 0.35f, 15f);
+        mGooglyPet = new GooglyPet(R.drawable.zebra, 0.40f, 0.35f, 0.60f, 0.35f, 35f);
 
         //create view to display pet
         mPetView = new GooglyPetView(this, mGooglyPet);
