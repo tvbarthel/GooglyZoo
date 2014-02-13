@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
+import fr.tvbarthel.attempt.googlyzooapp.listener.GooglyPetListener;
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyEye;
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPet;
 import fr.tvbarthel.attempt.googlyzooapp.ui.GooglyPetView;
@@ -26,6 +27,10 @@ import fr.tvbarthel.attempt.googlyzooapp.utils.FaceDetectionUtils;
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
+    /**
+     * Log cat
+     */
+    private static final String TAG = MainActivity.class.getName();
 
     /**
      * duration of eye transition between two known position
@@ -42,12 +47,39 @@ public class MainActivity extends Activity
      */
     private CharSequence mTitle;
 
-    private GooglyPetView mPet;
+    /**
+     * Googly pet view
+     */
+    private GooglyPetView mPetView;
+
+    /**
+     * Googly pet model
+     */
     private GooglyPet mGooglyPet;
+
+    /**
+     * layout params used to center | bottom googly pet view
+     */
     private FrameLayout.LayoutParams mPetParams;
+
+    /**
+     * camera preview
+     */
     private FrameLayout mPreview;
+
+    /**
+     * Face detection
+     */
     private FacePreviewDetection mFaceDetectionPreview;
+
+    /**
+     * camera hardware
+     */
     private Camera mCamera;
+
+    /**
+     * current device rotation
+     */
     private int mCurrentRotation;
 
     /**
@@ -58,19 +90,19 @@ public class MainActivity extends Activity
     private float mLastOrientationY;
 
 
-    private static final String TAG = MainActivity.class.getName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mPet = new GooglyPetView(this, getResources().getDrawable(R.drawable.zebra));
+        //create pet model
+        mGooglyPet = new GooglyPet(R.drawable.zebra, 0.40f, 0.35f, 0.60f, 0.35f, 15f);
+
+        //create view to display pet
+        mPetView = new GooglyPetView(this, mGooglyPet);
         mPetParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         mPetParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
-
-        mGooglyPet = new GooglyPet(R.drawable.zebra, 0.40f, 0.35f, 0.60f, 0.35f, 15f);
-        mPet.setEyesModel(mGooglyPet);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -217,7 +249,7 @@ public class MainActivity extends Activity
             mPreview.removeView(mFaceDetectionPreview);
         }
         if (mPreview != null) {
-            mPreview.removeView(mPet);
+            mPreview.removeView(mPetView);
         }
     }
 
@@ -243,6 +275,19 @@ public class MainActivity extends Activity
         final GooglyEye leftEye = mGooglyPet.getLeftEye();
         final GooglyEye rightEye = mGooglyPet.getRightEye();
 
+        if (leftEye.isOpened()) {
+            leftEye.blink();
+        } else {
+            leftEye.open();
+        }
+
+        if (rightEye.isOpened()) {
+            rightEye.blink();
+        } else {
+            rightEye.open();
+        }
+
+
         if (mEyeAnimator.isRunning()) {
             mEyeAnimator.end();
         }
@@ -257,7 +302,7 @@ public class MainActivity extends Activity
         leftEyeX.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                mPet.invalidate();
+                mPetView.invalidate();
             }
         });
 
@@ -298,7 +343,7 @@ public class MainActivity extends Activity
             mPreview = (FrameLayout) findViewById(R.id.container);
 
             mPreview.addView(mFaceDetectionPreview);
-            mPreview.addView(mPet, mPetParams);
+            mPreview.addView(mPetView, mPetParams);
             mCamera.setFaceDetectionListener(new Camera.FaceDetectionListener() {
                 @Override
                 public void onFaceDetection(Camera.Face[] faces, Camera camera) {

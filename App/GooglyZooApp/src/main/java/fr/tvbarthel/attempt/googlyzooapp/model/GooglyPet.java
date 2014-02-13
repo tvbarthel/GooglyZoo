@@ -1,5 +1,7 @@
 package fr.tvbarthel.attempt.googlyzooapp.model;
 
+import java.util.ArrayList;
+
 import fr.tvbarthel.attempt.googlyzooapp.listener.GooglyEyeListener;
 import fr.tvbarthel.attempt.googlyzooapp.listener.GooglyPetListener;
 
@@ -28,10 +30,11 @@ public class GooglyPet {
      */
     private int mPetRes;
 
+
     /**
-     * pet listener
+     * listeners list for pet event
      */
-    private GooglyPetListener mListener;
+    private ArrayList<GooglyPetListener> mListenerList;
 
     /**
      * Pet with two eyes
@@ -58,9 +61,7 @@ public class GooglyPet {
                 GooglyEye otherEye = getSecondEye(src);
                 if (otherEye.isOpened()) {
                     //pet awakes
-                    if(mListener!=null){
-                        mListener.onAwake();
-                    }
+                    fireAwakeEvent();
                 }
 
             }
@@ -79,9 +80,7 @@ public class GooglyPet {
                 GooglyEye otherEye = getSecondEye(src);
                 if (otherEye.isClosed()) {
                     //pet fall asleep
-                    if(mListener!=null){
-                        mListener.onFallAsleep();
-                    }
+                    fireFallAsleepEvent();
                 }
             }
         };
@@ -89,17 +88,34 @@ public class GooglyPet {
         //set listener
         mLeftEye.setListener(mEyesListener);
         mRightEye.setListener(mEyesListener);
-
     }
 
     /**
-     * set listener to catch pet event
+     * add listener to catch pet event
      *
      * @param listener
      */
-    public void setListener(GooglyPetListener listener) {
-        mListener = listener;
+    public void addListener(GooglyPetListener listener) {
+        if (mListenerList == null) {
+            mListenerList = new ArrayList<GooglyPetListener>();
+        }
+
+        if (!mListenerList.contains(listener)) {
+            mListenerList.add(listener);
+        }
     }
+
+    /**
+     * remove listener to stop event callback
+     *
+     * @param listener
+     */
+    public void removeListener(GooglyPetListener listener) {
+        if (mListenerList != null && mListenerList.contains(listener)) {
+            mListenerList.remove(listener);
+        }
+    }
+
 
     /**
      * Set orientation for both eyes
@@ -114,14 +130,6 @@ public class GooglyPet {
         mRightEye.setOrientationY(yOrientation);
     }
 
-    public GooglyEye getLeftEye() {
-        return mLeftEye;
-    }
-
-    public GooglyEye getRightEye() {
-        return mRightEye;
-    }
-
     /**
      * retrieve the second eye of the pet
      *
@@ -130,6 +138,44 @@ public class GooglyPet {
      */
     private GooglyEye getSecondEye(GooglyEye eye) {
         return eye.equals(mLeftEye) ? mLeftEye : mRightEye;
+    }
+
+    /**
+     * call onAwake of all registered listeners
+     */
+    private void fireAwakeEvent() {
+        if (mListenerList != null && mListenerList.size() > 0) {
+            for (GooglyPetListener listener : mListenerList) {
+                listener.onAwake();
+            }
+        }
+    }
+
+    /**
+     * call onFallAsleep of all registered listeners
+     */
+    private void fireFallAsleepEvent() {
+        if (mListenerList != null && mListenerList.size() > 0) {
+            for (GooglyPetListener listener : mListenerList) {
+                listener.onFallAsleep();
+            }
+        }
+    }
+
+    /**
+     * Getter & Setter
+     */
+
+    public GooglyEye getLeftEye() {
+        return mLeftEye;
+    }
+
+    public GooglyEye getRightEye() {
+        return mRightEye;
+    }
+
+    public int getPetRes() {
+        return mPetRes;
     }
 
 
