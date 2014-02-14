@@ -1,8 +1,5 @@
 package fr.tvbarthel.attempt.googlyzooapp;
 
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.hardware.Camera;
@@ -18,8 +15,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import fr.tvbarthel.attempt.googlyzooapp.listener.GooglyPetListener;
-import fr.tvbarthel.attempt.googlyzooapp.model.GooglyEye;
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPet;
 import fr.tvbarthel.attempt.googlyzooapp.ui.GooglyPetView;
 import fr.tvbarthel.attempt.googlyzooapp.utils.FaceDetectionUtils;
@@ -31,11 +26,6 @@ public class MainActivity extends Activity
      * Log cat
      */
     private static final String TAG = MainActivity.class.getName();
-
-    /**
-     * duration of eye transition between two known position
-     */
-    private static final int EYE_ANIMATION_DURATION_IN_MILLI = 300;
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -50,7 +40,7 @@ public class MainActivity extends Activity
     /**
      * Googly pet view
      */
-    private GooglyPetView mPetView;
+    private GooglyPetView mGooglyPetView;
 
     /**
      * Googly pet model
@@ -83,12 +73,14 @@ public class MainActivity extends Activity
     private int mCurrentRotation;
 
     /**
-     * eye animator
+     * last face x detected
      */
-    private AnimatorSet mEyeAnimator;
     private float mLastOrientationX;
-    private float mLastOrientationY;
 
+    /**
+     * last face y detected
+     */
+    private float mLastOrientationY;
 
 
     @Override
@@ -100,7 +92,7 @@ public class MainActivity extends Activity
         mGooglyPet = new GooglyPet(R.drawable.zebra, 0.40f, 0.35f, 0.60f, 0.35f, 35f);
 
         //create view to display pet
-        mPetView = new GooglyPetView(this, mGooglyPet);
+        mGooglyPetView = new GooglyPetView(this, mGooglyPet);
         mPetParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         mPetParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
 
@@ -108,7 +100,6 @@ public class MainActivity extends Activity
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
 
-        mEyeAnimator = new AnimatorSet();
         mLastOrientationX = 0;
         mLastOrientationY = 0;
 
@@ -249,7 +240,7 @@ public class MainActivity extends Activity
             mPreview.removeView(mFaceDetectionPreview);
         }
         if (mPreview != null) {
-            mPreview.removeView(mPetView);
+            mPreview.removeView(mGooglyPetView);
         }
     }
 
@@ -272,50 +263,8 @@ public class MainActivity extends Activity
      * @param relativeFaceY
      */
     private void animateEye(float relativeFaceX, float relativeFaceY) {
-        final GooglyEye leftEye = mGooglyPet.getLeftEye();
-        final GooglyEye rightEye = mGooglyPet.getRightEye();
 
-        if (leftEye.isOpened()) {
-            leftEye.blink();
-        } else {
-            leftEye.open();
-        }
-
-        if (rightEye.isOpened()) {
-            rightEye.blink();
-        } else {
-            rightEye.open();
-        }
-
-
-        if (mEyeAnimator.isRunning()) {
-            mEyeAnimator.end();
-        }
-
-        ObjectAnimator leftEyeX =
-                ObjectAnimator.ofFloat(leftEye, "orientationX", mLastOrientationX, relativeFaceX);
-        leftEyeX.setDuration(EYE_ANIMATION_DURATION_IN_MILLI);
-
-        ObjectAnimator leftEyeY =
-                ObjectAnimator.ofFloat(leftEye, "orientationY", mLastOrientationY, relativeFaceY);
-        leftEyeY.setDuration(EYE_ANIMATION_DURATION_IN_MILLI);
-        leftEyeX.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                mPetView.invalidate();
-            }
-        });
-
-        ObjectAnimator rightEyeX =
-                ObjectAnimator.ofFloat(rightEye, "orientationX", mLastOrientationX, relativeFaceX);
-        rightEyeX.setDuration(EYE_ANIMATION_DURATION_IN_MILLI);
-
-        ObjectAnimator rightEyeY =
-                ObjectAnimator.ofFloat(rightEye, "orientationY", mLastOrientationY, relativeFaceY);
-        rightEyeY.setDuration(EYE_ANIMATION_DURATION_IN_MILLI);
-
-        mEyeAnimator.playTogether(leftEyeX, leftEyeY, rightEyeX, rightEyeY);
-        mEyeAnimator.start();
+        mGooglyPetView.animatePetEyes(relativeFaceX, relativeFaceY, mLastOrientationX, mLastOrientationY);
 
         mLastOrientationX = relativeFaceX;
         mLastOrientationY = relativeFaceY;
@@ -343,7 +292,7 @@ public class MainActivity extends Activity
             mPreview = (FrameLayout) findViewById(R.id.container);
 
             mPreview.addView(mFaceDetectionPreview);
-            mPreview.addView(mPetView, mPetParams);
+            mPreview.addView(mGooglyPetView, mPetParams);
             mCamera.setFaceDetectionListener(new Camera.FaceDetectionListener() {
                 @Override
                 public void onFaceDetection(Camera.Face[] faces, Camera camera) {

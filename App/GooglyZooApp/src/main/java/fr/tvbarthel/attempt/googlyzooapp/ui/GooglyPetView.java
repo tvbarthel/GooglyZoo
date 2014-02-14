@@ -1,6 +1,8 @@
 package fr.tvbarthel.attempt.googlyzooapp.ui;
 
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -23,6 +25,11 @@ public class GooglyPetView extends ImageView {
     private static final String TAG = GooglyPetView.class.getName();
 
     /**
+     * duration of eye transition between two known position
+     */
+    private static final int EYE_ANIMATION_DURATION_IN_MILLI = 300;
+
+    /**
      * radius used for eye navigation
      */
     private static final float EYE_RADIUS = 15f;
@@ -41,6 +48,12 @@ public class GooglyPetView extends ImageView {
      * Googly pet event listener to update view on pet events
      */
     private GooglyPetListener mListener;
+
+    private AnimatorSet mEyeAnimator;
+    private ObjectAnimator mLeftEyeAnimatorX;
+    private ObjectAnimator mLeftEyeAnimatorY;
+    private ObjectAnimator mRightEyeAnimatorX;
+    private ObjectAnimator mRightEyeAnimatorY;
 
 
     public GooglyPetView(Context context, GooglyPet model) {
@@ -70,6 +83,23 @@ public class GooglyPetView extends ImageView {
 
         //add listener
         mGooglyPetModel.addListener(mListener);
+
+        //init animator set
+        mEyeAnimator = new AnimatorSet();
+
+        //init object animator
+        mLeftEyeAnimatorX = ObjectAnimator.ofFloat(mGooglyPetModel.getLeftEye(), "orientationX",0);
+        mLeftEyeAnimatorY = ObjectAnimator.ofFloat(mGooglyPetModel.getLeftEye(), "orientationY",0);
+        mRightEyeAnimatorX = ObjectAnimator.ofFloat(mGooglyPetModel.getRightEye(), "orientationX",0);
+        mRightEyeAnimatorY = ObjectAnimator.ofFloat(mGooglyPetModel.getRightEye(), "orientationY",0);
+        mRightEyeAnimatorX.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                GooglyPetView.this.invalidate();
+            }
+        });
+        mEyeAnimator.playTogether(mLeftEyeAnimatorX, mLeftEyeAnimatorY
+                , mRightEyeAnimatorX, mRightEyeAnimatorY);
 
         this.setImageDrawable(getResources().getDrawable(mGooglyPetModel.getPetRes()));
     }
@@ -132,5 +162,33 @@ public class GooglyPetView extends ImageView {
         trans.setInterpolator(new DecelerateInterpolator());
         trans.setDuration(300);
         trans.start();
+    }
+
+    public void animatePetEyes(float newXDirection, float newYDirection, float lastXDirection, float lastYDirection) {
+        final GooglyEye leftEye = mGooglyPetModel.getLeftEye();
+        final GooglyEye rightEye = mGooglyPetModel.getRightEye();
+
+        if (mEyeAnimator.isRunning()) {
+            mEyeAnimator.end();
+        }
+
+        if (leftEye.isOpened()) {
+            leftEye.blink();
+        } else {
+            leftEye.open();
+        }
+
+        if (rightEye.isOpened()) {
+            rightEye.blink();
+        } else {
+            rightEye.open();
+        }
+
+        mLeftEyeAnimatorX.setFloatValues(lastXDirection, newXDirection);
+        mLeftEyeAnimatorY.setFloatValues(lastYDirection, newYDirection);
+        mRightEyeAnimatorX.setFloatValues(lastXDirection, newXDirection);
+        mRightEyeAnimatorY.setFloatValues(lastYDirection, newYDirection);
+
+        mEyeAnimator.start();
     }
 }
