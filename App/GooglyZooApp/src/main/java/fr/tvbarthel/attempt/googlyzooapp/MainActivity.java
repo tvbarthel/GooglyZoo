@@ -73,14 +73,9 @@ public class MainActivity extends Activity
     private int mCurrentRotation;
 
     /**
-     * last face x detected
+     * last face detected position
      */
-    private float mLastOrientationX;
-
-    /**
-     * last face y detected
-     */
-    private float mLastOrientationY;
+    private float[] mLastFaceDetectedPosition;
 
 
     @Override
@@ -100,8 +95,7 @@ public class MainActivity extends Activity
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
 
-        mLastOrientationX = 0;
-        mLastOrientationY = 0;
+        mLastFaceDetectedPosition = new float[]{0, 0};
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
@@ -257,17 +251,16 @@ public class MainActivity extends Activity
     }
 
     /**
-     * update pet model with gradually and invalidate pet view to redraw the model
+     * animate the googly pet view for eye motion
      *
-     * @param relativeFaceX
-     * @param relativeFaceY
+     * @param faceDetectedPosition face detected
      */
-    private void animateEye(float relativeFaceX, float relativeFaceY) {
+    private void animateEye(float[] faceDetectedPosition) {
 
-        mGooglyPetView.animatePetEyes(relativeFaceX, relativeFaceY, mLastOrientationX, mLastOrientationY);
+        mGooglyPetView.animatePetEyes(faceDetectedPosition, mLastFaceDetectedPosition);
 
-        mLastOrientationX = relativeFaceX;
-        mLastOrientationY = relativeFaceY;
+        mLastFaceDetectedPosition[0] = faceDetectedPosition[0];
+        mLastFaceDetectedPosition[1] = faceDetectedPosition[1];
     }
 
 
@@ -299,7 +292,7 @@ public class MainActivity extends Activity
                     if (faces.length > 0) {
                         final float[] relativePosition = FaceDetectionUtils.getRelativeHeadPosition(
                                 faces[0], mFaceDetectionPreview, mCurrentRotation);
-                        animateEye(relativePosition[0], relativePosition[1]);
+                        animateEye(relativePosition);
                     }
                 }
             });

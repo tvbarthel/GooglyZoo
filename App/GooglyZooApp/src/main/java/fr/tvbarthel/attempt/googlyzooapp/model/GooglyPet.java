@@ -116,18 +116,20 @@ public class GooglyPet {
         }
     }
 
-
     /**
      * Set orientation for both eyes
+     * Used by ObjectAnimator
      *
-     * @param xOrientation
-     * @param yOrientation
+     * @param orientations
      */
-    public void setEyeOrientation(float xOrientation, float yOrientation) {
-        mLeftEye.setOrientationX(xOrientation);
-        mLeftEye.setOrientationY(yOrientation);
-        mRightEye.setOrientationX(xOrientation);
-        mRightEye.setOrientationY(yOrientation);
+    public void setEyesOrientation(float[] orientations) {
+        if (orientations.length != 2) {
+            return;
+        }
+        mLeftEye.setOrientationX(orientations[0]);
+        mLeftEye.setOrientationY(orientations[1]);
+        mRightEye.setOrientationX(orientations[0]);
+        mRightEye.setOrientationY(orientations[1]);
     }
 
     /**
