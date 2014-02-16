@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPet;
+import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPetFactory;
 import fr.tvbarthel.attempt.googlyzooapp.ui.GooglyPetView;
 import fr.tvbarthel.attempt.googlyzooapp.utils.FaceDetectionUtils;
 
@@ -84,7 +85,7 @@ public class MainActivity extends Activity
         setContentView(R.layout.activity_main);
 
         //create pet model
-        mGooglyPet = new GooglyPet(R.drawable.zebra, 0.40f, 0.35f, 0.60f, 0.35f, 35f);
+        mGooglyPet = GooglyPetFactory.createGooglyZebra();
 
         //create view to display pet
         mGooglyPetView = new GooglyPetView(this, mGooglyPet);
