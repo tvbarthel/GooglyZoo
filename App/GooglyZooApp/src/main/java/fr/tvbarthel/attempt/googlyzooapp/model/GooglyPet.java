@@ -30,6 +30,11 @@ public class GooglyPet {
      */
     private int mPetRes;
 
+    /**
+     * proportion of the body compare to the whole pet (body + head)
+     */
+    private float mBodyProportion;
+
 
     /**
      * listeners list for pet event
@@ -47,9 +52,9 @@ public class GooglyPet {
      * @param eyeDiameter    diameter for both eye
      */
     public GooglyPet(int petResId, float leftRelativeX, float leftRelativeY, float rightRelativeX,
-                     float rightRelativeY, float eyeDiameter) {
+                     float rightRelativeY, float eyeDiameter, float bodyProportion) {
         mPetRes = petResId;
-
+        mBodyProportion = bodyProportion;
         //init pet's eyes
         mLeftEye = new GooglyEye(leftRelativeX, leftRelativeY, eyeDiameter);
         mRightEye = new GooglyEye(rightRelativeX, rightRelativeY, eyeDiameter);
@@ -180,5 +185,12 @@ public class GooglyPet {
         return mPetRes;
     }
 
+    public float getBodyProportion() {
+        return mBodyProportion;
+    }
+
+    public float getHeadProportion() {
+        return 1.0f - mBodyProportion;
+    }
 
 }

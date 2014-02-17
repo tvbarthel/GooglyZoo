@@ -143,7 +143,7 @@ public class GooglyPetView extends ImageView {
      * animate the view to move down from 70% of its height
      */
     private void moveDown() {
-        ObjectAnimator trans = ObjectAnimator.ofFloat(GooglyPetView.this, "translationY", GooglyPetView.this.getHeight() * 0.70f);
+        ObjectAnimator trans = ObjectAnimator.ofFloat(GooglyPetView.this, "translationY", GooglyPetView.this.getHeight() * mGooglyPetModel.getBodyProportion());
         trans.setInterpolator(new DecelerateInterpolator());
         trans.setDuration(300);
         trans.start();
@@ -154,7 +154,7 @@ public class GooglyPetView extends ImageView {
      * animate the view to move up to 25% of its height
      */
     private void moveUp() {
-        ObjectAnimator trans = ObjectAnimator.ofFloat(GooglyPetView.this, "translationY", GooglyPetView.this.getHeight() * 0.25f);
+        ObjectAnimator trans = ObjectAnimator.ofFloat(GooglyPetView.this, "translationY", GooglyPetView.this.getHeight() * mGooglyPetModel.getHeadProportion());
         trans.setInterpolator(new DecelerateInterpolator());
         trans.setDuration(300);
         trans.start();
