@@ -62,9 +62,6 @@ public class GooglyPetView extends ImageView {
         mPaint.setStrokeWidth(15f);
         mPaint.setColor(Color.BLACK);
 
-        //init model
-        mGooglyPetModel = model;
-
         //init pet event listener
         mListener = new GooglyPetListener() {
 
@@ -79,8 +76,8 @@ public class GooglyPetView extends ImageView {
             }
         };
 
-        //add listener
-        mGooglyPetModel.addListener(mListener);
+        mGooglyPetModel = model;
+
 
         //init animator with custom evaluator
         mEyesAnimator = ObjectAnimator.ofObject(mGooglyPetModel, "EyesOrientation",
@@ -97,7 +94,26 @@ public class GooglyPetView extends ImageView {
         //set animation duration
         mEyesAnimator.setDuration(EYE_ANIMATION_DURATION_IN_MILLI);
 
+        //init model
+        initModel();
+
+
+    }
+
+    public void setModel(GooglyPet model) {
+        if(mGooglyPetModel != null){
+            mGooglyPetModel.removeListener(mListener);
+            mGooglyPetModel = null;
+        }
+        mGooglyPetModel = model;
+        initModel();
+    }
+
+    private void initModel() {
+        //add listener
+        mGooglyPetModel.addListener(mListener);
         this.setImageDrawable(getResources().getDrawable(mGooglyPetModel.getPetRes()));
+        mEyesAnimator.setTarget(mGooglyPetModel);
     }
 
     @Override

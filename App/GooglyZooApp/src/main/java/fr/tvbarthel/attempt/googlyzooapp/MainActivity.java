@@ -44,11 +44,6 @@ public class MainActivity extends Activity
     private GooglyPetView mGooglyPetView;
 
     /**
-     * Googly pet model
-     */
-    private GooglyPet mGooglyPet;
-
-    /**
      * layout params used to center | bottom googly pet view
      */
     private FrameLayout.LayoutParams mPetParams;
@@ -84,11 +79,8 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //create pet model
-        mGooglyPet = GooglyPetFactory.createGooglyZebra();
-
         //create view to display pet
-        mGooglyPetView = new GooglyPetView(this, mGooglyPet);
+        mGooglyPetView = new GooglyPetView(this, GooglyPetFactory.createGooglyZebra());
         mPetParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         mPetParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
 
@@ -102,6 +94,7 @@ public class MainActivity extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
     }
 
     @Override
@@ -115,15 +108,6 @@ public class MainActivity extends Activity
         super.onPause();
         releasePreview();
         releaseCamera();
-    }
-
-    @Override
-    public void onNavigationDrawerItemSelected(int position) {
-        // update the main content by replacing fragments
-//        FragmentManager fragmentManager = getFragmentManager();
-//        fragmentManager.beginTransaction()
-//                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-//                .commit();
     }
 
     public void onSectionAttached(int number) {
@@ -262,6 +246,11 @@ public class MainActivity extends Activity
 
         mLastFaceDetectedPosition[0] = faceDetectedPosition[0];
         mLastFaceDetectedPosition[1] = faceDetectedPosition[1];
+    }
+
+    @Override
+    public void onNavigationDrawerItemSelected(GooglyPet petSelected) {
+        mGooglyPetView.setModel(petSelected);
     }
 
 

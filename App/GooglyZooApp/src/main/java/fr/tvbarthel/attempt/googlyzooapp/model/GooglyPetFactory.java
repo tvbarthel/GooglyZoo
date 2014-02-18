@@ -50,10 +50,11 @@ public class GooglyPetFactory {
                 ZEBRA_RIGHT_EYE_X,
                 ZEBRA_RIGHT_EYE_Y,
                 ZEBRA_EYES_DIAMETER,
-                ZERBA_BODY_PROPORTION);
+                ZERBA_BODY_PROPORTION,
+                R.string.googly_zebra_name);
     }
 
-    public static GooglyPet createGoolyGnu() {
+    public static GooglyPet createGooglyGnu() {
         return new GooglyPet(
                 R.drawable.gnu,
                 GNU_LEFT_EYE_X,
@@ -61,10 +62,11 @@ public class GooglyPetFactory {
                 GNU_RIGHT_EYE_X,
                 GNU_RIGHT_EYE_Y,
                 GNU_EYES_DIAMETER,
-                GNU_BODY_PROPORTION);
+                GNU_BODY_PROPORTION,
+                R.string.googly_gnu_name);
     }
 
-    public static GooglyPet createGoolyHippo() {
+    public static GooglyPet createGooglyHippo() {
         return new GooglyPet(
                 R.drawable.hippo,
                 HIPPO_LEFT_EYE_X,
@@ -72,6 +74,7 @@ public class GooglyPetFactory {
                 HIPPO_RIGHT_EYE_X,
                 HIPPO_RIGHT_EYE_Y,
                 HIPPO_EYES_DIAMETER,
-                HIPPO_BODY_PROPORTION);
+                HIPPO_BODY_PROPORTION,
+                R.string.googly_hippo_name);
     }
 }
