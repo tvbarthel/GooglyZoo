@@ -1,7 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:right="4dp" android:bottom="4dp">
+        <!--<shape android:shape="rectangle">
+            <solid android:color="@color/transparent_grey"/>
+        </shape>!-->
+        <bitmap android:src="@drawable/drawer_entry_bg">
 
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/drawer_entry_pressed" android:state_pressed="true"/>
-    <item android:drawable="@drawable/drawer_entry_pressed" android:state_activated="true"/>
-    <item android:drawable="@drawable/drawer_entry_base"/>
-</selector>
+        </bitmap>
+    </item>
+</layer-list>

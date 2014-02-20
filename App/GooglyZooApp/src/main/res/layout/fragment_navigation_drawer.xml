@@ -2,8 +2,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="@dimen/navigation_drawer_list_vertical_padding"
+    android:paddingLeft="@dimen/navigation_drawer_list_horizontal_padding"
+    android:paddingRight="@dimen/navigation_drawer_list_horizontal_padding"
     android:choiceMode="singleChoice"
     android:divider="@android:color/transparent"
-    android:dividerHeight="0dp"
-    android:background="#cccc"
+    android:dividerHeight="@dimen/navigation_drawer_list_divider_height"
+    android:background="@color/transparent_grey"
     tools:context="fr.tvbarthel.attempt.googlyzooapp.NavigationDrawerFragment" />

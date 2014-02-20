@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -30,9 +31,12 @@ public class GooglyPetDrawerAdapter extends ArrayAdapter<GooglyPet> {
 
         if (rowView == null) {
             rowView = inflater.inflate(R.layout.googly_drawer_entry, parent, false);
+            ((TextView) rowView.findViewById(R.id.googly_drawer_pet_name)).setText(
+                    context.getResources().getString(currentGooglyPetEntry.getNameId()));
+            ((ImageView) rowView.findViewById(R.id.googly_drawer_pet_ic)).setImageDrawable(
+                    context.getResources().getDrawable(currentGooglyPetEntry.getPetIc()));
         }
-        ((TextView) rowView.findViewById(R.id.googly_drawer_pet_name)).setText(
-                context.getResources().getString(currentGooglyPetEntry.getNameId()));
+
 
         return rowView;
     }

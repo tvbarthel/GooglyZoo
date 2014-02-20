@@ -40,6 +40,11 @@ public class GooglyPet {
      */
     private int mNameRes;
 
+    /**
+     * googly pet icon
+     */
+    private int mPetIc;
+
 
     /**
      * listeners list for pet event
@@ -57,12 +62,14 @@ public class GooglyPet {
      * @param eyeDiameter    diameter for both eye
      * @param bodyProportion proportion of the body compare to the head
      * @param name           googly pet name
+     * @param ic             googly pet icon res
      */
     public GooglyPet(int petResId, float leftRelativeX, float leftRelativeY, float rightRelativeX,
-                     float rightRelativeY, float eyeDiameter, float bodyProportion, int name) {
+                     float rightRelativeY, float eyeDiameter, float bodyProportion, int name, int ic) {
         mPetRes = petResId;
         mBodyProportion = bodyProportion;
         mNameRes = name;
+        mPetIc = ic;
         //init pet's eyes
         mLeftEye = new GooglyEye(leftRelativeX, leftRelativeY, eyeDiameter);
         mRightEye = new GooglyEye(rightRelativeX, rightRelativeY, eyeDiameter);
@@ -201,8 +208,12 @@ public class GooglyPet {
         return 1.0f - mBodyProportion;
     }
 
-    public int getNameId(){
+    public int getNameId() {
         return mNameRes;
+    }
+
+    public int getPetIc(){
+        return mPetIc;
     }
 
 }
