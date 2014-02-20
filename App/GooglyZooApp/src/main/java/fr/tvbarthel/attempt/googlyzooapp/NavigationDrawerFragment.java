@@ -24,8 +24,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPet;
+import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPetEntry;
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPetFactory;
-import fr.tvbarthel.attempt.googlyzooapp.ui.adapter.GooglyPetDrawerAdapter;
+import fr.tvbarthel.attempt.googlyzooapp.ui.adapter.GooglyPetEntryAdapter;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -56,9 +57,9 @@ public class NavigationDrawerFragment extends Fragment {
     private ActionBarDrawerToggle mDrawerToggle;
 
     /**
-     * Available googly pets lisr
+     * Available googly pets list
      */
-    private ArrayList<GooglyPet> mAvailableGooglyPets;
+    private ArrayList<GooglyPetEntry> mAvailableGooglyPets;
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerListView;
@@ -86,10 +87,10 @@ public class NavigationDrawerFragment extends Fragment {
         }
 
         //init available pets
-        mAvailableGooglyPets = new ArrayList<GooglyPet>();
-        mAvailableGooglyPets.add(GooglyPetFactory.createGooglyZebra());
-        mAvailableGooglyPets.add(GooglyPetFactory.createGooglyGnu());
-        mAvailableGooglyPets.add(GooglyPetFactory.createGooglyHippo());
+        mAvailableGooglyPets = new ArrayList<GooglyPetEntry>();
+        mAvailableGooglyPets.add(new GooglyPetEntry(R.string.googly_zebra_name, R.drawable.zebra_ic));
+        mAvailableGooglyPets.add(new GooglyPetEntry(R.string.googly_gnu_name, R.drawable.gnu_ic));
+        mAvailableGooglyPets.add(new GooglyPetEntry(R.string.googly_hippo_name, R.drawable.hippo_ic));
     }
 
     @Override
@@ -112,7 +113,7 @@ public class NavigationDrawerFragment extends Fragment {
         });
 
         mDrawerListView.setAdapter(new
-                GooglyPetDrawerAdapter(getActionBar().getThemedContext(), mAvailableGooglyPets));
+                GooglyPetEntryAdapter(getActionBar().getThemedContext(), mAvailableGooglyPets));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
     }
@@ -271,6 +272,7 @@ public class NavigationDrawerFragment extends Fragment {
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setTitle(R.string.app_name);
+        actionBar.setIcon(R.drawable.ic_launcher);
     }
 
     private ActionBar getActionBar() {
@@ -284,6 +286,6 @@ public class NavigationDrawerFragment extends Fragment {
         /**
          * Called when an item in the navigation drawer is selected.
          */
-        void onNavigationDrawerItemSelected(GooglyPet petSelected);
+        void onNavigationDrawerItemSelected(GooglyPetEntry petSelected);
     }
 }

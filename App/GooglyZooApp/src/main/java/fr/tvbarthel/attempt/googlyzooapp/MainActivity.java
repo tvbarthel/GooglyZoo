@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPet;
+import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPetEntry;
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPetFactory;
 import fr.tvbarthel.attempt.googlyzooapp.ui.GooglyPetView;
 import fr.tvbarthel.attempt.googlyzooapp.utils.FaceDetectionUtils;
@@ -37,6 +38,11 @@ public class MainActivity extends Activity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
+
+    /**
+     * Used to display icon from selected pet
+     */
+    private int mActionBarIcon;
 
     /**
      * Googly pet view
@@ -86,9 +92,11 @@ public class MainActivity extends Activity
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mTitle = getTitle();
 
-        mLastFaceDetectedPosition = new float[]{0, 0};
+        mTitle = getTitle();
+        mActionBarIcon = R.drawable.ic_launcher;
+
+                mLastFaceDetectedPosition = new float[]{0, 0};
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
@@ -115,6 +123,7 @@ public class MainActivity extends Activity
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
+        actionBar.setIcon(mActionBarIcon);
     }
 
 
@@ -235,9 +244,23 @@ public class MainActivity extends Activity
     }
 
     @Override
-    public void onNavigationDrawerItemSelected(GooglyPet petSelected) {
-        mGooglyPetView.setModel(petSelected);
-        mTitle = getResources().getString(petSelected.getNameId());
+    public void onNavigationDrawerItemSelected(GooglyPetEntry petSelected) {
+        final int googlyName = petSelected.getName();
+        GooglyPet model = null;
+        switch (googlyName) {
+            case R.string.googly_zebra_name:
+                model = GooglyPetFactory.createGooglyZebra();
+                break;
+            case R.string.googly_gnu_name:
+                model = GooglyPetFactory.createGooglyGnu();
+                break;
+            case R.string.googly_hippo_name:
+                model = GooglyPetFactory.createGooglyHippo();
+                break;
+        }
+        mGooglyPetView.setModel(model);
+        mTitle = getResources().getString(googlyName);
+        mActionBarIcon = petSelected.getBlackAndWhiteIcon();
     }
 
 
