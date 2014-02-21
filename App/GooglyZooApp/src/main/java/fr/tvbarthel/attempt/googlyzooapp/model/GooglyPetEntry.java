@@ -16,16 +16,22 @@ public class GooglyPetEntry {
      */
     private int mPetBlackAndWhiteIc;
 
+    /**
+     * colored icon
+     */
+    private int mPetColoredIc;
 
     /**
      * constructor for a drawer entry model
      *
      * @param name              pet name res
      * @param whiteAndBlackIcon white and black icon res
+     * @param coloredIc         colored icon res
      */
-    public GooglyPetEntry(int name, int whiteAndBlackIcon) {
+    public GooglyPetEntry(int name, int whiteAndBlackIcon, int coloredIc) {
         mPetName = name;
         mPetBlackAndWhiteIc = whiteAndBlackIcon;
+        mPetColoredIc = coloredIc;
     }
 
     /**
@@ -40,4 +46,7 @@ public class GooglyPetEntry {
         return mPetBlackAndWhiteIc;
     }
 
+    public int getColoredIcon() {
+        return mPetColoredIc;
+    }
 }

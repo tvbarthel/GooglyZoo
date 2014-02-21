@@ -23,9 +23,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPet;
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPetEntry;
-import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPetFactory;
 import fr.tvbarthel.attempt.googlyzooapp.ui.adapter.GooglyPetEntryAdapter;
 
 /**
@@ -88,9 +86,12 @@ public class NavigationDrawerFragment extends Fragment {
 
         //init available pets
         mAvailableGooglyPets = new ArrayList<GooglyPetEntry>();
-        mAvailableGooglyPets.add(new GooglyPetEntry(R.string.googly_zebra_name, R.drawable.zebra_ic));
-        mAvailableGooglyPets.add(new GooglyPetEntry(R.string.googly_gnu_name, R.drawable.gnu_ic));
-        mAvailableGooglyPets.add(new GooglyPetEntry(R.string.googly_hippo_name, R.drawable.hippo_ic));
+        mAvailableGooglyPets.add(
+                new GooglyPetEntry(R.string.googly_zebra_name, R.drawable.zebra_ic_bw, R.drawable.zebra_ic));
+        mAvailableGooglyPets.add(
+                new GooglyPetEntry(R.string.googly_gnu_name, R.drawable.gnu_ic_bw, R.drawable.gnu_ic));
+        mAvailableGooglyPets.add(
+                new GooglyPetEntry(R.string.googly_hippo_name, R.drawable.hippo_ic_bw, R.drawable.hippo_ic));
     }
 
     @Override
@@ -206,6 +207,7 @@ public class NavigationDrawerFragment extends Fragment {
         }
         if (mDrawerListView != null) {
             mDrawerListView.setItemChecked(position, true);
+
         }
     }
 

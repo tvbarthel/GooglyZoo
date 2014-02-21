@@ -24,18 +24,24 @@ public class GooglyPetEntryAdapter extends ArrayAdapter<GooglyPetEntry> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final GooglyPetEntry currentGooglyPetEntry = getItem(position);
+        final GooglyPetEntry petEntry = getItem(position);
         final Context context = getContext();
         final LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = convertView;
 
         if (rowView == null) {
             rowView = inflater.inflate(R.layout.googly_drawer_entry, parent, false);
+            //set pet name
             ((TextView) rowView.findViewById(R.id.googly_drawer_pet_name)).setText(
-                    context.getResources().getString(currentGooglyPetEntry.getName()));
-            ((ImageView) rowView.findViewById(R.id.googly_drawer_pet_ic)).setImageDrawable(
-                    context.getResources().getDrawable(currentGooglyPetEntry.getBlackAndWhiteIcon()));
+                    context.getResources().getString(petEntry.getName()));
         }
+
+        //can't reuse old view since activated state could have changed
+        final boolean isSelected = rowView.isActivated();
+        final int ic = isSelected ? petEntry.getColoredIcon() : petEntry.getBlackAndWhiteIcon();
+        //set blackandwhite icon if not selected else colored icon
+        ((ImageView) rowView.findViewById(R.id.googly_drawer_pet_ic)).setImageDrawable(
+                context.getResources().getDrawable(ic));
 
 
         return rowView;
