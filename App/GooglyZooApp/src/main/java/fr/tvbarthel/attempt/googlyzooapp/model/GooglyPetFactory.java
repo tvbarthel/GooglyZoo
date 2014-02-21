@@ -30,9 +30,9 @@ public class GooglyPetFactory {
     /**
      * relative values for hippo's eyes position
      */
-    private static final float HIPPO_LEFT_EYE_X = 0.40f;
+    private static final float HIPPO_LEFT_EYE_X = 0.38f;
     private static final float HIPPO_LEFT_EYE_Y = 0.25f;
-    private static final float HIPPO_RIGHT_EYE_X = 0.60f;
+    private static final float HIPPO_RIGHT_EYE_X = 0.58f;
     private static final float HIPPO_RIGHT_EYE_Y = 0.25f;
     private static final float HIPPO_EYES_DIAMETER = 38f;
     private static final float HIPPO_BODY_PROPORTION = 0.79f;
