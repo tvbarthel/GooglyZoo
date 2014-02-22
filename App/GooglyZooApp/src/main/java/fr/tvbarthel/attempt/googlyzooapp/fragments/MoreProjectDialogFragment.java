@@ -30,14 +30,14 @@ public class MoreProjectDialogFragment extends DialogFragment {
 
         if (dialogView != null) {
 
-            dialogView.findViewById(R.id.dialog_more_apps_chase_whisply).setOnClickListener(new View.OnClickListener() {
+            dialogView.findViewById(R.id.dialog_more_projects_chasy).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     launchPlayStoreDetails(getString(R.string.dialog_more_fragment_chase_whisply_package_name));
                 }
             });
 
-            dialogView.findViewById(R.id.dialog_more_apps_simplethermometer).setOnClickListener(new View.OnClickListener() {
+            dialogView.findViewById(R.id.dialog_more_projects_simple_thermometer).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     launchPlayStoreDetails(getString(R.string.dialog_more_fragment_simplethermometer_package_name));
