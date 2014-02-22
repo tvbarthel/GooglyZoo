@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
+import fr.tvbarthel.attempt.googlyzooapp.fragments.MoreProjectDialogFragment;
+import fr.tvbarthel.attempt.googlyzooapp.fragments.NavigationDrawerFragment;
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPet;
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPetEntry;
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPetFactory;
@@ -79,7 +81,6 @@ public class MainActivity extends Activity
      */
     private float[] mLastFaceDetectedPosition;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,13 +97,12 @@ public class MainActivity extends Activity
         mTitle = getTitle();
         mActionBarIcon = R.drawable.ic_launcher;
 
-                mLastFaceDetectedPosition = new float[]{0, 0};
+        mLastFaceDetectedPosition = new float[]{0, 0};
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
-
     }
 
     @Override
@@ -142,11 +142,11 @@ public class MainActivity extends Activity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            return true;
+        } else if (id == R.id.action_more_projects) {
+            (new MoreProjectDialogFragment()).show(getFragmentManager(),"dialog_more_projects");
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -238,7 +238,6 @@ public class MainActivity extends Activity
     private void animateEye(float[] faceDetectedPosition) {
 
         mGooglyPetView.animatePetEyes(faceDetectedPosition, mLastFaceDetectedPosition);
-
         mLastFaceDetectedPosition[0] = faceDetectedPosition[0];
         mLastFaceDetectedPosition[1] = faceDetectedPosition[1];
     }

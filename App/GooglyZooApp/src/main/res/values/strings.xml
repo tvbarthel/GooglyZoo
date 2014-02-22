@@ -13,4 +13,18 @@
     <string name="googly_gnu_name">Gnoogly</string>
     <string name="googly_hippo_name">Hippoogly</string>
 
+    <!-- Action bar !-->
+    <string name="googly_drawer_instruction">Select your pet</string>
+    <string name="googly_action_more_projects">MORE PROJECTS</string>
+
+    <!-- More project dialog Fragment!-->
+    <string name="dialog_more_fragment_title">Find more projects</string>
+    <string name="dialog_more_fragment_chasy_title">Chase Whisply</string>
+    <string name="dialog_more_fragment_simple_thermometer_title">Simple Thermometer</string>
+    <string name="dialog_more_fragment_simplethermometer_package_name">fr.tvbarthel.apps.simplethermometer</string>
+    <string name="dialog_more_fragment_chase_whisply_package_name">fr.tvbarthel.games.chasewhisply</string>
+
+    <!-- dialog fragments -->
+    <string name="dialog_ok">OK</string>
+
 </resources>

@@ -101,7 +101,7 @@ public class GooglyPetView extends ImageView {
     }
 
     public void setModel(GooglyPet model) {
-        if(mGooglyPetModel != null){
+        if (mGooglyPetModel != null) {
             mGooglyPetModel.removeListener(mListener);
             mGooglyPetModel = null;
         }
@@ -112,7 +112,7 @@ public class GooglyPetView extends ImageView {
     private void initModel() {
         //add listener
         mGooglyPetModel.addListener(mListener);
-        this.setImageDrawable(getResources().getDrawable(mGooglyPetModel.getPetRes()));
+        this.setImageResource(mGooglyPetModel.getPetRes());
         mEyesAnimator.setTarget(mGooglyPetModel);
     }
 
