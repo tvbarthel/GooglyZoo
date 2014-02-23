@@ -18,7 +18,12 @@ public class FacePreviewDetection extends SurfaceView implements SurfaceHolder.C
     private SurfaceHolder mHolder;
     private Camera mCamera;
 
-    public FacePreviewDetection(Context context, Camera camera) {
+    /**
+     * fire faceDectection state (enable | not supported)
+     */
+    private FacePreviewDetectionCallback mCallback;
+
+    public FacePreviewDetection(Context context, Camera camera, FacePreviewDetectionCallback callback) {
         super(context);
         mCamera = camera;
 
@@ -26,6 +31,8 @@ public class FacePreviewDetection extends SurfaceView implements SurfaceHolder.C
         // underlying surface is created and destroyed.
         mHolder = getHolder();
         mHolder.addCallback(this);
+
+        mCallback = callback;
     }
 
     public void surfaceCreated(SurfaceHolder holder) {
@@ -110,5 +117,14 @@ public class FacePreviewDetection extends SurfaceView implements SurfaceHolder.C
         } else {
             Log.e(TAG, "Face Detection not supported");
         }
+    }
+
+    public interface FacePreviewDetectionCallback {
+        /**
+         * fired when face detection as started
+         *
+         * @param supported true if faceDectection is supported, otherwise false
+         */
+        public void onFaceDetectionStart(boolean supported);
     }
 }

@@ -14,8 +14,11 @@
     <string name="googly_hippo_name">Hippoogly</string>
 
     <!-- Action bar !-->
-    <string name="googly_drawer_instruction">Select your pet</string>
+    <string name="googly_drawer_instruction">Select your Googly Pet</string>
     <string name="googly_action_more_projects">MORE PROJECTS</string>
+
+    <!-- Toast !-->
+    <string name="face_detection_not_support">Sorry, your device doesn\'t support Face Detection :(</string>
 
     <!-- More project dialog Fragment!-->
     <string name="dialog_more_fragment_title">Find more projects</string>

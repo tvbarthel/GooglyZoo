@@ -16,6 +16,7 @@ import android.view.Surface;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import fr.tvbarthel.attempt.googlyzooapp.fragments.MoreProjectDialogFragment;
 import fr.tvbarthel.attempt.googlyzooapp.fragments.NavigationDrawerFragment;
@@ -282,7 +283,15 @@ public class MainActivity extends Activity
                 MainActivity.this.finish();
             }
 
-            mFaceDetectionPreview = new FacePreviewDetection(MainActivity.this, mCamera);
+            mFaceDetectionPreview = new FacePreviewDetection(MainActivity.this, mCamera, new FacePreviewDetection.FacePreviewDetectionCallback() {
+                @Override
+                public void onFaceDetectionStart(boolean supported) {
+                    if (!supported) {
+                        Toast.makeText(MainActivity.this,
+                                R.string.face_detection_not_support, Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
             mPreview = (FrameLayout) findViewById(R.id.container);
 
             mPreview.addView(mFaceDetectionPreview);
