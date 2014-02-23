@@ -11,21 +11,20 @@ public class FaceDetectionUtils {
 
     /**
      * process values from FaceDetectionListener to retrieve relative position
+     * based on cameraPreview dimension and current device rotation
      *
-     * @param face
-     * @param cameraPreview
-     * @param currentOrientation
-     * @return
+     * @param facePosition       detected face
+     * @param cameraPreview      camera preview used for faceDectection
+     * @param currentOrientation current device rotation
+     * @return normalized relative position in a direct orthonormal system
      */
     public static float[] getRelativeHeadPosition(
-            Camera.Face face, View cameraPreview, int currentOrientation) {
+            float[] facePosition, View cameraPreview, int currentOrientation) {
 
         float[] relativePosition = new float[2];
 
-        final float cameraCoordinateX = (float) face.rect.centerX() /
-                ((float) cameraPreview.getMeasuredWidth());
-        final float cameraCoordinateY = (float) face.rect.centerY() /
-                ((float) cameraPreview.getMeasuredHeight());
+        final float cameraCoordinateX = facePosition[0] / ((float) cameraPreview.getMeasuredWidth());
+        final float cameraCoordinateY = facePosition[1] / ((float) cameraPreview.getMeasuredHeight());
 
         switch (currentOrientation) {
             case Surface.ROTATION_0:

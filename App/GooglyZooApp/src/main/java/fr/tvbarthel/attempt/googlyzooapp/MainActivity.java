@@ -17,6 +17,7 @@ import android.widget.FrameLayout;
 
 import fr.tvbarthel.attempt.googlyzooapp.fragments.MoreProjectDialogFragment;
 import fr.tvbarthel.attempt.googlyzooapp.fragments.NavigationDrawerFragment;
+import fr.tvbarthel.attempt.googlyzooapp.listener.SmoothFaceDetectionListener;
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPet;
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPetEntry;
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPetFactory;
@@ -76,18 +77,13 @@ public class MainActivity extends Activity
      */
     private int mCurrentRotation;
 
-    /**
-     * last face detected position
-     */
-    private float[] mLastFaceDetectedPosition;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         //create view to display pet
-        mGooglyPetView = new GooglyPetView(this, GooglyPetFactory.createGooglyZebra());
+        mGooglyPetView = new GooglyPetView(this);
         mPetParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         mPetParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
 
@@ -96,8 +92,6 @@ public class MainActivity extends Activity
 
         mTitle = getTitle();
         mActionBarIcon = R.drawable.ic_launcher;
-
-        mLastFaceDetectedPosition = new float[]{0, 0};
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
@@ -146,7 +140,7 @@ public class MainActivity extends Activity
         if (id == R.id.action_settings) {
             return true;
         } else if (id == R.id.action_more_projects) {
-            (new MoreProjectDialogFragment()).show(getFragmentManager(),"dialog_more_projects");
+            (new MoreProjectDialogFragment()).show(getFragmentManager(), "dialog_more_projects");
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -230,17 +224,6 @@ public class MainActivity extends Activity
         }
     }
 
-    /**
-     * animate the googly pet view for eye motion
-     *
-     * @param faceDetectedPosition face detected
-     */
-    private void animateEye(float[] faceDetectedPosition) {
-
-        mGooglyPetView.animatePetEyes(faceDetectedPosition, mLastFaceDetectedPosition);
-        mLastFaceDetectedPosition[0] = faceDetectedPosition[0];
-        mLastFaceDetectedPosition[1] = faceDetectedPosition[1];
-    }
 
     @Override
     public void onNavigationDrawerItemSelected(GooglyPetEntry petSelected) {
@@ -285,14 +268,13 @@ public class MainActivity extends Activity
 
             mPreview.addView(mFaceDetectionPreview);
             mPreview.addView(mGooglyPetView, mPetParams);
-            mCamera.setFaceDetectionListener(new Camera.FaceDetectionListener() {
+            mCamera.setFaceDetectionListener(new SmoothFaceDetectionListener() {
                 @Override
-                public void onFaceDetection(Camera.Face[] faces, Camera camera) {
-                    if (faces.length > 0) {
-                        final float[] relativePosition = FaceDetectionUtils.getRelativeHeadPosition(
-                                faces[0], mFaceDetectionPreview, mCurrentRotation);
-                        animateEye(relativePosition);
-                    }
+                public void onSmoothFaceDetection(float[] smoothFacePosition) {
+                    //get relative position based on camera preview dimension and current rotation
+                    final float[] relativePosition = FaceDetectionUtils.getRelativeHeadPosition(
+                            smoothFacePosition, mFaceDetectionPreview, mCurrentRotation);
+                    mGooglyPetView.animatePetEyes(relativePosition);
                 }
             });
 
