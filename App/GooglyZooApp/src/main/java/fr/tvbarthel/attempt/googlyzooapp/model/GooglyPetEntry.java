@@ -7,6 +7,11 @@ package fr.tvbarthel.attempt.googlyzooapp.model;
 public class GooglyPetEntry {
 
     /**
+     * Pet id
+     */
+    private int mPetId;
+
+    /**
      * Pet name res
      */
     private int mPetName;
@@ -27,11 +32,13 @@ public class GooglyPetEntry {
      * @param name              pet name res
      * @param whiteAndBlackIcon white and black icon res
      * @param coloredIc         colored icon res
+     * @param petId             pet id from GooglyPetUtils
      */
-    public GooglyPetEntry(int name, int whiteAndBlackIcon, int coloredIc) {
+    public GooglyPetEntry(int name, int whiteAndBlackIcon, int coloredIc, int petId) {
         mPetName = name;
         mPetBlackAndWhiteIc = whiteAndBlackIcon;
         mPetColoredIc = coloredIc;
+        mPetId = petId;
     }
 
     /**
@@ -48,5 +55,9 @@ public class GooglyPetEntry {
 
     public int getColoredIcon() {
         return mPetColoredIc;
+    }
+
+    public int getPetId(){
+        return mPetId;
     }
 }

@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import fr.tvbarthel.attempt.googlyzooapp.R;
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPetEntry;
 import fr.tvbarthel.attempt.googlyzooapp.ui.adapter.GooglyPetEntryAdapter;
+import fr.tvbarthel.attempt.googlyzooapp.utils.GooglyPetUtils;
 import fr.tvbarthel.attempt.googlyzooapp.utils.SharedPreferencesUtils;
 
 /**
@@ -82,11 +83,20 @@ public class NavigationDrawerFragment extends Fragment {
         //init available pets
         mAvailableGooglyPets = new ArrayList<GooglyPetEntry>();
         mAvailableGooglyPets.add(
-                new GooglyPetEntry(R.string.googly_zebra_name, R.drawable.zebra_ic_bw, R.drawable.zebra_ic));
+                new GooglyPetEntry(R.string.googly_zebra_name,
+                        R.drawable.zebra_ic_bw,
+                        R.drawable.zebra_ic,
+                        GooglyPetUtils.GOOGLY_PET_ZEBRA));
         mAvailableGooglyPets.add(
-                new GooglyPetEntry(R.string.googly_gnu_name, R.drawable.gnu_ic_bw, R.drawable.gnu_ic));
+                new GooglyPetEntry(R.string.googly_gnu_name,
+                        R.drawable.gnu_ic_bw,
+                        R.drawable.gnu_ic,
+                        GooglyPetUtils.GOOGLY_PET_GNU));
         mAvailableGooglyPets.add(
-                new GooglyPetEntry(R.string.googly_hippo_name, R.drawable.hippo_ic_bw, R.drawable.hippo_ic));
+                new GooglyPetEntry(R.string.googly_hippo_name,
+                        R.drawable.hippo_ic_bw,
+                        R.drawable.hippo_ic,
+                        GooglyPetUtils.GOOGLY_PET_HIPPO));
     }
 
     @Override

@@ -20,7 +20,6 @@ import android.widget.FrameLayout;
 import fr.tvbarthel.attempt.googlyzooapp.fragments.MoreProjectDialogFragment;
 import fr.tvbarthel.attempt.googlyzooapp.fragments.NavigationDrawerFragment;
 import fr.tvbarthel.attempt.googlyzooapp.listener.SmoothFaceDetectionListener;
-import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPet;
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPetEntry;
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPetFactory;
 import fr.tvbarthel.attempt.googlyzooapp.ui.GooglyPetView;
@@ -255,22 +254,8 @@ public class MainActivity extends Activity
     @Override
     public void onNavigationDrawerItemSelected(GooglyPetEntry petSelected) {
         final int googlyName = petSelected.getName();
-        GooglyPet model = null;
-        switch (googlyName) {
-            case R.string.googly_zebra_name:
-                model = GooglyPetFactory.createGooglyZebra();
-                mSelectedGooglyPet = GooglyPetUtils.GOOGLY_PET_ZEBRA;
-                break;
-            case R.string.googly_gnu_name:
-                model = GooglyPetFactory.createGooglyGnu();
-                mSelectedGooglyPet = GooglyPetUtils.GOOGLY_PET_GNU;
-                break;
-            case R.string.googly_hippo_name:
-                model = GooglyPetFactory.createGooglyHippo();
-                mSelectedGooglyPet = GooglyPetUtils.GOOGLY_PET_HIPPO;
-                break;
-        }
-        mGooglyPetView.setModel(model);
+        mSelectedGooglyPet = petSelected.getPetId();
+        mGooglyPetView.setModel(GooglyPetFactory.createGooglyPet(mSelectedGooglyPet));
         mTitle = getResources().getString(googlyName);
         mActionBarIcon = petSelected.getBlackAndWhiteIcon();
     }
