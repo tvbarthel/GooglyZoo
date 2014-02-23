@@ -27,6 +27,11 @@ public class GooglyPetEntry {
     private int mPetColoredIc;
 
     /**
+     * use to know if the entry is selected or not
+     */
+    private boolean mIsSelected;
+
+    /**
      * constructor for a drawer entry model
      *
      * @param name              pet name res
@@ -39,6 +44,7 @@ public class GooglyPetEntry {
         mPetBlackAndWhiteIc = whiteAndBlackIcon;
         mPetColoredIc = coloredIc;
         mPetId = petId;
+        mIsSelected = false;
     }
 
     /**
@@ -57,7 +63,15 @@ public class GooglyPetEntry {
         return mPetColoredIc;
     }
 
-    public int getPetId(){
+    public int getPetId() {
         return mPetId;
+    }
+
+    public boolean isSelected() {
+        return mIsSelected;
+    }
+
+    public void selected(boolean selected) {
+        mIsSelected = selected;
     }
 }

@@ -97,6 +97,8 @@ public class NavigationDrawerFragment extends Fragment {
                         R.drawable.hippo_ic_bw,
                         R.drawable.hippo_ic,
                         GooglyPetUtils.GOOGLY_PET_HIPPO));
+
+
     }
 
     @Override
@@ -120,7 +122,7 @@ public class NavigationDrawerFragment extends Fragment {
 
         mDrawerListView.setAdapter(new
                 GooglyPetEntryAdapter(getActionBar().getThemedContext(), mAvailableGooglyPets));
-        mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
+        selectItem(mCurrentSelectedPosition);
         return mDrawerListView;
     }
 
@@ -201,8 +203,27 @@ public class NavigationDrawerFragment extends Fragment {
         });
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+        //selectItem(mCurrentSelectedPosition);
     }
 
+    /**
+     * restore selected entry according to last petId used
+     *
+     * @param petId
+     */
+    public void selectEntry(int petId) {
+        for (GooglyPetEntry entry : mAvailableGooglyPets) {
+            if (entry.getPetId() == petId) {
+                selectItem(mAvailableGooglyPets.indexOf(entry));
+            }
+        }
+    }
+
+    /**
+     * private behavior when an item is selected
+     *
+     * @param position
+     */
     private void selectItem(int position) {
         mCurrentSelectedPosition = position;
         if (mCallbacks != null) {
@@ -212,9 +233,21 @@ public class NavigationDrawerFragment extends Fragment {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
         }
         if (mDrawerListView != null) {
-            mDrawerListView.setItemChecked(position, true);
-
+            updateSelectedEntry(position);
         }
+    }
+
+    /**
+     * update selected state of entries
+     *
+     * @param position
+     */
+    private void updateSelectedEntry(int position) {
+        for (GooglyPetEntry entry : mAvailableGooglyPets) {
+            entry.selected(false);
+        }
+        mAvailableGooglyPets.get(position).selected(true);
+        mDrawerListView.setItemChecked(position, true);
     }
 
     @Override

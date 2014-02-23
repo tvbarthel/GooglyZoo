@@ -112,6 +112,8 @@ public class MainActivity extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        mNavigationDrawerFragment.selectEntry(mSelectedGooglyPet);
     }
 
     @Override
@@ -255,9 +257,11 @@ public class MainActivity extends Activity
     public void onNavigationDrawerItemSelected(GooglyPetEntry petSelected) {
         final int googlyName = petSelected.getName();
         mSelectedGooglyPet = petSelected.getPetId();
-        mGooglyPetView.setModel(GooglyPetFactory.createGooglyPet(mSelectedGooglyPet));
         mTitle = getResources().getString(googlyName);
         mActionBarIcon = petSelected.getBlackAndWhiteIcon();
+        if (mGooglyPetView != null) {
+            mGooglyPetView.setModel(GooglyPetFactory.createGooglyPet(mSelectedGooglyPet));
+        }
     }
 
 

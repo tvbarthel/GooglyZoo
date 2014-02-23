@@ -37,9 +37,9 @@ public class GooglyPetEntryAdapter extends ArrayAdapter<GooglyPetEntry> {
         }
 
         //can't reuse old view since activated state could have changed
-        final boolean isSelected = rowView.isActivated();
+        final boolean isSelected = petEntry.isSelected();
         final int ic = isSelected ? petEntry.getColoredIcon() : petEntry.getBlackAndWhiteIcon();
-        //set blackandwhite icon if not selected else colored icon
+        //set blackandwhite icon if not selected else colored one
         ((ImageView) rowView.findViewById(R.id.googly_drawer_pet_ic)).setImageDrawable(
                 context.getResources().getDrawable(ic));
 
