@@ -1,6 +1,7 @@
 package fr.tvbarthel.attempt.googlyzooapp.model;
 
 import fr.tvbarthel.attempt.googlyzooapp.R;
+import fr.tvbarthel.attempt.googlyzooapp.utils.GooglyPetUtils;
 
 /**
  * Created by tbarthel on 16/02/14.
@@ -36,6 +37,30 @@ public class GooglyPetFactory {
     private static final float HIPPO_RIGHT_EYE_Y = 0.25f;
     private static final float HIPPO_EYES_DIAMETER = 38f;
     private static final float HIPPO_BODY_PROPORTION = 0.79f;
+
+    /**
+     * Create a googly pet using pet identifier
+     *
+     * @param id id from GooglyPetUtils
+     * @return
+     */
+    public static GooglyPet createGooglyPet(int id) {
+        final GooglyPet createdPet;
+        switch (id) {
+            case GooglyPetUtils.GOOGLY_PET_ZEBRA:
+                createdPet = createGooglyZebra();
+                break;
+            case GooglyPetUtils.GOOGLY_PET_GNU:
+                createdPet = createGooglyGnu();
+                break;
+            case GooglyPetUtils.GOOGLY_PET_HIPPO:
+                createdPet = createGooglyHippo();
+                break;
+            default:
+                createdPet = createGooglyZebra();
+        }
+        return createdPet;
+    }
 
     /**
      * Create a Googly zebra

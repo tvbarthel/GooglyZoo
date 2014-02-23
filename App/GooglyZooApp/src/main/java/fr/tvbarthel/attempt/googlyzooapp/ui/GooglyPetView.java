@@ -1,7 +1,6 @@
 package fr.tvbarthel.attempt.googlyzooapp.ui;
 
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -44,13 +43,13 @@ public class GooglyPetView extends ImageView {
     private GooglyPetListener mListener;
 
     /**
-     * use to place pet well on the first detection
+     * use to place pet well when displayed for the first time
      * image view height is used for this placement and is available starting from the onLayout
      */
-    private boolean mFirstDetection;
+    private boolean mFirstDisplay;
 
 
-    public GooglyPetView(Context context) {
+    public GooglyPetView(Context context, GooglyPet model) {
         super(context);
 
         //init paint
@@ -72,7 +71,8 @@ public class GooglyPetView extends ImageView {
             }
         };
 
-        mFirstDetection = false;
+        setModel(model);
+        mFirstDisplay = true;
     }
 
     /**
@@ -81,9 +81,7 @@ public class GooglyPetView extends ImageView {
      * @param model GooglyPet from GoolyPetFactory
      */
     public void setModel(GooglyPet model) {
-        if (mGooglyPetModel == null) {
-            mFirstDetection = true;
-        } else {
+        if (mGooglyPetModel != null) {
             mGooglyPetModel.removeListener(mListener);
             mGooglyPetModel = null;
         }
@@ -129,16 +127,20 @@ public class GooglyPetView extends ImageView {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        if (mFirstDetection) {
-            moveUp();
-            mFirstDetection = false;
+        if (mFirstDisplay) {
+            moveDown();
+            mFirstDisplay = false;
+        } else if (!mGooglyPetModel.isAwake()) {
+            moveDown();
         }
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        mGooglyPetModel.removeListener(mListener);
+        if (mGooglyPetModel != null) {
+            mGooglyPetModel.removeListener(mListener);
+        }
     }
 
     /**

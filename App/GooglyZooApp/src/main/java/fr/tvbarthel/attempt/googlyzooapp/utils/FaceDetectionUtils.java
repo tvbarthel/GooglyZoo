@@ -1,6 +1,5 @@
 package fr.tvbarthel.attempt.googlyzooapp.utils;
 
-import android.hardware.Camera;
 import android.view.Surface;
 import android.view.View;
 

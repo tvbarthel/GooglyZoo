@@ -41,6 +41,11 @@ public class GooglyPet {
     private ArrayList<GooglyPetListener> mListenerList;
 
     /**
+     * pet wake only if its two eyes are opened
+     */
+    private boolean mIsAwake;
+
+    /**
      * Pet with two eyes
      *
      * @param petResId       res id
@@ -59,6 +64,9 @@ public class GooglyPet {
         mLeftEye = new GooglyEye(leftRelativeX, leftRelativeY, eyeDiameter);
         mRightEye = new GooglyEye(rightRelativeX, rightRelativeY, eyeDiameter);
 
+        //pet asleep at the beginning
+        mIsAwake = false;
+
         //init eyes event listener
         mEyesListener = new GooglyEyeListener() {
             @Override
@@ -66,6 +74,7 @@ public class GooglyPet {
                 GooglyEye otherEye = getSecondEye(src);
                 if (otherEye.isOpened()) {
                     //pet awakes
+                    mIsAwake = true;
                     fireAwakeEvent();
                 }
 
@@ -85,6 +94,7 @@ public class GooglyPet {
                 GooglyEye otherEye = getSecondEye(src);
                 if (otherEye.isClosed()) {
                     //pet fall asleep
+                    mIsAwake = false;
                     fireFallAsleepEvent();
                 }
             }
@@ -191,6 +201,10 @@ public class GooglyPet {
 
     public float getHeadProportion() {
         return 1.0f - mBodyProportion;
+    }
+
+    public boolean isAwake() {
+        return mIsAwake;
     }
 
 

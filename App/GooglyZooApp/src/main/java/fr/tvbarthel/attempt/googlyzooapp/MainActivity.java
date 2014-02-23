@@ -2,9 +2,11 @@ package fr.tvbarthel.attempt.googlyzooapp;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.hardware.Camera;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Gravity;
@@ -23,6 +25,8 @@ import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPetEntry;
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPetFactory;
 import fr.tvbarthel.attempt.googlyzooapp.ui.GooglyPetView;
 import fr.tvbarthel.attempt.googlyzooapp.utils.FaceDetectionUtils;
+import fr.tvbarthel.attempt.googlyzooapp.utils.GooglyPetUtils;
+import fr.tvbarthel.attempt.googlyzooapp.utils.SharedPreferencesUtils;
 
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -77,13 +81,25 @@ public class MainActivity extends Activity
      */
     private int mCurrentRotation;
 
+    /**
+     * id of the current pet
+     */
+    private int mSelectedGooglyPet;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //get last pet used
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        mSelectedGooglyPet = sp.getInt(SharedPreferencesUtils.PREF_USER_GOOGLY_PET_SELECTED,
+                GooglyPetUtils.GOOGLY_PET_ZEBRA);
+
         //create view to display pet
-        mGooglyPetView = new GooglyPetView(this);
+        mGooglyPetView = new GooglyPetView(this, GooglyPetFactory.createGooglyPet(mSelectedGooglyPet));
+
+        //set up params for googlyPetView
         mPetParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         mPetParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
 
@@ -110,6 +126,17 @@ public class MainActivity extends Activity
         super.onPause();
         releasePreview();
         releaseCamera();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        //store last selected pet
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt(SharedPreferencesUtils.PREF_USER_GOOGLY_PET_SELECTED, mSelectedGooglyPet);
+        editor.commit();
     }
 
     public void restoreActionBar() {
@@ -232,12 +259,15 @@ public class MainActivity extends Activity
         switch (googlyName) {
             case R.string.googly_zebra_name:
                 model = GooglyPetFactory.createGooglyZebra();
+                mSelectedGooglyPet = GooglyPetUtils.GOOGLY_PET_ZEBRA;
                 break;
             case R.string.googly_gnu_name:
                 model = GooglyPetFactory.createGooglyGnu();
+                mSelectedGooglyPet = GooglyPetUtils.GOOGLY_PET_GNU;
                 break;
             case R.string.googly_hippo_name:
                 model = GooglyPetFactory.createGooglyHippo();
+                mSelectedGooglyPet = GooglyPetUtils.GOOGLY_PET_HIPPO;
                 break;
         }
         mGooglyPetView.setModel(model);
