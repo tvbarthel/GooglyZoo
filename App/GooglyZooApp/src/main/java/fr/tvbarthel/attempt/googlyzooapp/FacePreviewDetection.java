@@ -64,12 +64,41 @@ public class FacePreviewDetection extends SurfaceView implements SurfaceHolder.C
         // start preview with new settings
         try {
             mCamera.setPreviewDisplay(mHolder);
+            //get best size for preview for landscape orientation
+            //based on whishes ratio;
+            Camera.Parameters params = mCamera.getParameters();
+            Camera.Size bestSize = getBestPreviewSize(w, h, params);
+            params.setPreviewSize(bestSize.width, bestSize.height);
+            mCamera.setParameters(params);
             mCamera.startPreview();
             startFaceDetection();
 
         } catch (Exception e) {
             Log.d(TAG, "Error starting camera preview: " + e.getMessage());
         }
+    }
+
+    /**
+     * give the best size based of wishes ratio
+     *
+     * @param width      wishes width
+     * @param height     wishes height
+     * @param parameters camera parameters to get supported preview sizes
+     * @return
+     */
+    private Camera.Size getBestPreviewSize(int width, int height, Camera.Parameters parameters) {
+        Camera.Size result = null;
+        float wishesRatio = (float) width / (float) height;
+        float dif = Float.MAX_VALUE;
+        for (Camera.Size size : parameters.getSupportedPreviewSizes()) {
+            final float newDif = Math.abs(wishesRatio - (float) size.width / (float) size.height);
+            if (newDif < dif) {
+                result = size;
+                dif = newDif;
+            }
+        }
+        return result;
+
     }
 
     private void startFaceDetection() {
