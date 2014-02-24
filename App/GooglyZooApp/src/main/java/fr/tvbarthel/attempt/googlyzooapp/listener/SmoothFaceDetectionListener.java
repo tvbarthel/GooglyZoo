@@ -39,7 +39,7 @@ public abstract class SmoothFaceDetectionListener implements Camera.FaceDetectio
     /**
      * duration of face transition between two known positions
      */
-    private static final int FACE_MOTION_DURATION_IN_MILLI = 300;
+    private static final int FACE_MOTION_DURATION_IN_MILLI = 100;
 
     /**
      * listener which apply smooth motion between old face position and the new one
