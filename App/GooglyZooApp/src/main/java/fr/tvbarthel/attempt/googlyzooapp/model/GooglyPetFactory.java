@@ -39,6 +39,16 @@ public class GooglyPetFactory {
     private static final float HIPPO_BODY_PROPORTION = 0.79f;
 
     /**
+     * relative values for bee's eyes position
+     */
+    private static final float BEE_LEFT_EYE_X = 0.40f;
+    private static final float BEE_LEFT_EYE_Y = 0.30f;
+    private static final float BEE_RIGHT_EYE_X = 0.60f;
+    private static final float BEE_RIGHT_EYE_Y = 0.30f;
+    private static final float BEE_EYES_DIAMETER = 38f;
+    private static final float BEE_BODY_PROPORTION = 0.74f;
+
+    /**
      * Create a googly pet using pet identifier
      *
      * @param id id from GooglyPetUtils
@@ -55,6 +65,10 @@ public class GooglyPetFactory {
                 break;
             case GooglyPetUtils.GOOGLY_PET_HIPPO:
                 createdPet = createGooglyHippo();
+                break;
+
+            case GooglyPetUtils.GOOGLY_PET_BEE:
+                createdPet = createGooglyBee();
                 break;
             default:
                 createdPet = createGooglyZebra();
@@ -78,6 +92,11 @@ public class GooglyPetFactory {
                 ZERBA_BODY_PROPORTION);
     }
 
+    /**
+     * Create a Googly Gnu
+     *
+     * @return googly gnu
+     */
     public static GooglyPet createGooglyGnu() {
         return new GooglyPet(
                 R.drawable.gnu,
@@ -89,6 +108,11 @@ public class GooglyPetFactory {
                 GNU_BODY_PROPORTION);
     }
 
+    /**
+     * Create a Googly Hippo
+     *
+     * @return googly hippo
+     */
     public static GooglyPet createGooglyHippo() {
         return new GooglyPet(
                 R.drawable.hippo,
@@ -98,5 +122,21 @@ public class GooglyPetFactory {
                 HIPPO_RIGHT_EYE_Y,
                 HIPPO_EYES_DIAMETER,
                 HIPPO_BODY_PROPORTION);
+    }
+
+    /**
+     * Create a Googly Bee
+     *
+     * @return googly bee
+     */
+    public static GooglyPet createGooglyBee() {
+        return new GooglyPet(
+                R.drawable.bee,
+                BEE_LEFT_EYE_X,
+                BEE_LEFT_EYE_Y,
+                BEE_RIGHT_EYE_X,
+                BEE_RIGHT_EYE_Y,
+                BEE_EYES_DIAMETER,
+                BEE_BODY_PROPORTION);
     }
 }
