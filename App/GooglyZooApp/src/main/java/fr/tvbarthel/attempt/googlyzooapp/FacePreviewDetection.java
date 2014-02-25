@@ -95,17 +95,22 @@ public class FacePreviewDetection extends SurfaceView implements SurfaceHolder.C
      */
     private Camera.Size getBestPreviewSize(int width, int height, Camera.Parameters parameters) {
         Camera.Size result = null;
-        float wishesRatio = (float) width / (float) height;
-        float dif = Float.MAX_VALUE;
-        for (Camera.Size size : parameters.getSupportedPreviewSizes()) {
-            final float newDif = Math.abs(wishesRatio - (float) size.width / (float) size.height);
-            if (newDif < dif) {
-                result = size;
-                dif = newDif;
+        final Camera.Parameters p = mCamera.getParameters();
+        for (Camera.Size size : p.getSupportedPreviewSizes()) {
+            if (size.width <= width && size.height <= height) {
+                if (result == null) {
+                    result = size;
+                } else {
+                    final int resultArea = result.width * result.height;
+                    final int newArea = size.width * size.height;
+
+                    if (newArea > resultArea) {
+                        result = size;
+                    }
+                }
             }
         }
         return result;
-
     }
 
     private void startFaceDetection() {
