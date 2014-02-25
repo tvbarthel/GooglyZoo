@@ -38,11 +38,6 @@ public class GooglyPetView extends ImageView {
     private GooglyPet mGooglyPetModel;
 
     /**
-     * Googly pet event listener to update view on pet events
-     */
-    private GooglyPetListener mListener;
-
-    /**
      * use to place pet well when displayed for the first time
      * image view height is used for this placement and is available starting from the onLayout
      */
@@ -57,20 +52,6 @@ public class GooglyPetView extends ImageView {
         mPaint.setStrokeWidth(15f);
         mPaint.setColor(Color.BLACK);
 
-        //init pet event listener
-        mListener = new GooglyPetListener() {
-
-            @Override
-            public void onAwake() {
-                moveUp();
-            }
-
-            @Override
-            public void onFallAsleep() {
-                moveDown();
-            }
-        };
-
         setModel(model);
         mFirstDisplay = true;
     }
@@ -81,16 +62,8 @@ public class GooglyPetView extends ImageView {
      * @param model GooglyPet from GoolyPetFactory
      */
     public void setModel(GooglyPet model) {
-        if (mGooglyPetModel != null) {
-            mGooglyPetModel.removeListener(mListener);
-            mGooglyPetModel = null;
-        }
-
         //update model
         mGooglyPetModel = model;
-
-        //add listener
-        mGooglyPetModel.addListener(mListener);
 
         //update pet skin
         this.setImageResource(mGooglyPetModel.getPetRes());
@@ -138,15 +111,13 @@ public class GooglyPetView extends ImageView {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if (mGooglyPetModel != null) {
-            mGooglyPetModel.removeListener(mListener);
-        }
+
     }
 
     /**
      * animate the view to move down from 70% of its height
      */
-    private void moveDown() {
+    public void moveDown() {
         ObjectAnimator trans = ObjectAnimator.ofFloat(GooglyPetView.this, "translationY", GooglyPetView.this.getHeight() * mGooglyPetModel.getBodyProportion());
         trans.setInterpolator(new DecelerateInterpolator());
         trans.setDuration(300);
@@ -157,7 +128,7 @@ public class GooglyPetView extends ImageView {
     /**
      * animate the view to move up to 25% of its height
      */
-    private void moveUp() {
+    public void moveUp() {
         ObjectAnimator trans = ObjectAnimator.ofFloat(GooglyPetView.this, "translationY", GooglyPetView.this.getHeight() * mGooglyPetModel.getHeadProportion());
         trans.setInterpolator(new DecelerateInterpolator());
         trans.setDuration(300);

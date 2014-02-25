@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import fr.tvbarthel.attempt.googlyzooapp.fragments.MoreProjectDialogFragment;
 import fr.tvbarthel.attempt.googlyzooapp.fragments.NavigationDrawerFragment;
+import fr.tvbarthel.attempt.googlyzooapp.listener.GooglyPetListener;
 import fr.tvbarthel.attempt.googlyzooapp.listener.SmoothFaceDetectionListener;
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPet;
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPetEntry;
@@ -61,6 +62,11 @@ public class MainActivity extends Activity
      * Googly pet model
      */
     private GooglyPet mGooglyPet;
+
+    /**
+     * Googly pet listener
+     */
+    private GooglyPetListener mGooglyPetListener;
 
     /**
      * layout params used to center | bottom googly pet view
@@ -105,6 +111,20 @@ public class MainActivity extends Activity
         //init model
         mGooglyPet = GooglyPetFactory.createGooglyPet(mSelectedGooglyPet);
 
+        //init pet event listener
+        mGooglyPetListener = new GooglyPetListener() {
+
+            @Override
+            public void onAwake() {
+                mGooglyPetView.moveUp();
+            }
+
+            @Override
+            public void onFallAsleep() {
+                mGooglyPetView.moveDown();
+            }
+        };
+
         //set up params for googlyPetView
         mPetParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         mPetParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
@@ -127,16 +147,31 @@ public class MainActivity extends Activity
     protected void onResume() {
         super.onResume();
 
+        //register listener on googly pet
+        if (mGooglyPet != null) {
+            mGooglyPet.addListener(mGooglyPetListener);
+        }
+
         //create view to display pet
         mGooglyPetView = new GooglyPetView(this, mGooglyPet);
 
+        //start camera in background for avoiding black screen
         new CameraAsyncTask().execute();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+
+        //remove listener from googly pet
+        if (mGooglyPet != null) {
+            mGooglyPet.removeListener(mGooglyPetListener);
+        }
+
+        //release preview
         releasePreview();
+
+        //release camera for other app !
         releaseCamera();
     }
 
@@ -270,7 +305,18 @@ public class MainActivity extends Activity
         mSelectedGooglyPet = petSelected.getPetId();
         mTitle = getResources().getString(googlyName);
         mActionBarIcon = petSelected.getBlackAndWhiteIcon();
+
+        //remove listener from the old pet
+        if (mGooglyPet != null) {
+            mGooglyPet.removeListener(mGooglyPetListener);
+        }
+
+        //create the selected Googly pet
         mGooglyPet = GooglyPetFactory.createGooglyPet(mSelectedGooglyPet);
+
+        //register listener on the new pet
+        mGooglyPet.addListener(mGooglyPetListener);
+
         if (mGooglyPetView != null) {
             mGooglyPetView.setModel(mGooglyPet);
         }
