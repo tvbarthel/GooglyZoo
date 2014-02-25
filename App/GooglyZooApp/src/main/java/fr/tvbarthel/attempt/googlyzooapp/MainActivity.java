@@ -21,6 +21,7 @@ import android.widget.Toast;
 import fr.tvbarthel.attempt.googlyzooapp.fragments.MoreProjectDialogFragment;
 import fr.tvbarthel.attempt.googlyzooapp.fragments.NavigationDrawerFragment;
 import fr.tvbarthel.attempt.googlyzooapp.listener.SmoothFaceDetectionListener;
+import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPet;
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPetEntry;
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPetFactory;
 import fr.tvbarthel.attempt.googlyzooapp.ui.GooglyPetView;
@@ -55,6 +56,11 @@ public class MainActivity extends Activity
      * Googly pet view
      */
     private GooglyPetView mGooglyPetView;
+
+    /**
+     * Googly pet model
+     */
+    private GooglyPet mGooglyPet;
 
     /**
      * layout params used to center | bottom googly pet view
@@ -96,8 +102,8 @@ public class MainActivity extends Activity
         mSelectedGooglyPet = sp.getInt(SharedPreferencesUtils.PREF_USER_GOOGLY_PET_SELECTED,
                 GooglyPetUtils.GOOGLY_PET_ZEBRA);
 
-        //create view to display pet
-        mGooglyPetView = new GooglyPetView(this, GooglyPetFactory.createGooglyPet(mSelectedGooglyPet));
+        //init model
+        mGooglyPet = GooglyPetFactory.createGooglyPet(mSelectedGooglyPet);
 
         //set up params for googlyPetView
         mPetParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -120,6 +126,10 @@ public class MainActivity extends Activity
     @Override
     protected void onResume() {
         super.onResume();
+
+        //create view to display pet
+        mGooglyPetView = new GooglyPetView(this, mGooglyPet);
+
         new CameraAsyncTask().execute();
     }
 
@@ -260,8 +270,9 @@ public class MainActivity extends Activity
         mSelectedGooglyPet = petSelected.getPetId();
         mTitle = getResources().getString(googlyName);
         mActionBarIcon = petSelected.getBlackAndWhiteIcon();
+        mGooglyPet = GooglyPetFactory.createGooglyPet(mSelectedGooglyPet);
         if (mGooglyPetView != null) {
-            mGooglyPetView.setModel(GooglyPetFactory.createGooglyPet(mSelectedGooglyPet));
+            mGooglyPetView.setModel(mGooglyPet);
         }
     }
 
