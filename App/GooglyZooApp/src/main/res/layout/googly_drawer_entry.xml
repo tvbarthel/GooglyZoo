@@ -14,6 +14,7 @@
         android:background="@color/transparent_black"
         android:id="@+id/googly_drawer_pet_name"
         android:textColor="@color/white"
+        android:paddingBottom="5dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:paddingLeft="@dimen/activity_horizontal_margin_half"/>

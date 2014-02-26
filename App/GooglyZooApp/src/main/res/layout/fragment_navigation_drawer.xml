@@ -9,4 +9,5 @@
     android:divider="@android:color/transparent"
     android:dividerHeight="@dimen/navigation_drawer_list_divider_height"
     android:background="@color/transparent_grey"
+    android:scrollbarStyle="outsideInset"
     tools:context="fr.tvbarthel.attempt.googlyzooapp.fragments.NavigationDrawerFragment" />
