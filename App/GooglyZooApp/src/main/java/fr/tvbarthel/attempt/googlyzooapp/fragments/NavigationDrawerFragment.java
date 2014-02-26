@@ -103,10 +103,10 @@ public class NavigationDrawerFragment extends Fragment {
                         R.drawable.bee_ic,
                         GooglyPetUtils.GOOGLY_PET_BEE));
         mAvailableGooglyPets.add(
-                new GooglyPetEntry(R.string.googly_monkey_name,
-                        R.drawable.monkey_ic_bw,
-                        R.drawable.monkey_ic,
-                        GooglyPetUtils.GOOGLY_PET_MONKEY));
+                new GooglyPetEntry(R.string.googly_elk_name,
+                        R.drawable.elk_ic_bw,
+                        R.drawable.elk_ic,
+                        GooglyPetUtils.GOOGLY_PET_ELK));
         mAvailableGooglyPets.add(
                 new GooglyPetEntry(R.string.googly_elephant_name,
                         R.drawable.elephant_ic_bw,

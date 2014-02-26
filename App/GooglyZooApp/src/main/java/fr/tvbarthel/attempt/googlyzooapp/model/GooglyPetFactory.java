@@ -49,16 +49,6 @@ public class GooglyPetFactory {
     private static final float BEE_BODY_PROPORTION = 0.74f;
 
     /**
-     * relative values for monkey's eyes position
-     */
-    private static final float MONKEY_LEFT_EYE_X = 0.425f;
-    private static final float MONKEY_LEFT_EYE_Y = 0.30f;
-    private static final float MONKEY_RIGHT_EYE_X = 0.58f;
-    private static final float MONKEY_RIGHT_EYE_Y = 0.30f;
-    private static final float MONKEY_EYES_DIAMETER = 28f;
-    private static final float MONKEY_BODY_PROPORTION = 0.74f;
-
-    /**
      * relative values for elephant's eyes position
      */
     private static final float ELEPHANT_LEFT_EYE_X = 0.41f;
@@ -89,6 +79,16 @@ public class GooglyPetFactory {
     private static final float GOAT_BODY_PROPORTION = 0.67f;
 
     /**
+     * relative values for elk's eyes position
+     */
+    private static final float ELK_LEFT_EYE_X = 0.43f;
+    private static final float ELK_LEFT_EYE_Y = 0.40f;
+    private static final float ELK_RIGHT_EYE_X = 0.57f;
+    private static final float ELK_RIGHT_EYE_Y = 0.40f;
+    private static final float ELK_EYES_DIAMETER = 28f;
+    private static final float ELK_BODY_PROPORTION = 0.63f;
+
+    /**
      * Create a googly pet using pet identifier
      *
      * @param id id from GooglyPetUtils
@@ -109,9 +109,6 @@ public class GooglyPetFactory {
             case GooglyPetUtils.GOOGLY_PET_BEE:
                 createdPet = createGooglyBee();
                 break;
-            case GooglyPetUtils.GOOGLY_PET_MONKEY:
-                createdPet = createGooglyMonkey();
-                break;
             case GooglyPetUtils.GOOGLY_PET_ELEPHANT:
                 createdPet = createGooglyElephant();
                 break;
@@ -120,6 +117,9 @@ public class GooglyPetFactory {
                 break;
             case GooglyPetUtils.GOOGLY_PET_GOAT:
                 createdPet = createGooglyGoat();
+                break;
+            case GooglyPetUtils.GOOGLY_PET_ELK:
+                createdPet = createGooglyElk();
                 break;
             default:
                 createdPet = createGooglyZebra();
@@ -192,22 +192,6 @@ public class GooglyPetFactory {
     }
 
     /**
-     * Create a Googly Monkey
-     *
-     * @return googly monkey
-     */
-    public static GooglyPet createGooglyMonkey() {
-        return new GooglyPet(
-                R.drawable.monkey,
-                MONKEY_LEFT_EYE_X,
-                MONKEY_LEFT_EYE_Y,
-                MONKEY_RIGHT_EYE_X,
-                MONKEY_RIGHT_EYE_Y,
-                MONKEY_EYES_DIAMETER,
-                MONKEY_BODY_PROPORTION);
-    }
-
-    /**
      * Create a Googly Elephant
      *
      * @return googly elephant
@@ -253,5 +237,21 @@ public class GooglyPetFactory {
                 GOAT_RIGHT_EYE_Y,
                 GOAT_EYES_DIAMETER,
                 GOAT_BODY_PROPORTION);
+    }
+
+    /**
+     * Create a Googly Elk
+     *
+     * @return googly elk
+     */
+    public static GooglyPet createGooglyElk() {
+        return new GooglyPet(
+                R.drawable.elk,
+                ELK_LEFT_EYE_X,
+                ELK_LEFT_EYE_Y,
+                ELK_RIGHT_EYE_X,
+                ELK_RIGHT_EYE_Y,
+                ELK_EYES_DIAMETER,
+                ELK_BODY_PROPORTION);
     }
 }
