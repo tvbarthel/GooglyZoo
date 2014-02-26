@@ -59,6 +59,16 @@ public class GooglyPetFactory {
     private static final float MONKEY_BODY_PROPORTION = 0.74f;
 
     /**
+     * relative values for elephant's eyes position
+     */
+    private static final float ELEPHANT_LEFT_EYE_X = 0.41f;
+    private static final float ELEPHANT_LEFT_EYE_Y = 0.26f;
+    private static final float ELEPHANT_RIGHT_EYE_X = 0.59f;
+    private static final float ELEPHANT_RIGHT_EYE_Y = 0.26f;
+    private static final float ELEPHANT_EYES_DIAMETER = 38f;
+    private static final float ELEPHANT_BODY_PROPORTION = 0.78f;
+
+    /**
      * Create a googly pet using pet identifier
      *
      * @param id id from GooglyPetUtils
@@ -81,6 +91,9 @@ public class GooglyPetFactory {
                 break;
             case GooglyPetUtils.GOOGLY_PET_MONKEY:
                 createdPet = createGooglyMonkey();
+                break;
+            case GooglyPetUtils.GOOGLY_PET_ELEPHANT:
+                createdPet = createGooglyElephant();
                 break;
             default:
                 createdPet = createGooglyZebra();
@@ -166,5 +179,21 @@ public class GooglyPetFactory {
                 MONKEY_RIGHT_EYE_Y,
                 MONKEY_EYES_DIAMETER,
                 MONKEY_BODY_PROPORTION);
+    }
+
+    /**
+     * Create a Googly Monkey
+     *
+     * @return googly monkey
+     */
+    public static GooglyPet createGooglyElephant() {
+        return new GooglyPet(
+                R.drawable.elephant,
+                ELEPHANT_LEFT_EYE_X,
+                ELEPHANT_LEFT_EYE_Y,
+                ELEPHANT_RIGHT_EYE_X,
+                ELEPHANT_RIGHT_EYE_Y,
+                ELEPHANT_EYES_DIAMETER,
+                ELEPHANT_BODY_PROPORTION);
     }
 }
