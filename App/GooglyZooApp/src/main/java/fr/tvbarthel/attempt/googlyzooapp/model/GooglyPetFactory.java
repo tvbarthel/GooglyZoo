@@ -79,6 +79,16 @@ public class GooglyPetFactory {
     private static final float COW_BODY_PROPORTION = 0.78f;
 
     /**
+     * relative values for goat's eyes position
+     */
+    private static final float GOAT_LEFT_EYE_X = 0.40f;
+    private static final float GOAT_LEFT_EYE_Y = 0.37f;
+    private static final float GOAT_RIGHT_EYE_X = 0.60f;
+    private static final float GOAT_RIGHT_EYE_Y = 0.37f;
+    private static final float GOAT_EYES_DIAMETER = 36f;
+    private static final float GOAT_BODY_PROPORTION = 0.67f;
+
+    /**
      * Create a googly pet using pet identifier
      *
      * @param id id from GooglyPetUtils
@@ -107,6 +117,9 @@ public class GooglyPetFactory {
                 break;
             case GooglyPetUtils.GOOGLY_PET_COW:
                 createdPet = createGooglyCow();
+                break;
+            case GooglyPetUtils.GOOGLY_PET_GOAT:
+                createdPet = createGooglyGoat();
                 break;
             default:
                 createdPet = createGooglyZebra();
@@ -195,9 +208,9 @@ public class GooglyPetFactory {
     }
 
     /**
-     * Create a Googly Monkey
+     * Create a Googly Elephant
      *
-     * @return googly monkey
+     * @return googly elephant
      */
     public static GooglyPet createGooglyElephant() {
         return new GooglyPet(
@@ -211,9 +224,9 @@ public class GooglyPetFactory {
     }
 
     /**
-     * Create a Googly Monkey
+     * Create a Googly Cow
      *
-     * @return googly monkey
+     * @return googly cow
      */
     public static GooglyPet createGooglyCow() {
         return new GooglyPet(
@@ -224,5 +237,21 @@ public class GooglyPetFactory {
                 COW_RIGHT_EYE_Y,
                 COW_EYES_DIAMETER,
                 COW_BODY_PROPORTION);
+    }
+
+    /**
+     * Create a Googly Goat
+     *
+     * @return googly goat
+     */
+    public static GooglyPet createGooglyGoat() {
+        return new GooglyPet(
+                R.drawable.goat,
+                GOAT_LEFT_EYE_X,
+                GOAT_LEFT_EYE_Y,
+                GOAT_RIGHT_EYE_X,
+                GOAT_RIGHT_EYE_Y,
+                GOAT_EYES_DIAMETER,
+                GOAT_BODY_PROPORTION);
     }
 }

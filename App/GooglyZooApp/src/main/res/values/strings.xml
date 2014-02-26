@@ -16,6 +16,7 @@
     <string name="googly_monkey_name">Monkoogly</string>
     <string name="googly_elephant_name">Elephoogly</string>
     <string name="googly_cow_name">Cowoogly</string>
+    <string name="googly_goat_name">Goatoogly</string>
 
     <!-- Action bar !-->
     <string name="googly_drawer_instruction">Select your Googly Pet</string>
