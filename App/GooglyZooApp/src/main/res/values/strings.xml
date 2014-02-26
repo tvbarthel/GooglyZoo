@@ -13,6 +13,7 @@
     <string name="googly_gnu_name">Gnoogly</string>
     <string name="googly_hippo_name">Hippoogly</string>
     <string name="googly_bee_name">Boogly</string>
+    <string name="googly_monkey_name">Monkoogly</string>
 
     <!-- Action bar !-->
     <string name="googly_drawer_instruction">Select your Googly Pet</string>
