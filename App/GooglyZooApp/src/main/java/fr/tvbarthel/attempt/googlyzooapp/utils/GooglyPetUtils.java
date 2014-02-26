@@ -34,4 +34,9 @@ public class GooglyPetUtils {
      * elephant
      */
     public static final int GOOGLY_PET_ELEPHANT = 0x00000006;
+
+    /**
+     * cow
+     */
+    public static final int GOOGLY_PET_COW = 0x00000007;
 }
