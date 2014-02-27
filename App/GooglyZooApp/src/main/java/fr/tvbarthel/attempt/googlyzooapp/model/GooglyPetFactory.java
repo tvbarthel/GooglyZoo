@@ -98,6 +98,16 @@ public class GooglyPetFactory {
     private static final float HORSE_EYES_DIAMETER = 38f;
     private static final float HORSE_BODY_PROPORTION = 0.70f;
 
+    /**
+     * relative values for pig's eyes position
+     */
+    private static final float PIG_LEFT_EYE_X = 0.38f;
+    private static final float PIG_LEFT_EYE_Y = 0.23f;
+    private static final float PIG_RIGHT_EYE_X = 0.61f;
+    private static final float PIG_RIGHT_EYE_Y = 0.23f;
+    private static final float PIG_EYES_DIAMETER = 38f;
+    private static final float PIG_BODY_PROPORTION = 0.80f;
+
 
     /**
      * Create a googly pet using pet identifier
@@ -134,6 +144,9 @@ public class GooglyPetFactory {
                 break;
             case GooglyPetUtils.GOOGLY_PET_HORSE:
                 createdPet = createGooglyHorse();
+                break;
+            case GooglyPetUtils.GOOGLY_PET_PIG:
+                createdPet = createGooglyPig();
                 break;
             default:
                 createdPet = createGooglyZebra();
@@ -283,5 +296,21 @@ public class GooglyPetFactory {
                 HORSE_RIGHT_EYE_Y,
                 HORSE_EYES_DIAMETER,
                 HORSE_BODY_PROPORTION);
+    }
+
+    /**
+     * Create a Googly pig
+     *
+     * @return googly pig
+     */
+    public static GooglyPet createGooglyPig() {
+        return new GooglyPet(
+                R.drawable.pig,
+                PIG_LEFT_EYE_X,
+                PIG_LEFT_EYE_Y,
+                PIG_RIGHT_EYE_X,
+                PIG_RIGHT_EYE_Y,
+                PIG_EYES_DIAMETER,
+                PIG_BODY_PROPORTION);
     }
 }
