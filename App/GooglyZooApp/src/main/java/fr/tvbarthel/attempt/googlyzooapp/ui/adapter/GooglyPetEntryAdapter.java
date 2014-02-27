@@ -31,10 +31,11 @@ public class GooglyPetEntryAdapter extends ArrayAdapter<GooglyPetEntry> {
 
         if (rowView == null) {
             rowView = inflater.inflate(R.layout.googly_drawer_entry, parent, false);
-            //set pet name
-            ((TextView) rowView.findViewById(R.id.googly_drawer_pet_name)).setText(
-                    context.getResources().getString(petEntry.getName()));
         }
+
+        //set pet name 
+        ((TextView) rowView.findViewById(R.id.googly_drawer_pet_name)).setText(
+                context.getResources().getString(petEntry.getName()));
 
         //can't reuse old view since activated state could have changed
         final boolean isSelected = petEntry.isSelected();
