@@ -17,6 +17,7 @@
     <string name="googly_drawer_instruction">Select your Googly Pet</string>
     <string name="googly_action_more_projects">MORE PROJECTS</string>
     <string name="action_license_title">License</string>
+    <string name="action_about_title">About</string>
 
     <!-- Toast !-->
     <string name="face_detection_not_support">Sorry, your device doesn\'t support Face Detection :(</string>
@@ -33,6 +34,11 @@
     <string name="dialog_license_content">
         Copyright © 2013 tvbarthel.\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program. If not, see http://www.gnu.org/licenses/.
     </string>
+
+    <!-- About dialog Fragment -->
+    <string name="dialog_about_title">About</string>
+    <string name="dialog_about_content">GooglyZoo is an open-source application developed by Thomas \"tbarthel\" Barthélémy, a student in Computer Engineering.\n\nCode source: https://github.com/tvbarthel/GooglyZoo\n\nThis application is an head tracking attempt based on SmoothFaceDetectionListerner https://github.com/tvbarthel/GooglyZoo/blob/master/App/GooglyZooApp/src/main/java/fr/tvbarthel/attempt/googlyzooapp/listener/SmoothFaceDetectionListener.java</string>
+
 
     <!-- dialog fragments -->
     <string name="dialog_ok">OK</string>

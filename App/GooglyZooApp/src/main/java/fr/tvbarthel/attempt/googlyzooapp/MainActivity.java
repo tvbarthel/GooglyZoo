@@ -18,6 +18,8 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import fr.tvbarthel.attempt.googlyzooapp.fragments.AboutDialogFragment;
+import fr.tvbarthel.attempt.googlyzooapp.fragments.LicenseDialogFragment;
 import fr.tvbarthel.attempt.googlyzooapp.fragments.MoreProjectDialogFragment;
 import fr.tvbarthel.attempt.googlyzooapp.fragments.NavigationDrawerFragment;
 import fr.tvbarthel.attempt.googlyzooapp.listener.GooglyPetListener;
@@ -211,11 +213,14 @@ public class MainActivity extends Activity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_license) {
+            (new LicenseDialogFragment()).show(getFragmentManager(), "dialog_license");
             return true;
         } else if (id == R.id.action_more_projects) {
             (new MoreProjectDialogFragment()).show(getFragmentManager(), "dialog_more_projects");
             return true;
+        } else if (id == R.id.action_about) {
+            (new AboutDialogFragment()).show(getFragmentManager(), "dialog_about");
         }
         return super.onOptionsItemSelected(item);
     }

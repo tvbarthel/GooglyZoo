@@ -2,8 +2,7 @@
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/transparent_grey">
+            android:layout_height="match_parent" >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/dialog_license_title"
+            android:text="@string/dialog_about_title"
             android:id="@+id/textView"
             android:fontFamily="sans-serif-light"
             android:textColor="@color/holo_blue"/>
@@ -24,11 +23,10 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/dialog_license_content"
-            android:id="@+id/dialog_license_content"
+            android:text="@string/dialog_about_content"
+            android:id="@+id/dialog_about_content"
             android:fontFamily="sans-serif-light"
-            android:layout_marginTop="8dp"
-            android:textColor="@color/black"/>
+            android:layout_marginTop="8dp"/>
 
     </LinearLayout>
 
