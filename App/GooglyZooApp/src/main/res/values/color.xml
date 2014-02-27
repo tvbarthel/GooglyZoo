@@ -13,6 +13,6 @@
     <color name="holo_dark_red">#CC0000</color>
     <color name="background_grey">#e5e5e5</color>
     <color name="text_view_grey">#888888</color>
-    <color name="transparent_grey">#cccc</color>
+    <color name="transparent_grey">#88cccccc</color>
     <color name="transparent_black">#55000000</color>
 </resources>
