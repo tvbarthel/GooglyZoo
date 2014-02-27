@@ -33,7 +33,7 @@ public class GooglyPetEntryAdapter extends ArrayAdapter<GooglyPetEntry> {
             rowView = inflater.inflate(R.layout.googly_drawer_entry, parent, false);
         }
 
-        //set pet name 
+        //set pet name
         ((TextView) rowView.findViewById(R.id.googly_drawer_pet_name)).setText(
                 context.getResources().getString(petEntry.getName()));
 

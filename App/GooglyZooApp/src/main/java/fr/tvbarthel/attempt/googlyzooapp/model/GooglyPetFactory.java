@@ -89,6 +89,17 @@ public class GooglyPetFactory {
     private static final float ELK_BODY_PROPORTION = 0.63f;
 
     /**
+     * relative values for horse's eyes position
+     */
+    private static final float HORSE_LEFT_EYE_X = 0.39f;
+    private static final float HORSE_LEFT_EYE_Y = 0.34f;
+    private static final float HORSE_RIGHT_EYE_X = 0.605f;
+    private static final float HORSE_RIGHT_EYE_Y = 0.34f;
+    private static final float HORSE_EYES_DIAMETER = 38f;
+    private static final float HORSE_BODY_PROPORTION = 0.70f;
+
+
+    /**
      * Create a googly pet using pet identifier
      *
      * @param id id from GooglyPetUtils
@@ -120,6 +131,9 @@ public class GooglyPetFactory {
                 break;
             case GooglyPetUtils.GOOGLY_PET_ELK:
                 createdPet = createGooglyElk();
+                break;
+            case GooglyPetUtils.GOOGLY_PET_HORSE:
+                createdPet = createGooglyHorse();
                 break;
             default:
                 createdPet = createGooglyZebra();
@@ -253,5 +267,21 @@ public class GooglyPetFactory {
                 ELK_RIGHT_EYE_Y,
                 ELK_EYES_DIAMETER,
                 ELK_BODY_PROPORTION);
+    }
+
+    /**
+     * Create a Googly Horse
+     *
+     * @return googly horse
+     */
+    public static GooglyPet createGooglyHorse() {
+        return new GooglyPet(
+                R.drawable.horse,
+                HORSE_LEFT_EYE_X,
+                HORSE_LEFT_EYE_Y,
+                HORSE_RIGHT_EYE_X,
+                HORSE_RIGHT_EYE_Y,
+                HORSE_EYES_DIAMETER,
+                HORSE_BODY_PROPORTION);
     }
 }
