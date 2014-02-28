@@ -55,5 +55,10 @@ public class GooglyPetUtils {
      */
     public static final int GOOGLY_PET_PIG = 0x00000010;
 
+    /**
+     * triceratops
+     */
+    public static final int GOOGLY_PET_TRICERATOPS = 0x00000011;
+
 
 }

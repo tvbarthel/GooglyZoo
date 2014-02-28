@@ -108,6 +108,16 @@ public class GooglyPetFactory {
     private static final float PIG_EYES_DIAMETER = 38f;
     private static final float PIG_BODY_PROPORTION = 0.80f;
 
+    /**
+     * relative values for triceratops' eyes position
+     */
+    private static final float TRICERATOPS_LEFT_EYE_X = 0.37f;
+    private static final float TRICERATOPS_LEFT_EYE_Y = 0.36f;
+    private static final float TRICERATOPS_RIGHT_EYE_X = 0.62f;
+    private static final float TRICERATOPS_RIGHT_EYE_Y = 0.36f;
+    private static final float TRICERATOPS_EYES_DIAMETER = 38f;
+    private static final float TRICERATOPS_BODY_PROPORTION = 0.67f;
+
 
     /**
      * Create a googly pet using pet identifier
@@ -147,6 +157,9 @@ public class GooglyPetFactory {
                 break;
             case GooglyPetUtils.GOOGLY_PET_PIG:
                 createdPet = createGooglyPig();
+                break;
+            case GooglyPetUtils.GOOGLY_PET_TRICERATOPS:
+                createdPet = createGooglyTriceratops();
                 break;
             default:
                 createdPet = createGooglyZebra();
@@ -312,5 +325,21 @@ public class GooglyPetFactory {
                 PIG_RIGHT_EYE_Y,
                 PIG_EYES_DIAMETER,
                 PIG_BODY_PROPORTION);
+    }
+
+    /**
+     * Create a Googly triceratops
+     *
+     * @return googly triceratops
+     */
+    public static GooglyPet createGooglyTriceratops() {
+        return new GooglyPet(
+                R.drawable.triceratops,
+                TRICERATOPS_LEFT_EYE_X,
+                TRICERATOPS_LEFT_EYE_Y,
+                TRICERATOPS_RIGHT_EYE_X,
+                TRICERATOPS_RIGHT_EYE_Y,
+                TRICERATOPS_EYES_DIAMETER,
+                TRICERATOPS_BODY_PROPORTION);
     }
 }
