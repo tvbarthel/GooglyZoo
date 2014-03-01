@@ -7,4 +7,8 @@
           android:title="@string/action_about_title"
           android:orderInCategory="90"
           android:showAsAction="never" />
+    <item android:id="@+id/action_beta"
+          android:title="@string/action_beta_title"
+          android:orderInCategory="80"
+          android:showAsAction="never" />
 </menu>

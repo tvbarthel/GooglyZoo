@@ -100,6 +100,26 @@ public class MainActivity extends Activity
      */
     private int mSelectedGooglyPet;
 
+    /**
+     * Smooth listener
+     */
+    private SmoothFaceDetectionListener mSmoothFaceDetectionListener;
+
+    /**
+     * Basic listener
+     */
+    private Camera.FaceDetectionListener mBasicFaceDetectionListener;
+
+    /**
+     * current listener
+     */
+    private Camera.FaceDetectionListener mCurrentListener;
+
+    /**
+     * use to manage Toast well
+     */
+    private Toast mToast;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,6 +163,30 @@ public class MainActivity extends Activity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
         mNavigationDrawerFragment.selectEntry(mSelectedGooglyPet);
+
+        mSmoothFaceDetectionListener = new SmoothFaceDetectionListener() {
+            @Override
+            public void onSmoothFaceDetection(float[] smoothFacePosition) {
+                //get relative position based on camera preview dimension and current rotation
+                final float[] relativePosition = FaceDetectionUtils.getRelativeHeadPosition(
+                        smoothFacePosition, mFaceDetectionPreview, mCurrentRotation);
+                mGooglyPetView.animatePetEyes(relativePosition);
+            }
+        };
+
+        mBasicFaceDetectionListener = new Camera.FaceDetectionListener() {
+            @Override
+            public void onFaceDetection(Camera.Face[] faces, Camera camera) {
+                if (faces.length > 0) {
+                    final float[] relativePosition = FaceDetectionUtils.getRelativeHeadPosition(
+                            new float[]{faces[0].rect.centerX(), faces[0].rect.centerY()},
+                            mFaceDetectionPreview, mCurrentRotation);
+                    mGooglyPetView.animatePetEyes(relativePosition);
+                }
+            }
+        };
+
+        mCurrentListener = mSmoothFaceDetectionListener;
     }
 
     @Override
@@ -221,6 +265,11 @@ public class MainActivity extends Activity
             return true;
         } else if (id == R.id.action_about) {
             (new AboutDialogFragment()).show(getFragmentManager(), "dialog_about");
+            return true;
+        } else if (id == R.id.action_beta) {
+            mCurrentListener = switchListener();
+            mCamera.setFaceDetectionListener(mCurrentListener);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -303,6 +352,34 @@ public class MainActivity extends Activity
         }
     }
 
+    /**
+     * switch listener
+     *
+     * @return unused listener
+     */
+    private Camera.FaceDetectionListener switchListener() {
+        if (mCurrentListener == mSmoothFaceDetectionListener) {
+            makeToast(R.string.basic_face_detection);
+            return mBasicFaceDetectionListener;
+        } else {
+            makeToast(R.string.smooth_face_detection);
+            return mSmoothFaceDetectionListener;
+        }
+    }
+
+    /**
+     * avoid Toast queue, only one Toast for this activity
+     *
+     * @param text toast message
+     */
+    private void makeToast(int text) {
+        if (mToast != null) {
+            mToast.cancel();
+        }
+        mToast = Toast.makeText(this, text, Toast.LENGTH_LONG);
+        mToast.show();
+    }
+
 
     @Override
     public void onNavigationDrawerItemSelected(GooglyPetEntry petSelected) {
@@ -349,8 +426,7 @@ public class MainActivity extends Activity
                 @Override
                 public void onFaceDetectionStart(boolean supported) {
                     if (!supported) {
-                        Toast.makeText(MainActivity.this,
-                                R.string.face_detection_not_support, Toast.LENGTH_LONG).show();
+                        makeToast(R.string.face_detection_not_support);
                     }
                 }
             });
@@ -358,16 +434,7 @@ public class MainActivity extends Activity
 
             mPreview.addView(mFaceDetectionPreview);
             mPreview.addView(mGooglyPetView, mPetParams);
-            mCamera.setFaceDetectionListener(new SmoothFaceDetectionListener() {
-                @Override
-                public void onSmoothFaceDetection(float[] smoothFacePosition) {
-                    //get relative position based on camera preview dimension and current rotation
-                    final float[] relativePosition = FaceDetectionUtils.getRelativeHeadPosition(
-                            smoothFacePosition, mFaceDetectionPreview, mCurrentRotation);
-                    mGooglyPetView.animatePetEyes(relativePosition);
-                }
-            });
-
+            mCamera.setFaceDetectionListener(mCurrentListener);
 
             setCameraDisplayOrientation(mCamera);
         }

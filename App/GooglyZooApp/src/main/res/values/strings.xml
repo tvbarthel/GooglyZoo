@@ -21,9 +21,12 @@
     <string name="googly_action_more_projects">MORE PROJECTS</string>
     <string name="action_license_title">License</string>
     <string name="action_about_title">About</string>
+    <string name="action_beta_title">Beta</string>
 
     <!-- Toast !-->
     <string name="face_detection_not_support">Sorry, your device doesn\'t support Face Detection :(</string>
+    <string name="basic_face_detection">SmoothFaceDetection OFF</string>
+    <string name="smooth_face_detection">SmoothFaceDetection ON</string>
 
     <!-- More project dialog Fragment!-->
     <string name="dialog_more_fragment_title">Find more projects</string>
