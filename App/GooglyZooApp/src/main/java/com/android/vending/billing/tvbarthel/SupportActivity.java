@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -58,6 +59,11 @@ public class SupportActivity extends Activity {
     private IabHelper.QueryInventoryFinishedListener mQueryInventoryListener;
 
     /**
+     * Listener for purchase consumption when already owned
+     */
+    private IabHelper.OnConsumeFinishedListener mConsumeListener;
+
+    /**
      * id for  espresso product
      */
     private static final String SKU_ESPRESSO = "espresso";
@@ -92,6 +98,16 @@ public class SupportActivity extends Activity {
      */
     private boolean mIsIabRequestingCoffeeList;
 
+    /**
+     * Remember the selected item since purchase == null when already owned
+     */
+    private int mSelectedPurchase;
+
+    /**
+     * Purchase list
+     */
+    private ArrayList<Purchase> mPurchaseList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,6 +123,17 @@ public class SupportActivity extends Activity {
 
         //set adapter
         mCoffeeListView.setAdapter(mCoffeeAdapter);
+        mCoffeeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(TAG, "coffee selected for purchase : " + mCoffeeAdapter.getItem(position).getTitle());
+                mSelectedPurchase = position;
+                mIabHelper.launchPurchaseFlow(SupportActivity.this,
+                        mCoffeeAdapter.getItem(position).getSku(),
+                        REQUEST_CODE_SUPPORT_DEV,
+                        mPurchaseFinishedListener);
+            }
+        });
 
         String base64EncodedPublicKey = getResources().getString(R.string.support_key);
         mIabHelper = new IabHelper(this, base64EncodedPublicKey);
@@ -117,12 +144,17 @@ public class SupportActivity extends Activity {
         //Iab not started
         mIsIabStarted = false;
         mIsIabRequestingCoffeeList = false;
+        mSelectedPurchase = -1;
+        mPurchaseList = new ArrayList<Purchase>();
 
         //init listener for purchase callback
         initPurchaseListener();
 
         //init listener for inventory callback
         initInventoryListener();
+
+        //init listener for purchase consumption
+        initConsumeListener();
 
         //start helper
         startIabHelper();
@@ -210,14 +242,46 @@ public class SupportActivity extends Activity {
                 // if we were disposed of in the meantime, quit.
                 if (mIabHelper == null) return;
 
-                if (result.isFailure()) {
-                    makeToast("Error purchasing: " + result);
-                    if (result.getResponse() == IabHelper.BILLING_RESPONSE_RESULT_ITEM_ALREADY_OWNED) {
-                        //consume and buy again
+                //if success, thanks the user
+                if (result.isSuccess()) {
+                    String success = getResources().getString(R.string.support_purchase_success);
+                    Log.d(TAG, success);
+                    makeToast(success);
+                } else if (result.getResponse() == IabHelper.BILLING_RESPONSE_RESULT_ITEM_ALREADY_OWNED) {
+                    //if purchase already owned consume it
+                    Log.d(TAG, "alreadyOwned !");
+                    if (mPurchaseList.get(mSelectedPurchase) != null) {
+                        Log.d(TAG, "start consumption");
+                        //workaround to get the purchase since info == null when already owned
+                        mIabHelper.consumeAsync(mPurchaseList.get(mSelectedPurchase), mConsumeListener);
                     }
-                    return;
+                } else {
+                    //display error
+                    makeToast(result.getMessage());
                 }
 
+            }
+        };
+    }
+
+    /**
+     * init callback for purchase consumption when purchase is already owned
+     */
+    private void initConsumeListener() {
+        mConsumeListener = new IabHelper.OnConsumeFinishedListener() {
+            @Override
+            public void onConsumeFinished(Purchase purchase, IabResult result) {
+                //if consume or not owned (due to cache from API v3, not owned purchase can be
+                // asked for consumption) buy roduct again
+                if (result.isSuccess() ||
+                        result.getResponse() == IabHelper.BILLING_RESPONSE_RESULT_ITEM_NOT_OWNED) {
+                    Log.d(TAG, "pruchase consume : " + purchase.getSku());
+                    Log.d(TAG, "Buy it again : " + purchase.getOriginalJson());
+                    mIabHelper.launchPurchaseFlow(SupportActivity.this,
+                            purchase.getSku(),
+                            REQUEST_CODE_SUPPORT_DEV,
+                            mPurchaseFinishedListener);
+                }
             }
         };
     }
@@ -240,6 +304,7 @@ public class SupportActivity extends Activity {
                 if (inv != null && inv.hasDetails(SKU_ESPRESSO)) {
                     //clear the list
                     mCoffeeAdapter.clear();
+                    mPurchaseList.clear();
 
                     //get purchase details
                     SkuDetails espressoDetails = inv.getSkuDetails(SKU_ESPRESSO);
@@ -247,6 +312,7 @@ public class SupportActivity extends Activity {
 
                     //add espresso to the coffee list
                     mCoffeeAdapter.add(espressoDetails);
+                    mPurchaseList.add(inv.getPurchase(SKU_ESPRESSO));
 
                     //TODO remove when more purchase will be available
                     mCoffeeAdapter.add(espressoDetails);
