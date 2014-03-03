@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/support_card">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/support_entry_title"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin_half"
+        android:fontFamily="sans-serif-light"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/support_entry_description"
+        android:layout_below="@+id/support_entry_title"
+        android:textStyle="italic"
+        android:textColor="@color/transparent_black"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/support_entry_price"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginBottom="@dimen/activity_vertical_margin_half"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/support_entry_price"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin_half"/>
+
+</RelativeLayout>

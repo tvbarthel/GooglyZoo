@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/card_grey"
+                android:layout_marginTop="?android:attr/actionBarSize">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/support_title"
+        android:id="@+id/support_title"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"/>
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/support_purchase_list"
+        android:layout_below="@+id/support_title"
+        android:layout_centerHorizontal="true"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="@dimen/support_list_divider_height"
+        android:padding="@dimen/support_list_padding"
+        android:scrollbarStyle="outsideOverlay"/>
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/support_progressbar"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/support_error"
+        android:id="@+id/support_error_placeholder"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center"
+        android:gravity="center_horizontal"
+        android:visibility="gone"/>
+
+</RelativeLayout>
