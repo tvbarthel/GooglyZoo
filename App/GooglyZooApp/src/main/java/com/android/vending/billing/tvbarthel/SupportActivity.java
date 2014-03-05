@@ -1,9 +1,11 @@
 package com.android.vending.billing.tvbarthel;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -244,9 +246,7 @@ public class SupportActivity extends Activity {
 
                 //if success, thanks the user
                 if (result.isSuccess()) {
-                    String success = getResources().getString(R.string.support_purchase_success);
-                    Log.d(TAG, success);
-                    makeToast(success);
+                    purchaseSuccess(info);
                 } else if (result.getResponse() == IabHelper.BILLING_RESPONSE_RESULT_ITEM_ALREADY_OWNED) {
                     //if purchase already owned consume it
                     Log.d(TAG, "alreadyOwned !");
@@ -363,5 +363,23 @@ public class SupportActivity extends Activity {
                 requestCoffeeList();
             }
         });
+    }
+
+    /**
+     * dialog to thanks user for his support
+     */
+    private void purchaseSuccess(Purchase info) {
+        AlertDialog.Builder build = new AlertDialog.Builder(this);
+        build.setPositiveButton("Thanks !", null);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        View thanksView = inflater.inflate(R.layout.support_thanks, null);
+        if (thanksView != null) {
+            final TextView thanksMessage =
+                    (TextView) thanksView.findViewById(R.id.support_thanks_message);
+            thanksMessage.setText(String.format(
+                    getResources().getString(R.string.support_thanks), info.getSku()));
+            build.setView(thanksView);
+            build.create().show();
+        }
     }
 }
