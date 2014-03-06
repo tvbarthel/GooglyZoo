@@ -66,9 +66,24 @@ public class SupportActivity extends Activity {
     private IabHelper.OnConsumeFinishedListener mConsumeListener;
 
     /**
-     * id for  espresso product
+     * id for espresso product
      */
     private static final String SKU_ESPRESSO = "espresso";
+
+    /**
+     * id for cappuccino product
+     */
+    private static final String SKU_CAPPUCCINO = "cappuccino";
+
+    /**
+     * id for iced coffee product
+     */
+    private static final String SKU_ICED_COFFEE = "iced_coffee";
+
+    /**
+     * id for earl grey product
+     */
+    private static final String SKU_EARL_GREY = "earl_grey";
 
     /**
      * list view for coffee entry
@@ -228,6 +243,9 @@ public class SupportActivity extends Activity {
         //retrieve purchase list
         List<String> inventory = new ArrayList<String>();
         inventory.add(SKU_ESPRESSO);
+        inventory.add(SKU_CAPPUCCINO);
+        inventory.add(SKU_ICED_COFFEE);
+        inventory.add(SKU_EARL_GREY);
         mIsIabRequestingCoffeeList = true;
         mIabHelper.queryInventoryAsync(true, inventory, mQueryInventoryListener);
     }
@@ -272,7 +290,7 @@ public class SupportActivity extends Activity {
             @Override
             public void onConsumeFinished(Purchase purchase, IabResult result) {
                 //if consume or not owned (due to cache from API v3, not owned purchase can be
-                // asked for consumption) buy roduct again
+                // asked for consumption) buy product again
                 if (result.isSuccess() ||
                         result.getResponse() == IabHelper.BILLING_RESPONSE_RESULT_ITEM_NOT_OWNED) {
                     Log.d(TAG, "pruchase consume : " + purchase.getSku());
@@ -301,29 +319,52 @@ public class SupportActivity extends Activity {
                     mErrorPlaceholder.setVisibility(View.VISIBLE);
                     return;
                 }
-                if (inv != null && inv.hasDetails(SKU_ESPRESSO)) {
+                if (inv != null) {
                     //clear the list
                     mCoffeeAdapter.clear();
                     mPurchaseList.clear();
 
-                    //get purchase details
-                    SkuDetails espressoDetails = inv.getSkuDetails(SKU_ESPRESSO);
-                    Log.d(TAG, "espresso : " + espressoDetails.getDescription() + " " + espressoDetails.getPrice());
+                    //get espresso details
+                    if (inv.hasDetails(SKU_ESPRESSO)) {
+                        SkuDetails espressoDetails = inv.getSkuDetails(SKU_ESPRESSO);
+                        Log.d(TAG, "espresso : " + espressoDetails.getDescription() + " " + espressoDetails.getPrice());
 
-                    //add espresso to the coffee list
-                    mCoffeeAdapter.add(espressoDetails);
-                    mPurchaseList.add(inv.getPurchase(SKU_ESPRESSO));
+                        //add espresso to the coffee list
+                        mCoffeeAdapter.add(espressoDetails);
+                        mPurchaseList.add(inv.getPurchase(SKU_ESPRESSO));
+                    }
 
-                    //TODO remove when more purchase will be available
-                    mCoffeeAdapter.add(espressoDetails);
-                    mCoffeeAdapter.add(espressoDetails);
-                    mCoffeeAdapter.add(espressoDetails);
-                    mCoffeeAdapter.add(espressoDetails);
-                    mCoffeeAdapter.add(espressoDetails);
-                    mCoffeeAdapter.add(espressoDetails);
-                    mCoffeeAdapter.add(espressoDetails);
+                    //get earl grey details
+                    if (inv.hasDetails(SKU_EARL_GREY)) {
+                        SkuDetails earlGreyDetails = inv.getSkuDetails(SKU_EARL_GREY);
+                        Log.d(TAG, "earl grey : " + earlGreyDetails.getDescription() + " " + earlGreyDetails.getPrice());
+
+                        //add espresso to the coffee list
+                        mCoffeeAdapter.add(earlGreyDetails);
+                        mPurchaseList.add(inv.getPurchase(SKU_EARL_GREY));
+                    }
+
+                    //get cappuccino details
+                    if (inv.hasDetails(SKU_CAPPUCCINO)) {
+                        SkuDetails cappuccinoDetails = inv.getSkuDetails(SKU_CAPPUCCINO);
+                        Log.d(TAG, "cappuccino : " + cappuccinoDetails.getDescription() + " " + cappuccinoDetails.getPrice());
+
+                        //add espresso to the coffee list
+                        mCoffeeAdapter.add(cappuccinoDetails);
+                        mPurchaseList.add(inv.getPurchase(SKU_CAPPUCCINO));
+                    }
+
+                    //get iced coffee details
+                    if (inv.hasDetails(SKU_ICED_COFFEE)) {
+                        SkuDetails icedCoffeeDetails = inv.getSkuDetails(SKU_ICED_COFFEE);
+                        Log.d(TAG, "ice coffee : " + icedCoffeeDetails.getDescription() + " " + icedCoffeeDetails.getPrice());
+
+                        //add espresso to the coffee list
+                        mCoffeeAdapter.add(icedCoffeeDetails);
+                        mPurchaseList.add(inv.getPurchase(SKU_ICED_COFFEE));
+                    }
                 } else {
-                    Log.d(TAG, "inv empty or espresso no details");
+                    Log.d(TAG, "inv empty");
                 }
 
                 //hide loader
