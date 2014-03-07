@@ -2,6 +2,7 @@ package fr.tvbarthel.attempt.googlyzooapp;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.hardware.Camera;
 import android.os.AsyncTask;
@@ -17,6 +18,12 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.Toast;
+
+import com.android.vending.billing.IabHelper;
+import com.android.vending.billing.IabResult;
+import com.android.vending.billing.Inventory;
+import com.android.vending.billing.tvbarthel.SupportActivity;
+import com.android.vending.billing.tvbarthel.utils.SupportUtils;
 
 import fr.tvbarthel.attempt.googlyzooapp.fragments.AboutDialogFragment;
 import fr.tvbarthel.attempt.googlyzooapp.fragments.LicenseDialogFragment;
@@ -34,7 +41,6 @@ import fr.tvbarthel.attempt.googlyzooapp.utils.SharedPreferencesUtils;
 
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
-
     /**
      * Log cat
      */
@@ -120,6 +126,11 @@ public class MainActivity extends Activity
      */
     private Toast mToast;
 
+    /**
+     * used to know if user as donate
+     */
+    private boolean mHasDonate;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -192,6 +203,9 @@ public class MainActivity extends Activity
     @Override
     protected void onResume() {
         super.onResume();
+
+        //check donation history
+        checkDonation();
 
         //register listener on googly pet
         if (mGooglyPet != null) {
@@ -270,6 +284,8 @@ public class MainActivity extends Activity
             mCurrentListener = switchListener();
             mCamera.setFaceDetectionListener(mCurrentListener);
             return true;
+        } else if (id == R.id.action_support) {
+            startActivity(new Intent(this, SupportActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }
@@ -437,6 +453,59 @@ public class MainActivity extends Activity
             mCamera.setFaceDetectionListener(mCurrentListener);
 
             setCameraDisplayOrientation(mCamera);
+        }
+    }
+
+
+    /**
+     * Unlock small advantages for supporter, at least greet them
+     */
+    public void checkDonation() {
+        mHasDonate = false;
+        final SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        final int donateState = sharedPreferences.getInt(SupportUtils.SUPPORT_SHARED_KEY,
+                SupportUtils.SUPPORT_UNSET);
+        switch (donateState) {
+            case SupportUtils.SUPPORT_UNSET:
+                //retrieve info
+                final IabHelper helper = new IabHelper(getApplicationContext(),
+                        getResources().getString(R.string.support_key));
+                helper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+                    @Override
+                    public void onIabSetupFinished(IabResult result) {
+                        if (result.isSuccess()) {
+                            helper.queryInventoryAsync(new IabHelper.QueryInventoryFinishedListener() {
+                                @Override
+                                public void onQueryInventoryFinished(IabResult result, Inventory inv) {
+                                    if (result.isSuccess()) {
+                                        if (SupportUtils.hasPurchased(inv)) {
+                                            mHasDonate = true;
+                                            makeToast(R.string.support_has_supported_us);
+
+                                            //save it
+                                            final SharedPreferences.Editor editor = sharedPreferences.edit();
+                                            editor.putInt(SupportUtils.SUPPORT_SHARED_KEY, SupportUtils.SUPPORT_DONATE);
+                                            editor.commit();
+
+                                            //release resources
+                                            helper.dispose();
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+                break;
+            case SupportUtils.SUPPORT_DONATE:
+                //user already support us
+                mHasDonate = true;
+                makeToast(R.string.support_has_supported_us);
+                break;
+            case SupportUtils.SUPPORT_NOT_YET:
+                //user doesn't support us yet
+                break;
         }
     }
 

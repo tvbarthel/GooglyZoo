@@ -3,7 +3,9 @@ package com.android.vending.billing.tvbarthel;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +21,7 @@ import com.android.vending.billing.Inventory;
 import com.android.vending.billing.Purchase;
 import com.android.vending.billing.SkuDetails;
 import com.android.vending.billing.tvbarthel.adapter.SupportAdapter;
+import com.android.vending.billing.tvbarthel.utils.SupportUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,11 +37,6 @@ public class SupportActivity extends Activity {
      * dev purpose
      */
     private static final String TAG = SupportActivity.class.getName();
-
-    /**
-     * arbitrary request code for the purchase flow
-     */
-    private static final int REQUEST_CODE_SUPPORT_DEV = 42;
 
     /**
      * helper for in app billing
@@ -64,26 +62,6 @@ public class SupportActivity extends Activity {
      * Listener for purchase consumption when already owned
      */
     private IabHelper.OnConsumeFinishedListener mConsumeListener;
-
-    /**
-     * id for espresso product
-     */
-    private static final String SKU_ESPRESSO = "espresso";
-
-    /**
-     * id for cappuccino product
-     */
-    private static final String SKU_CAPPUCCINO = "cappuccino";
-
-    /**
-     * id for iced coffee product
-     */
-    private static final String SKU_ICED_COFFEE = "iced_coffee";
-
-    /**
-     * id for earl grey product
-     */
-    private static final String SKU_EARL_GREY = "earl_grey";
 
     /**
      * list view for coffee entry
@@ -147,7 +125,7 @@ public class SupportActivity extends Activity {
                 mSelectedPurchase = position;
                 mIabHelper.launchPurchaseFlow(SupportActivity.this,
                         mCoffeeAdapter.getItem(position).getSku(),
-                        REQUEST_CODE_SUPPORT_DEV,
+                        SupportUtils.REQUEST_CODE_SUPPORT_DEV,
                         mPurchaseFinishedListener);
             }
         });
@@ -242,10 +220,10 @@ public class SupportActivity extends Activity {
     private void requestCoffeeList() {
         //retrieve purchase list
         List<String> inventory = new ArrayList<String>();
-        inventory.add(SKU_ESPRESSO);
-        inventory.add(SKU_CAPPUCCINO);
-        inventory.add(SKU_ICED_COFFEE);
-        inventory.add(SKU_EARL_GREY);
+        inventory.add(SupportUtils.SKU_ESPRESSO);
+        inventory.add(SupportUtils.SKU_CAPPUCCINO);
+        inventory.add(SupportUtils.SKU_ICED_COFFEE);
+        inventory.add(SupportUtils.SKU_EARL_GREY);
         mIsIabRequestingCoffeeList = true;
         mIabHelper.queryInventoryAsync(true, inventory, mQueryInventoryListener);
     }
@@ -297,7 +275,7 @@ public class SupportActivity extends Activity {
                     Log.d(TAG, "Buy it again : " + purchase.getOriginalJson());
                     mIabHelper.launchPurchaseFlow(SupportActivity.this,
                             purchase.getSku(),
-                            REQUEST_CODE_SUPPORT_DEV,
+                            SupportUtils.REQUEST_CODE_SUPPORT_DEV,
                             mPurchaseFinishedListener);
                 }
             }
@@ -325,43 +303,43 @@ public class SupportActivity extends Activity {
                     mPurchaseList.clear();
 
                     //get espresso details
-                    if (inv.hasDetails(SKU_ESPRESSO)) {
-                        SkuDetails espressoDetails = inv.getSkuDetails(SKU_ESPRESSO);
+                    if (inv.hasDetails(SupportUtils.SKU_ESPRESSO)) {
+                        SkuDetails espressoDetails = inv.getSkuDetails(SupportUtils.SKU_ESPRESSO);
                         Log.d(TAG, "espresso : " + espressoDetails.getDescription() + " " + espressoDetails.getPrice());
 
                         //add espresso to the coffee list
                         mCoffeeAdapter.add(espressoDetails);
-                        mPurchaseList.add(inv.getPurchase(SKU_ESPRESSO));
+                        mPurchaseList.add(inv.getPurchase(SupportUtils.SKU_ESPRESSO));
                     }
 
                     //get earl grey details
-                    if (inv.hasDetails(SKU_EARL_GREY)) {
-                        SkuDetails earlGreyDetails = inv.getSkuDetails(SKU_EARL_GREY);
+                    if (inv.hasDetails(SupportUtils.SKU_EARL_GREY)) {
+                        SkuDetails earlGreyDetails = inv.getSkuDetails(SupportUtils.SKU_EARL_GREY);
                         Log.d(TAG, "earl grey : " + earlGreyDetails.getDescription() + " " + earlGreyDetails.getPrice());
 
                         //add espresso to the coffee list
                         mCoffeeAdapter.add(earlGreyDetails);
-                        mPurchaseList.add(inv.getPurchase(SKU_EARL_GREY));
+                        mPurchaseList.add(inv.getPurchase(SupportUtils.SKU_EARL_GREY));
                     }
 
                     //get cappuccino details
-                    if (inv.hasDetails(SKU_CAPPUCCINO)) {
-                        SkuDetails cappuccinoDetails = inv.getSkuDetails(SKU_CAPPUCCINO);
+                    if (inv.hasDetails(SupportUtils.SKU_CAPPUCCINO)) {
+                        SkuDetails cappuccinoDetails = inv.getSkuDetails(SupportUtils.SKU_CAPPUCCINO);
                         Log.d(TAG, "cappuccino : " + cappuccinoDetails.getDescription() + " " + cappuccinoDetails.getPrice());
 
                         //add espresso to the coffee list
                         mCoffeeAdapter.add(cappuccinoDetails);
-                        mPurchaseList.add(inv.getPurchase(SKU_CAPPUCCINO));
+                        mPurchaseList.add(inv.getPurchase(SupportUtils.SKU_CAPPUCCINO));
                     }
 
                     //get iced coffee details
-                    if (inv.hasDetails(SKU_ICED_COFFEE)) {
-                        SkuDetails icedCoffeeDetails = inv.getSkuDetails(SKU_ICED_COFFEE);
+                    if (inv.hasDetails(SupportUtils.SKU_ICED_COFFEE)) {
+                        SkuDetails icedCoffeeDetails = inv.getSkuDetails(SupportUtils.SKU_ICED_COFFEE);
                         Log.d(TAG, "ice coffee : " + icedCoffeeDetails.getDescription() + " " + icedCoffeeDetails.getPrice());
 
                         //add espresso to the coffee list
                         mCoffeeAdapter.add(icedCoffeeDetails);
-                        mPurchaseList.add(inv.getPurchase(SKU_ICED_COFFEE));
+                        mPurchaseList.add(inv.getPurchase(SupportUtils.SKU_ICED_COFFEE));
                     }
                 } else {
                     Log.d(TAG, "inv empty");
@@ -422,5 +400,11 @@ public class SupportActivity extends Activity {
             build.setView(thanksView);
             build.create().show();
         }
+
+        //save support act in shared preferences
+        final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        final SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(SupportUtils.SUPPORT_SHARED_KEY, SupportUtils.SUPPORT_DONATE);
+        editor.commit();
     }
 }

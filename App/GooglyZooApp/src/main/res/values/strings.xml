@@ -60,6 +60,7 @@
     <string name="support_key">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnPetUYL4QnMc5GCc+oVAMkw76+AXyNfPqNxEb7BoT9anp7l/ABnsgoPriHX/qX565B6JF7KaPfakfqsDCGGusErO8/HRUBU242Yn8TKzuhvanRjC/vqknkTITlTugr0YhWbd8G4eYrBa+PXEVU9l6V79EZpmNlYO3boGlb4gOWY/mjxH1Gu2ZF04wlO1+zBPlxu6E9zuI9/lmVI9H79yEPMYhs+RpAMr/Ygast0friRJbUxwL8ptn0xk0kAyiSdFn4NAp6jHEyRERD9bbt49re1bgYcfKhNZe6iCdUBX4TGUtFjMVExOml/sdXmPFBlUH8lfnT7BrsYeWBC23V8EQQIDAQAB</string>
     <string name="support_title">Coffee Dev</string>
     <string name="support_error">Fail to load coffee list. \n Please, check your network connection.</string>
+    <string name="support_has_supported_us">Thanks for your support!</string>
     <string name="support_thanks">Thanks for your support ! This %1$s will help us to develop more free content apps !</string>
 
 </resources>

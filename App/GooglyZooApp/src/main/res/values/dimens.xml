@@ -10,7 +10,7 @@
     <dimen name="navigation_drawer_width">320dp</dimen>
     <dimen name="navigation_drawer_entry_height">64dp</dimen>
     <dimen name="navigation_drawer_entry_margin">10dp</dimen>
-    <dimen name="navigation_drawer_list_divider_height">8dp</dimen>
+    <dimen name="navigation_drawer_list_divider_height">10dp</dimen>
     <dimen name="navigation_drawer_list_horizontal_padding">8dp</dimen>
     <dimen name="navigation_drawer_list_vertical_padding">8dp</dimen>
 
