@@ -11,8 +11,8 @@
           android:title="@string/action_beta_title"
           android:orderInCategory="80"
           android:showAsAction="never" />
-    <item android:id="@+id/action_support"
-          android:title="@string/action_name_support"
+    <item android:id="@+id/action_more_projects"
+          android:title="@string/googly_action_more_projects"
           android:orderInCategory="101"
-          android:showAsAction="never"/>
+          android:showAsAction="never" />
 </menu>

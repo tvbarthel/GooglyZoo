@@ -37,9 +37,16 @@ public class SupportAdapter extends ArrayAdapter<SkuDetails> {
             rowView = inflater.inflate(R.layout.support_entry, parent, false);
         }
 
-        ((TextView) rowView.findViewById(R.id.support_entry_title)).setText(currentSku.getTitle());
-        ((TextView) rowView.findViewById(R.id.support_entry_description)).setText(currentSku.getDescription());
-        ((TextView) rowView.findViewById(R.id.support_entry_price)).setText(currentSku.getPrice());
+        final String title = currentSku.getTitle();
+        ((TextView) rowView.findViewById(R.id.support_entry_title)).setText(
+                title.substring(0, title.indexOf("(")));
+        ((TextView) rowView.findViewById(R.id.support_entry_description)).setText(
+                currentSku.getDescription());
+        final String price = currentSku.getPrice();
+        final String amount = price.substring(0, price.length() - 1);
+        final String currency = price.substring(price.length() - 1, price.length());
+        ((TextView) rowView.findViewById(R.id.support_entry_price)).setText(amount);
+        ((TextView) rowView.findViewById(R.id.support_entry_currency)).setText(currency);
 
         return rowView;
     }

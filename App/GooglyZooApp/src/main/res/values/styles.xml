@@ -21,4 +21,12 @@
     <style name="GooglyActionBarWidget" parent="@android:style/Theme.Holo">
         <item name="android:popupMenuStyle">@style/GooglyPopupMenu</item>
     </style>
+
+    <!-- Support theme !-->
+    <style name="SupportTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/SupportTheme.ActionBarStyle</item>
+    </style>
+    <style name="SupportTheme.ActionBarStyle" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/holo_brown</item>
+    </style>
 </resources>

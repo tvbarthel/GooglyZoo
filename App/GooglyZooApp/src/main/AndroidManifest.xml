@@ -29,7 +29,9 @@
         <activity
             android:name="com.android.vending.billing.tvbarthel.SupportActivity"
             android:label="@string/activity_support_label"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/SupportTheme"
+            android:icon="@drawable/ic_support">
         </activity>
     </application>
 

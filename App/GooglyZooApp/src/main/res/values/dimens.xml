@@ -19,4 +19,5 @@
     <dimen name="support_list_padding">16dp</dimen>
     <dimen name="support_horizontal_margin">16dp</dimen>
     <dimen name="support_vertical_margin">16dp</dimen>
+    <dimen name="support_entry_padding">8dp</dimen>
 </resources>
