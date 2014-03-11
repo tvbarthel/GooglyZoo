@@ -15,8 +15,4 @@
     <color name="text_view_grey">#888888</color>
     <color name="transparent_grey">#88cccccc</color>
     <color name="transparent_black">#55000000</color>
-
-    <!-- Support !-->
-    <color name="holo_brown">#7d321a</color>
-    <color name="holo_brown_light">#eae0d5</color>
 </resources>
