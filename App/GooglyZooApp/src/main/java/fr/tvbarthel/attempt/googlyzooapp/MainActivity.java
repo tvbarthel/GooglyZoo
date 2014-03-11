@@ -168,11 +168,6 @@ public class MainActivity extends Activity
         mTitle = getTitle();
         mActionBarIcon = R.drawable.ic_launcher;
 
-        // Set up the drawer.
-        mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
-
         mNavigationDrawerFragment.selectEntry(mSelectedGooglyPet);
 
         mSmoothFaceDetectionListener = new SmoothFaceDetectionListener() {
@@ -198,6 +193,11 @@ public class MainActivity extends Activity
         };
 
         mCurrentListener = mSmoothFaceDetectionListener;
+
+        // Set up the drawer.
+        mNavigationDrawerFragment.setUp(
+                R.id.navigation_drawer,
+                (DrawerLayout) findViewById(R.id.drawer_layout));
     }
 
     @Override
