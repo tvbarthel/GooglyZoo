@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:fontFamily="bold"
+        android:fontFamily="sans-serif-light"
         android:background="@color/transparent_black"
         android:id="@+id/googly_drawer_pet_name"
         android:textColor="@color/white"

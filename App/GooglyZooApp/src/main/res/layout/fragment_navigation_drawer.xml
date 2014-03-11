@@ -6,7 +6,7 @@
     android:choiceMode="singleChoice"
     android:divider="@android:color/transparent"
     android:dividerHeight="@dimen/navigation_drawer_list_divider_height"
-    android:background="@color/transparent_grey"
+    android:background="@color/card_grey"
     android:scrollbarStyle="outsideOverlay"
     android:clipToPadding="false"
     android:scrollbarThumbVertical="@drawable/scroll_bar"
