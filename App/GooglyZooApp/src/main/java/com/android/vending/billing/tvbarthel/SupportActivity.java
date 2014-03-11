@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -121,7 +120,6 @@ public class SupportActivity extends Activity {
         mCoffeeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "coffee selected for purchase : " + mCoffeeAdapter.getItem(position).getTitle());
                 mSelectedPurchase = position;
                 mIabHelper.launchPurchaseFlow(SupportActivity.this,
                         mCoffeeAdapter.getItem(position).getSku(),
@@ -158,7 +156,6 @@ public class SupportActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG, "onActivityResult(" + requestCode + "," + resultCode + "," + data);
         if (mIabHelper == null) return;
 
         // Pass on the activity result to the helper for handling
@@ -168,7 +165,6 @@ public class SupportActivity extends Activity {
             // billing...
             super.onActivityResult(requestCode, resultCode, data);
         } else {
-            Log.d(TAG, "onActivityResult handled by IABUtil.");
         }
     }
 
@@ -194,7 +190,6 @@ public class SupportActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         // very important:
-        Log.d(TAG, "Destroying helper.");
         if (mIabHelper != null) {
             mIabHelper.dispose();
             mIabHelper = null;
@@ -235,7 +230,6 @@ public class SupportActivity extends Activity {
         mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
             @Override
             public void onIabPurchaseFinished(IabResult result, Purchase info) {
-                Log.d(TAG, "Purchase finished: " + result + ", purchase: " + info);
 
                 // if we were disposed of in the meantime, quit.
                 if (mIabHelper == null) return;
@@ -245,15 +239,13 @@ public class SupportActivity extends Activity {
                     purchaseSuccess(info);
                 } else if (result.getResponse() == IabHelper.BILLING_RESPONSE_RESULT_ITEM_ALREADY_OWNED) {
                     //if purchase already owned consume it
-                    Log.d(TAG, "alreadyOwned !");
                     if (mPurchaseList.get(mSelectedPurchase) != null) {
-                        Log.d(TAG, "start consumption");
                         //workaround to get the purchase since info == null when already owned
                         mIabHelper.consumeAsync(mPurchaseList.get(mSelectedPurchase), mConsumeListener);
                     }
                 } else {
                     //display error
-                    makeToast(result.getMessage());
+                    makeToast(result.getMessage().substring(0, result.getMessage().indexOf('(')));
                 }
 
             }
@@ -271,8 +263,6 @@ public class SupportActivity extends Activity {
                 // asked for consumption) buy product again
                 if (result.isSuccess() ||
                         result.getResponse() == IabHelper.BILLING_RESPONSE_RESULT_ITEM_NOT_OWNED) {
-                    Log.d(TAG, "pruchase consume : " + purchase.getSku());
-                    Log.d(TAG, "Buy it again : " + purchase.getOriginalJson());
                     mIabHelper.launchPurchaseFlow(SupportActivity.this,
                             purchase.getSku(),
                             SupportUtils.REQUEST_CODE_SUPPORT_DEV,
@@ -290,7 +280,6 @@ public class SupportActivity extends Activity {
             @Override
             public void onQueryInventoryFinished(IabResult result, Inventory inv) {
                 mIsIabRequestingCoffeeList = false;
-                Log.d(TAG, "mQueryInventoryListener : " + result);
                 if (result.isFailure()) {
                     makeToast("Fail to load coffee list, check your internet connection.");
                     mLoader.setVisibility(View.GONE);
@@ -305,7 +294,6 @@ public class SupportActivity extends Activity {
                     //get espresso details
                     if (inv.hasDetails(SupportUtils.SKU_ESPRESSO)) {
                         SkuDetails espressoDetails = inv.getSkuDetails(SupportUtils.SKU_ESPRESSO);
-                        Log.d(TAG, "espresso : " + espressoDetails.getDescription() + " " + espressoDetails.getPrice());
 
                         //add espresso to the coffee list
                         mCoffeeAdapter.add(espressoDetails);
@@ -315,7 +303,6 @@ public class SupportActivity extends Activity {
                     //get earl grey details
                     if (inv.hasDetails(SupportUtils.SKU_EARL_GREY)) {
                         SkuDetails earlGreyDetails = inv.getSkuDetails(SupportUtils.SKU_EARL_GREY);
-                        Log.d(TAG, "earl grey : " + earlGreyDetails.getDescription() + " " + earlGreyDetails.getPrice());
 
                         //add espresso to the coffee list
                         mCoffeeAdapter.add(earlGreyDetails);
@@ -325,7 +312,6 @@ public class SupportActivity extends Activity {
                     //get cappuccino details
                     if (inv.hasDetails(SupportUtils.SKU_CAPPUCCINO)) {
                         SkuDetails cappuccinoDetails = inv.getSkuDetails(SupportUtils.SKU_CAPPUCCINO);
-                        Log.d(TAG, "cappuccino : " + cappuccinoDetails.getDescription() + " " + cappuccinoDetails.getPrice());
 
                         //add espresso to the coffee list
                         mCoffeeAdapter.add(cappuccinoDetails);
@@ -335,14 +321,13 @@ public class SupportActivity extends Activity {
                     //get iced coffee details
                     if (inv.hasDetails(SupportUtils.SKU_ICED_COFFEE)) {
                         SkuDetails icedCoffeeDetails = inv.getSkuDetails(SupportUtils.SKU_ICED_COFFEE);
-                        Log.d(TAG, "ice coffee : " + icedCoffeeDetails.getDescription() + " " + icedCoffeeDetails.getPrice());
 
                         //add espresso to the coffee list
                         mCoffeeAdapter.add(icedCoffeeDetails);
                         mPurchaseList.add(inv.getPurchase(SupportUtils.SKU_ICED_COFFEE));
                     }
                 } else {
-                    Log.d(TAG, "inv empty");
+                    //inv empty
                 }
 
                 //hide loader
@@ -363,7 +348,6 @@ public class SupportActivity extends Activity {
     private void startIabHelper() {
         mIabHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
             public void onIabSetupFinished(IabResult result) {
-                Log.d(TAG, "Setup finished.");
 
                 if (!result.isSuccess()) {
                     // Oh noes, there was a problem.
@@ -375,7 +359,6 @@ public class SupportActivity extends Activity {
                 if (mIabHelper == null) return;
 
                 // IAB is fully set up. Retrieve purchases list
-                Log.d(TAG, "Setup successful. Querying purchase list.");
                 mIsIabStarted = true;
 
                 //retrieve coffee list
