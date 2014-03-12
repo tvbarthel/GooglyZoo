@@ -2,8 +2,7 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/transparent_grey">
+                android:layout_height="match_parent">
 
     <ListView
         android:layout_width="wrap_content"
@@ -15,6 +14,7 @@
         android:dividerHeight="@dimen/support_list_divider_height"
         android:padding="@dimen/support_list_padding"
         android:layout_alignParentTop="true"
+        android:scrollbarThumbVertical="@drawable/support_scroll_bar"
         android:scrollbarStyle="outsideOverlay"/>
 
     <ProgressBar
@@ -38,15 +38,16 @@
         android:visibility="gone"/>
 
     <TextView
+        android:background="@color/support_card_background"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/support_title"
         android:id="@+id/support_title"
         android:gravity="center"
-        android:textColor="@color/text_view_grey"
+        android:textColor="@color/support_text"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/support_vertical_margin"/>
+        android:padding="@dimen/support_entry_padding"/>
 
 </RelativeLayout>

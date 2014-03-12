@@ -9,7 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/support_entry_top"
-        android:background="@drawable/support_card_title"
         android:padding="@dimen/support_entry_padding">
 
     <TextView
@@ -17,7 +16,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Medium Text"
-        android:textColor="@color/white"
+        android:textColor="@color/support_text"
         android:id="@+id/support_entry_title"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
@@ -29,7 +28,8 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Medium Text"
-            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textColor="@color/support_text"
             android:id="@+id/support_entry_price"
             android:layout_alignBottom="@+id/support_entry_currency"
             android:layout_toLeftOf="@+id/support_entry_currency"/>
@@ -50,14 +50,140 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/support_entry_description"
         android:layout_below="@+id/support_entry_top"
-        android:textStyle="italic"
-        android:textColor="@color/text_view_grey"
+        android:fontFamily="sans-serif-light"
+        android:textColor="@color/support_text"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:padding="@dimen/support_entry_padding"/>
+
+    <RelativeLayout
+        android:id="@+id/support_detail_coffee"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/support_entry_description"
+        android:paddingLeft="@dimen/support_entry_padding"
+        android:paddingRight="@dimen/support_entry_padding"
+        android:paddingBottom="@dimen/support_entry_padding">
+
+        <ImageView
+            android:id="@+id/support_detail_coffee_ic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/support_entry_padding"
+            android:src="@drawable/ic_coffee_bean"/>
+        
+        <ProgressBar
+            android:id="@+id/support_detail_coffee_bar"
+            android:layout_toRightOf="@+id/support_detail_coffee_ic"
+            android:layout_toLeftOf="@+id/support_detail_coffee_value"
+            android:layout_centerVertical="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:progressDrawable="@drawable/support_progress_bar"
+            android:layout_marginRight="@dimen/support_entry_padding"
+            style="@style/SupportTheme.ProgressBar"
+            android:progress="50"/>
+
+        <TextView
+            android:id="@+id/support_detail_coffee_value"
+            android:text="50%"
+            android:textStyle="italic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/support_text"
+            android:layout_alignParentEnd="true"/>
+
+        </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/support_detail_energy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/support_detail_coffee"
+        android:paddingLeft="@dimen/support_entry_padding"
+        android:paddingRight="@dimen/support_entry_padding"
+        android:paddingBottom="@dimen/support_entry_padding">
+
+        <ImageView
+            android:id="@+id/support_detail_energy_ic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/support_entry_padding"
+            android:src="@drawable/ic_energy"/>
+
+        <ProgressBar
+            android:id="@+id/support_detail_energy_bar"
+            android:layout_toRightOf="@+id/support_detail_energy_ic"
+            android:layout_toLeftOf="@+id/support_detail_energy_value"
+            android:layout_centerVertical="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:progressDrawable="@drawable/support_progress_bar"
+            android:layout_marginRight="@dimen/support_entry_padding"
+            style="@style/SupportTheme.ProgressBar"
+            android:progress="25"/>
+
+        <TextView
+            android:id="@+id/support_detail_energy_value"
+            android:text="25%"
+            android:textStyle="italic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/support_text"
+            android:layout_alignParentEnd="true"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/support_detail_candy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/support_detail_energy"
+        android:paddingLeft="@dimen/support_entry_padding"
+        android:paddingRight="@dimen/support_entry_padding"
+        android:paddingBottom="@dimen/support_entry_padding">
+
+        <ImageView
+            android:id="@+id/support_detail_candy_ic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/support_entry_padding"
+            android:src="@drawable/ic_candy_cane"/>
+
+        <ProgressBar
+            android:id="@+id/support_detail_candy_bar"
+            android:layout_toRightOf="@+id/support_detail_candy_ic"
+            android:layout_toLeftOf="@+id/support_detail_candy_value"
+            android:layout_centerVertical="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:progressDrawable="@drawable/support_progress_bar"
+            android:layout_marginRight="@dimen/support_entry_padding"
+            style="@style/SupportTheme.ProgressBar"
+            android:progress="75"/>
+
+        <TextView
+            android:id="@+id/support_detail_candy_value"
+            android:text="75%"
+            android:textStyle="italic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/support_text"
+            android:layout_alignParentEnd="true"/>
+
+    </RelativeLayout>
 
 
 
