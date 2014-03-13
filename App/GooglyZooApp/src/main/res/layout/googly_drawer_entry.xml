@@ -2,30 +2,31 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/navigation_drawer_entry_height"
+                android:layout_height="wrap_content"
                 android:background="@drawable/drawer_entry"
                 android:id="@+id/googly_drawer_entry">
 
     <TextView
+        android:id="@+id/googly_drawer_pet_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:fontFamily="sans-serif-light"
-        android:background="@color/transparent_black"
-        android:id="@+id/googly_drawer_pet_name"
         android:textColor="@color/white"
-        android:paddingBottom="5dp"
+        android:layout_centerVertical="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:paddingLeft="@dimen/activity_horizontal_margin_half"/>
+        android:layout_marginLeft="@dimen/activity_horizontal_margin_half"
+        android:layout_marginRight="@dimen/support_horizontal_margin"/>
 
     <ImageView
+        android:id="@+id/googly_drawer_pet_ic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/googly_drawer_pet_ic"
-        android:layout_alignParentBottom="true"
+        android:background="@drawable/white_line_left"
+        android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:paddingLeft="@dimen/navigation_drawer_list_horizontal_padding"
         android:layout_marginRight="@dimen/navigation_drawer_list_horizontal_padding"
         android:layout_marginBottom="@dimen/navigation_drawer_list_vertical_padding"/>
 </RelativeLayout>
