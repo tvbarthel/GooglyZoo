@@ -8,14 +8,25 @@
 
     <TextView
         android:id="@+id/googly_drawer_pet_name"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:fontFamily="sans-serif-light"
+        android:textStyle="bold"
         android:textColor="@color/white"
         android:layout_centerVertical="true"
         android:layout_alignParentStart="true"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin_half"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin_half"/>
+
+    <TextView
+        android:id="@+id/googly_drawer_oogly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:fontFamily="sans-serif-light"
+        android:text="@string/googly_name_ext"
+        android:textColor="@color/white"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/googly_drawer_pet_name"
         android:layout_marginRight="@dimen/support_horizontal_margin"/>
 
     <ImageView

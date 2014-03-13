@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
+import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -250,7 +251,7 @@ public class MainActivity extends Activity
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
+        actionBar.setTitle(Html.fromHtml(mTitle.toString()));
         actionBar.setIcon(mActionBarIcon);
     }
 
@@ -401,7 +402,8 @@ public class MainActivity extends Activity
     public void onNavigationDrawerItemSelected(GooglyPetEntry petSelected) {
         final int googlyName = petSelected.getName();
         mSelectedGooglyPet = petSelected.getPetId();
-        mTitle = getResources().getString(googlyName);
+        mTitle = "<b>" + getResources().getString(googlyName) + "</b>" +"<i>"+
+                getResources().getString(R.string.googly_name_ext)+"</i>";
         mActionBarIcon = petSelected.getBlackAndWhiteIcon();
 
         //remove listener from the old pet

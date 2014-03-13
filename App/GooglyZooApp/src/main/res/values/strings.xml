@@ -4,17 +4,18 @@
     <string name="app_name">GooglyZoo</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="googly_zebra_name">Zebroogly</string>
-    <string name="googly_gnu_name">Gnoogly</string>
-    <string name="googly_hippo_name">Hippoogly</string>
-    <string name="googly_bee_name">Boogly</string>
-    <string name="googly_elephant_name">Elephoogly</string>
-    <string name="googly_cow_name">Cowoogly</string>
-    <string name="googly_goat_name">Goatoogly</string>
-    <string name="googly_elk_name">Elkoogly</string>
-    <string name="googly_horse_name">Horsoogly</string>
-    <string name="googly_pig_name">Pigoogly</string>
-    <string name="googly_triceratops_name">Triceratoogly</string>
+    <string name="googly_zebra_name">Zebr</string>
+    <string name="googly_gnu_name">Gn</string>
+    <string name="googly_hippo_name">Hipp</string>
+    <string name="googly_bee_name">B</string>
+    <string name="googly_elephant_name">Eleph</string>
+    <string name="googly_cow_name">Cow</string>
+    <string name="googly_goat_name">Goat</string>
+    <string name="googly_elk_name">Elk</string>
+    <string name="googly_horse_name">Hors</string>
+    <string name="googly_pig_name">Pig</string>
+    <string name="googly_triceratops_name">Tricerat</string>
+    <string name="googly_name_ext">oogly</string>
 
     <!-- Action bar !-->
     <string name="googly_drawer_instruction">Select your Googly Pet</string>
