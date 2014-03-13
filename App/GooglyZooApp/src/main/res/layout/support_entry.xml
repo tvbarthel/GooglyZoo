@@ -9,55 +9,61 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/support_entry_top"
-        android:padding="@dimen/support_entry_padding">
+        android:padding="@dimen/support_entry_padding"
+        android:background="@drawable/white_line_bottom"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp">
 
     <TextView
+        android:layout_centerVertical="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Medium Text"
+        android:textStyle="bold"
         android:textColor="@color/support_text"
         android:id="@+id/support_entry_title"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:fontFamily="sans-serif-light"/>
+        android:layout_alignParentStart="true"/>
 
         <TextView
+            android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Medium Text"
-            android:textStyle="bold"
+            android:fontFamily="sans-serif-light"
             android:textColor="@color/support_text"
             android:id="@+id/support_entry_price"
-            android:layout_alignBottom="@+id/support_entry_currency"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/support_list_padding"
             android:layout_toLeftOf="@+id/support_entry_currency"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/white"
             android:textStyle="bold"
             android:id="@+id/support_entry_currency"
-            android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/activity_horizontal_margin"/>
 
     </RelativeLayout>
 
     <TextView
+        android:id="@+id/support_entry_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/support_entry_description"
         android:layout_below="@+id/support_entry_top"
         android:fontFamily="sans-serif-light"
         android:textColor="@color/support_text"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:padding="@dimen/support_entry_padding"/>
+        android:paddingLeft="@dimen/support_list_padding"
+        android:paddingRight="@dimen/support_list_padding"
+        android:layout_marginBottom="@dimen/support_vertical_margin"/>
 
     <RelativeLayout
         android:id="@+id/support_detail_coffee"
@@ -70,6 +76,7 @@
 
         <ImageView
             android:id="@+id/support_detail_coffee_ic"
+            android:background="@drawable/white_line_right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -112,6 +119,7 @@
 
         <ImageView
             android:id="@+id/support_detail_energy_ic"
+            android:background="@drawable/white_line_right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -154,6 +162,7 @@
 
         <ImageView
             android:id="@+id/support_detail_candy_ic"
+            android:background="@drawable/white_line_right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
