@@ -41,6 +41,7 @@
     <string name="support_error">Fail to load coffee list. \n Please, check your network connection.</string>
     <string name="support_has_supported_us">Thanks for your support!</string>
     <string name="support_thanks">Thanks for your support ! This %1$s will help us to develop more free content apps !</string>
+    <string name="support_bar_text"> %1$d %%</string>
 
     <!-- Dimens !-->
     <dimen name="support_list_divider_height">10dp</dimen>
