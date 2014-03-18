@@ -30,6 +30,7 @@ public class SupportAdapter extends ArrayAdapter<CoffeeEntry> {
         super(context, R.layout.support_entry, objects);
     }
 
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View rowView = convertView;
@@ -38,36 +39,70 @@ public class SupportAdapter extends ArrayAdapter<CoffeeEntry> {
         if (rowView == null) {
             final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             rowView = inflater.inflate(R.layout.support_entry, parent, false);
+
+            //configure view holder
+            CoffeeEntryHolder viewHolder = new CoffeeEntryHolder();
+            viewHolder.title =
+                    ((TextView) rowView.findViewById(R.id.support_entry_title));
+            viewHolder.description =
+                    ((TextView) rowView.findViewById(R.id.support_entry_description));
+            viewHolder.price =
+                    ((TextView) rowView.findViewById(R.id.support_entry_price));
+            viewHolder.currency =
+                    ((TextView) rowView.findViewById(R.id.support_entry_currency));
+            viewHolder.coffeeBar =
+                    ((ProgressBar) rowView.findViewById(R.id.support_detail_coffee_bar));
+            viewHolder.coffeeValue =
+                    ((TextView) rowView.findViewById(R.id.support_detail_coffee_value));
+            viewHolder.energyBar =
+                    ((ProgressBar) rowView.findViewById(R.id.support_detail_energy_bar));
+            viewHolder.energyValue =
+                    ((TextView) rowView.findViewById(R.id.support_detail_energy_value));
+            viewHolder.cnadyBar =
+                    ((ProgressBar) rowView.findViewById(R.id.support_detail_candy_bar));
+            viewHolder.candyValue =
+                    ((TextView) rowView.findViewById(R.id.support_detail_candy_value));
+            rowView.setTag(viewHolder);
         }
 
+        CoffeeEntryHolder holder = (CoffeeEntryHolder) rowView.getTag();
+
         final String title = currentSku.getTitle();
-        ((TextView) rowView.findViewById(R.id.support_entry_title)).setText(
-                title.substring(0, title.indexOf("(")));
-        ((TextView) rowView.findViewById(R.id.support_entry_description)).setText(
-                currentSku.getDescription());
+        holder.title.setText(title.substring(0, title.indexOf("(")));
+        holder.description.setText(currentSku.getDescription());
         final String price = currentSku.getPrice();
         final String amount = price.substring(0, price.length() - 1);
         final String currency = price.substring(price.length() - 1, price.length());
-        ((TextView) rowView.findViewById(R.id.support_entry_price)).setText(amount);
-        ((TextView) rowView.findViewById(R.id.support_entry_currency)).setText(currency);
+        holder.price.setText(amount);
+        holder.currency.setText(currency);
 
         //set bar value
-        ((ProgressBar) rowView.findViewById(R.id.support_detail_coffee_bar))
-                .setProgress(currentEntry.getCaffeineRate());
-        ((TextView) rowView.findViewById(R.id.support_detail_coffee_value))
-                .setText(getContext().getString(R.string.support_bar_text,
-                        currentEntry.getCaffeineRate()));
-        ((ProgressBar) rowView.findViewById(R.id.support_detail_energy_bar))
-                .setProgress(currentEntry.getEnergyRate());
-        ((TextView) rowView.findViewById(R.id.support_detail_energy_value))
-                .setText(getContext().getString(R.string.support_bar_text,
-                        currentEntry.getEnergyRate()));
-        ((ProgressBar) rowView.findViewById(R.id.support_detail_candy_bar))
-                .setProgress(currentEntry.getCandyRate());
-        ((TextView) rowView.findViewById(R.id.support_detail_candy_value))
-                .setText(getContext().getString(R.string.support_bar_text,
-                        currentEntry.getCandyRate()));
+        holder.coffeeBar.setProgress(currentEntry.getCaffeineRate());
+        holder.coffeeValue.setText(getContext().getString(R.string.support_bar_text,
+                currentEntry.getCaffeineRate()));
+        holder.energyBar.setProgress(currentEntry.getEnergyRate());
+        holder.energyValue.setText(getContext().getString(R.string.support_bar_text,
+                currentEntry.getEnergyRate()));
+        holder.cnadyBar.setProgress(currentEntry.getCandyRate());
+        holder.candyValue.setText(getContext().getString(R.string.support_bar_text,
+                currentEntry.getCandyRate()));
 
         return rowView;
+    }
+
+    /**
+     * View Holder pattern
+     */
+    static class CoffeeEntryHolder {
+        public TextView title;
+        public TextView description;
+        public TextView price;
+        public TextView currency;
+        public TextView coffeeValue;
+        public TextView energyValue;
+        public TextView candyValue;
+        public ProgressBar coffeeBar;
+        public ProgressBar energyBar;
+        public ProgressBar cnadyBar;
     }
 }

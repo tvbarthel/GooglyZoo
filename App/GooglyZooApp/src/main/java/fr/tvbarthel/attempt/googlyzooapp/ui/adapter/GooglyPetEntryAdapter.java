@@ -31,21 +31,36 @@ public class GooglyPetEntryAdapter extends ArrayAdapter<GooglyPetEntry> {
 
         if (rowView == null) {
             rowView = inflater.inflate(R.layout.googly_drawer_entry, parent, false);
+
+            //configure holder
+            GooglyPetEntryHolder viewHolder = new GooglyPetEntryHolder();
+            viewHolder.petName = ((TextView) rowView.findViewById(R.id.googly_drawer_pet_name));
+            viewHolder.petIcon = ((ImageView) rowView.findViewById(R.id.googly_drawer_pet_ic));
+            rowView.setTag(viewHolder);
         }
 
+        GooglyPetEntryHolder holder = (GooglyPetEntryHolder) rowView.getTag();
         //set pet name
-        ((TextView) rowView.findViewById(R.id.googly_drawer_pet_name)).setText(
+        holder.petName.setText(
                 context.getResources().getString(petEntry.getName()));
 
         //can't reuse old view since activated state could have changed
         final boolean isSelected = petEntry.isSelected();
         final int ic = isSelected ? petEntry.getColoredIcon() : petEntry.getBlackAndWhiteIcon();
         //set blackandwhite icon if not selected else colored one
-        ((ImageView) rowView.findViewById(R.id.googly_drawer_pet_ic)).setImageDrawable(
+        holder.petIcon.setImageDrawable(
                 context.getResources().getDrawable(ic));
 
 
         return rowView;
+    }
+
+    /**
+     * ViewHolder pattern
+     */
+    static class GooglyPetEntryHolder {
+        public TextView petName;
+        public ImageView petIcon;
     }
 
 }
