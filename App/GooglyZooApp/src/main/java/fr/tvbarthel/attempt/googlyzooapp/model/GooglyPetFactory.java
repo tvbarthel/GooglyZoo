@@ -1,5 +1,7 @@
 package fr.tvbarthel.attempt.googlyzooapp.model;
 
+import android.content.Context;
+
 import fr.tvbarthel.attempt.googlyzooapp.R;
 import fr.tvbarthel.attempt.googlyzooapp.utils.GooglyPetUtils;
 
@@ -15,7 +17,6 @@ public class GooglyPetFactory {
     private static final float ZEBRA_LEFT_EYE_Y = 0.35f;
     private static final float ZEBRA_RIGHT_EYE_X = 0.60f;
     private static final float ZEBRA_RIGHT_EYE_Y = 0.35f;
-    private static final float ZEBRA_EYES_DIAMETER = 35f;
     private static final float ZERBA_BODY_PROPORTION = 0.70f;
 
     /**
@@ -25,7 +26,6 @@ public class GooglyPetFactory {
     private static final float GNU_LEFT_EYE_Y = 0.38f;
     private static final float GNU_RIGHT_EYE_X = 0.60f;
     private static final float GNU_RIGHT_EYE_Y = 0.38f;
-    private static final float GNU_EYES_DIAMETER = 36f;
     private static final float GNU_BODY_PROPORTION = 0.65f;
 
     /**
@@ -35,7 +35,6 @@ public class GooglyPetFactory {
     private static final float HIPPO_LEFT_EYE_Y = 0.25f;
     private static final float HIPPO_RIGHT_EYE_X = 0.58f;
     private static final float HIPPO_RIGHT_EYE_Y = 0.25f;
-    private static final float HIPPO_EYES_DIAMETER = 38f;
     private static final float HIPPO_BODY_PROPORTION = 0.79f;
 
     /**
@@ -45,7 +44,6 @@ public class GooglyPetFactory {
     private static final float BEE_LEFT_EYE_Y = 0.30f;
     private static final float BEE_RIGHT_EYE_X = 0.60f;
     private static final float BEE_RIGHT_EYE_Y = 0.30f;
-    private static final float BEE_EYES_DIAMETER = 38f;
     private static final float BEE_BODY_PROPORTION = 0.74f;
 
     /**
@@ -55,7 +53,6 @@ public class GooglyPetFactory {
     private static final float ELEPHANT_LEFT_EYE_Y = 0.26f;
     private static final float ELEPHANT_RIGHT_EYE_X = 0.59f;
     private static final float ELEPHANT_RIGHT_EYE_Y = 0.26f;
-    private static final float ELEPHANT_EYES_DIAMETER = 38f;
     private static final float ELEPHANT_BODY_PROPORTION = 0.78f;
 
     /**
@@ -65,7 +62,6 @@ public class GooglyPetFactory {
     private static final float COW_LEFT_EYE_Y = 0.26f;
     private static final float COW_RIGHT_EYE_X = 0.61f;
     private static final float COW_RIGHT_EYE_Y = 0.26f;
-    private static final float COW_EYES_DIAMETER = 38f;
     private static final float COW_BODY_PROPORTION = 0.78f;
 
     /**
@@ -75,7 +71,6 @@ public class GooglyPetFactory {
     private static final float GOAT_LEFT_EYE_Y = 0.37f;
     private static final float GOAT_RIGHT_EYE_X = 0.60f;
     private static final float GOAT_RIGHT_EYE_Y = 0.37f;
-    private static final float GOAT_EYES_DIAMETER = 36f;
     private static final float GOAT_BODY_PROPORTION = 0.67f;
 
     /**
@@ -85,7 +80,6 @@ public class GooglyPetFactory {
     private static final float ELK_LEFT_EYE_Y = 0.40f;
     private static final float ELK_RIGHT_EYE_X = 0.57f;
     private static final float ELK_RIGHT_EYE_Y = 0.40f;
-    private static final float ELK_EYES_DIAMETER = 28f;
     private static final float ELK_BODY_PROPORTION = 0.63f;
 
     /**
@@ -95,7 +89,6 @@ public class GooglyPetFactory {
     private static final float HORSE_LEFT_EYE_Y = 0.34f;
     private static final float HORSE_RIGHT_EYE_X = 0.605f;
     private static final float HORSE_RIGHT_EYE_Y = 0.34f;
-    private static final float HORSE_EYES_DIAMETER = 38f;
     private static final float HORSE_BODY_PROPORTION = 0.70f;
 
     /**
@@ -105,7 +98,6 @@ public class GooglyPetFactory {
     private static final float PIG_LEFT_EYE_Y = 0.23f;
     private static final float PIG_RIGHT_EYE_X = 0.61f;
     private static final float PIG_RIGHT_EYE_Y = 0.23f;
-    private static final float PIG_EYES_DIAMETER = 38f;
     private static final float PIG_BODY_PROPORTION = 0.80f;
 
     /**
@@ -115,7 +107,6 @@ public class GooglyPetFactory {
     private static final float TRICERATOPS_LEFT_EYE_Y = 0.36f;
     private static final float TRICERATOPS_RIGHT_EYE_X = 0.62f;
     private static final float TRICERATOPS_RIGHT_EYE_Y = 0.36f;
-    private static final float TRICERATOPS_EYES_DIAMETER = 38f;
     private static final float TRICERATOPS_BODY_PROPORTION = 0.67f;
 
 
@@ -125,44 +116,44 @@ public class GooglyPetFactory {
      * @param id id from GooglyPetUtils
      * @return
      */
-    public static GooglyPet createGooglyPet(int id) {
+    public static GooglyPet createGooglyPet(int id,Context context) {
         final GooglyPet createdPet;
         switch (id) {
             case GooglyPetUtils.GOOGLY_PET_ZEBRA:
-                createdPet = createGooglyZebra();
+                createdPet = createGooglyZebra(context);
                 break;
             case GooglyPetUtils.GOOGLY_PET_GNU:
-                createdPet = createGooglyGnu();
+                createdPet = createGooglyGnu(context);
                 break;
             case GooglyPetUtils.GOOGLY_PET_HIPPO:
-                createdPet = createGooglyHippo();
+                createdPet = createGooglyHippo(context);
                 break;
             case GooglyPetUtils.GOOGLY_PET_BEE:
-                createdPet = createGooglyBee();
+                createdPet = createGooglyBee(context);
                 break;
             case GooglyPetUtils.GOOGLY_PET_ELEPHANT:
-                createdPet = createGooglyElephant();
+                createdPet = createGooglyElephant(context);
                 break;
             case GooglyPetUtils.GOOGLY_PET_COW:
-                createdPet = createGooglyCow();
+                createdPet = createGooglyCow(context);
                 break;
             case GooglyPetUtils.GOOGLY_PET_GOAT:
-                createdPet = createGooglyGoat();
+                createdPet = createGooglyGoat(context);
                 break;
             case GooglyPetUtils.GOOGLY_PET_ELK:
-                createdPet = createGooglyElk();
+                createdPet = createGooglyElk(context);
                 break;
             case GooglyPetUtils.GOOGLY_PET_HORSE:
-                createdPet = createGooglyHorse();
+                createdPet = createGooglyHorse(context);
                 break;
             case GooglyPetUtils.GOOGLY_PET_PIG:
-                createdPet = createGooglyPig();
+                createdPet = createGooglyPig(context);
                 break;
             case GooglyPetUtils.GOOGLY_PET_TRICERATOPS:
-                createdPet = createGooglyTriceratops();
+                createdPet = createGooglyTriceratops(context);
                 break;
             default:
-                createdPet = createGooglyZebra();
+                createdPet = createGooglyZebra(context);
         }
         return createdPet;
     }
@@ -172,14 +163,14 @@ public class GooglyPetFactory {
      *
      * @return googly zebra
      */
-    public static GooglyPet createGooglyZebra() {
+    public static GooglyPet createGooglyZebra(Context context) {
         return new GooglyPet(
                 R.drawable.zebra,
                 ZEBRA_LEFT_EYE_X,
                 ZEBRA_LEFT_EYE_Y,
                 ZEBRA_RIGHT_EYE_X,
                 ZEBRA_RIGHT_EYE_Y,
-                ZEBRA_EYES_DIAMETER,
+                context.getResources().getDimensionPixelSize(R.dimen.eye_diameter_zebra),
                 ZERBA_BODY_PROPORTION);
     }
 
@@ -188,14 +179,14 @@ public class GooglyPetFactory {
      *
      * @return googly gnu
      */
-    public static GooglyPet createGooglyGnu() {
+    public static GooglyPet createGooglyGnu(Context context) {
         return new GooglyPet(
                 R.drawable.gnu,
                 GNU_LEFT_EYE_X,
                 GNU_LEFT_EYE_Y,
                 GNU_RIGHT_EYE_X,
                 GNU_RIGHT_EYE_Y,
-                GNU_EYES_DIAMETER,
+                context.getResources().getDimensionPixelSize(R.dimen.eye_diameter_gnu),
                 GNU_BODY_PROPORTION);
     }
 
@@ -204,14 +195,14 @@ public class GooglyPetFactory {
      *
      * @return googly hippo
      */
-    public static GooglyPet createGooglyHippo() {
+    public static GooglyPet createGooglyHippo(Context context) {
         return new GooglyPet(
                 R.drawable.hippo,
                 HIPPO_LEFT_EYE_X,
                 HIPPO_LEFT_EYE_Y,
                 HIPPO_RIGHT_EYE_X,
                 HIPPO_RIGHT_EYE_Y,
-                HIPPO_EYES_DIAMETER,
+                context.getResources().getDimensionPixelSize(R.dimen.eye_diameter_hippo),
                 HIPPO_BODY_PROPORTION);
     }
 
@@ -220,14 +211,14 @@ public class GooglyPetFactory {
      *
      * @return googly bee
      */
-    public static GooglyPet createGooglyBee() {
+    public static GooglyPet createGooglyBee(Context context) {
         return new GooglyPet(
                 R.drawable.bee,
                 BEE_LEFT_EYE_X,
                 BEE_LEFT_EYE_Y,
                 BEE_RIGHT_EYE_X,
                 BEE_RIGHT_EYE_Y,
-                BEE_EYES_DIAMETER,
+                context.getResources().getDimensionPixelSize(R.dimen.eye_diameter_bee),
                 BEE_BODY_PROPORTION);
     }
 
@@ -236,14 +227,14 @@ public class GooglyPetFactory {
      *
      * @return googly elephant
      */
-    public static GooglyPet createGooglyElephant() {
+    public static GooglyPet createGooglyElephant(Context context) {
         return new GooglyPet(
                 R.drawable.elephant,
                 ELEPHANT_LEFT_EYE_X,
                 ELEPHANT_LEFT_EYE_Y,
                 ELEPHANT_RIGHT_EYE_X,
                 ELEPHANT_RIGHT_EYE_Y,
-                ELEPHANT_EYES_DIAMETER,
+                context.getResources().getDimensionPixelSize(R.dimen.eye_diameter_elephant),
                 ELEPHANT_BODY_PROPORTION);
     }
 
@@ -252,14 +243,14 @@ public class GooglyPetFactory {
      *
      * @return googly cow
      */
-    public static GooglyPet createGooglyCow() {
+    public static GooglyPet createGooglyCow(Context context) {
         return new GooglyPet(
                 R.drawable.cow,
                 COW_LEFT_EYE_X,
                 COW_LEFT_EYE_Y,
                 COW_RIGHT_EYE_X,
                 COW_RIGHT_EYE_Y,
-                COW_EYES_DIAMETER,
+                context.getResources().getDimensionPixelSize(R.dimen.eye_diameter_cow),
                 COW_BODY_PROPORTION);
     }
 
@@ -268,14 +259,14 @@ public class GooglyPetFactory {
      *
      * @return googly goat
      */
-    public static GooglyPet createGooglyGoat() {
+    public static GooglyPet createGooglyGoat(Context context) {
         return new GooglyPet(
                 R.drawable.goat,
                 GOAT_LEFT_EYE_X,
                 GOAT_LEFT_EYE_Y,
                 GOAT_RIGHT_EYE_X,
                 GOAT_RIGHT_EYE_Y,
-                GOAT_EYES_DIAMETER,
+                context.getResources().getDimensionPixelSize(R.dimen.eye_diameter_goat),
                 GOAT_BODY_PROPORTION);
     }
 
@@ -284,14 +275,14 @@ public class GooglyPetFactory {
      *
      * @return googly elk
      */
-    public static GooglyPet createGooglyElk() {
+    public static GooglyPet createGooglyElk(Context context) {
         return new GooglyPet(
                 R.drawable.elk,
                 ELK_LEFT_EYE_X,
                 ELK_LEFT_EYE_Y,
                 ELK_RIGHT_EYE_X,
                 ELK_RIGHT_EYE_Y,
-                ELK_EYES_DIAMETER,
+                context.getResources().getDimensionPixelSize(R.dimen.eye_diameter_elk),
                 ELK_BODY_PROPORTION);
     }
 
@@ -300,14 +291,14 @@ public class GooglyPetFactory {
      *
      * @return googly horse
      */
-    public static GooglyPet createGooglyHorse() {
+    public static GooglyPet createGooglyHorse(Context context) {
         return new GooglyPet(
                 R.drawable.horse,
                 HORSE_LEFT_EYE_X,
                 HORSE_LEFT_EYE_Y,
                 HORSE_RIGHT_EYE_X,
                 HORSE_RIGHT_EYE_Y,
-                HORSE_EYES_DIAMETER,
+                context.getResources().getDimensionPixelSize(R.dimen.eye_diameter_horse),
                 HORSE_BODY_PROPORTION);
     }
 
@@ -316,14 +307,14 @@ public class GooglyPetFactory {
      *
      * @return googly pig
      */
-    public static GooglyPet createGooglyPig() {
+    public static GooglyPet createGooglyPig(Context context) {
         return new GooglyPet(
                 R.drawable.pig,
                 PIG_LEFT_EYE_X,
                 PIG_LEFT_EYE_Y,
                 PIG_RIGHT_EYE_X,
                 PIG_RIGHT_EYE_Y,
-                PIG_EYES_DIAMETER,
+                context.getResources().getDimensionPixelSize(R.dimen.eye_diameter_pig),
                 PIG_BODY_PROPORTION);
     }
 
@@ -332,14 +323,14 @@ public class GooglyPetFactory {
      *
      * @return googly triceratops
      */
-    public static GooglyPet createGooglyTriceratops() {
+    public static GooglyPet createGooglyTriceratops(Context context) {
         return new GooglyPet(
                 R.drawable.triceratops,
                 TRICERATOPS_LEFT_EYE_X,
                 TRICERATOPS_LEFT_EYE_Y,
                 TRICERATOPS_RIGHT_EYE_X,
                 TRICERATOPS_RIGHT_EYE_Y,
-                TRICERATOPS_EYES_DIAMETER,
+                context.getResources().getDimensionPixelSize(R.dimen.eye_diameter_triceratops),
                 TRICERATOPS_BODY_PROPORTION);
     }
 }

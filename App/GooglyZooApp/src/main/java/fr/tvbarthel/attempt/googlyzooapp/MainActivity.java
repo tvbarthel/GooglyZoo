@@ -143,7 +143,7 @@ public class MainActivity extends Activity
                 GooglyPetUtils.GOOGLY_PET_ZEBRA);
 
         //init model
-        mGooglyPet = GooglyPetFactory.createGooglyPet(mSelectedGooglyPet);
+        mGooglyPet = GooglyPetFactory.createGooglyPet(mSelectedGooglyPet,this);
 
         //init pet event listener
         mGooglyPetListener = new GooglyPetListener() {
@@ -412,7 +412,7 @@ public class MainActivity extends Activity
         }
 
         //create the selected Googly pet
-        mGooglyPet = GooglyPetFactory.createGooglyPet(mSelectedGooglyPet);
+        mGooglyPet = GooglyPetFactory.createGooglyPet(mSelectedGooglyPet,this);
 
         //register listener on the new pet
         mGooglyPet.addListener(mGooglyPetListener);

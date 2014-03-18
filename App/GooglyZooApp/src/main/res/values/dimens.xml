@@ -5,12 +5,26 @@
     <dimen name="activity_horizontal_margin_half">8dp</dimen>
     <dimen name="activity_vertical_margin_half">8dp</dimen>
 
-        <!-- Per the design guidelines, navigation drawers should be between 240dp and 320dp:
-         https://developer.android.com/design/patterns/navigation-drawer.html -->
+    <!-- Per the design guidelines, navigation drawers should be between 240dp and 320dp:
+     https://developer.android.com/design/patterns/navigation-drawer.html -->
     <dimen name="navigation_drawer_width">320dp</dimen>
     <dimen name="navigation_drawer_entry_height">64dp</dimen>
     <dimen name="navigation_drawer_entry_margin">10dp</dimen>
     <dimen name="navigation_drawer_list_divider_height">10dp</dimen>
     <dimen name="navigation_drawer_list_horizontal_padding">8dp</dimen>
     <dimen name="navigation_drawer_list_vertical_padding">8dp</dimen>
+
+    <!-- Pet eyes diameter !-->
+    <dimen name="eye_diameter_zebra">22dp</dimen>
+    <dimen name="eye_diameter_gnu">20dp</dimen>
+    <dimen name="eye_diameter_hippo">21dp</dimen>
+    <dimen name="eye_diameter_elephant">21dp</dimen>
+    <dimen name="eye_diameter_cow">21dp</dimen>
+    <dimen name="eye_diameter_goat">20dp</dimen>
+    <dimen name="eye_diameter_elk">17dp</dimen>
+    <dimen name="eye_diameter_horse">21dp</dimen>
+    <dimen name="eye_diameter_triceratops">21dp</dimen>
+    <dimen name="eye_diameter_pig">21dp</dimen>
+    <dimen name="eye_diameter_bee">21dp</dimen>
+
 </resources>
