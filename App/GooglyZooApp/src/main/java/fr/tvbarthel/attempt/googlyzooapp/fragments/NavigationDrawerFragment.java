@@ -137,6 +137,12 @@ public class NavigationDrawerFragment extends Fragment {
                         R.drawable.triceratops_ic_bw,
                         R.drawable.triceratops_ic,
                         GooglyPetUtils.GOOGLY_PET_TRICERATOPS));
+
+        mAvailableGooglyPets.add(
+                new GooglyPetEntry(R.string.googly_tbarthel_name,
+                        R.drawable.tbarthel_ic_bw,
+                        R.drawable.tbarthel_ic,
+                        GooglyPetUtils.GOOGLY_PET_TBARTHEL));
     }
 
     @Override

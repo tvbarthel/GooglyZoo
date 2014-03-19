@@ -15,7 +15,9 @@
     <string name="googly_horse_name">Hors</string>
     <string name="googly_pig_name">Pig</string>
     <string name="googly_triceratops_name">Tricerat</string>
+    <string name="googly_tbarthel_name">Tbarth</string>
     <string name="googly_name_ext">oogly</string>
+
 
     <!-- Action bar !-->
     <string name="googly_drawer_instruction">Select your Googly Pet</string>

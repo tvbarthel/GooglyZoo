@@ -109,6 +109,15 @@ public class GooglyPetFactory {
     private static final float TRICERATOPS_RIGHT_EYE_Y = 0.36f;
     private static final float TRICERATOPS_BODY_PROPORTION = 0.67f;
 
+    /**
+     * relative values for tbarthel's eyes position
+     */
+    private static final float TBARTHEL_LEFT_EYE_X = 0.385f;
+    private static final float TBARTHEL_LEFT_EYE_Y = 0.42f;
+    private static final float TBARTHEL_RIGHT_EYE_X = 0.60f;
+    private static final float TBARTHEL_RIGHT_EYE_Y = 0.42f;
+    private static final float TBARTHEL_BODY_PROPORTION = 0.80f;
+
 
     /**
      * Create a googly pet using pet identifier
@@ -151,6 +160,9 @@ public class GooglyPetFactory {
                 break;
             case GooglyPetUtils.GOOGLY_PET_TRICERATOPS:
                 createdPet = createGooglyTriceratops(context);
+                break;
+            case GooglyPetUtils.GOOGLY_PET_TBARTHEL:
+                createdPet = createGooglyTbarhel(context);
                 break;
             default:
                 createdPet = createGooglyZebra(context);
@@ -332,5 +344,21 @@ public class GooglyPetFactory {
                 TRICERATOPS_RIGHT_EYE_Y,
                 context.getResources().getDimensionPixelSize(R.dimen.eye_diameter_triceratops),
                 TRICERATOPS_BODY_PROPORTION);
+    }
+
+    /**
+     * Create a Googly tbarthel
+     *
+     * @return googly tbarthel
+     */
+    public static GooglyPet createGooglyTbarhel(Context context) {
+        return new GooglyPet(
+                R.drawable.tbarthel,
+                TBARTHEL_LEFT_EYE_X,
+                TBARTHEL_LEFT_EYE_Y,
+                TBARTHEL_RIGHT_EYE_X,
+                TBARTHEL_RIGHT_EYE_Y,
+                context.getResources().getDimensionPixelSize(R.dimen.eye_diameter_tbarthel),
+                TBARTHEL_BODY_PROPORTION);
     }
 }
