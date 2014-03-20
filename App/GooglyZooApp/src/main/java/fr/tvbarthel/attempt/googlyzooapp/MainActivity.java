@@ -229,7 +229,7 @@ public class MainActivity extends Activity
     @Override
     protected void onPause() {
         super.onPause();
-        //Canceled the Camera AsyncTask
+        // Cancel the Camera AsyncTask.
         mCameraAsyncTask.cancel(true);
 
         //remove listener from googly pet
@@ -442,7 +442,7 @@ public class MainActivity extends Activity
         protected void onPostExecute(Camera camera) {
             super.onPostExecute(camera);
 
-            // Check if the task is canceled before trying to use the camera.
+            // Check if the task is cancelled before trying to use the camera.
             if(!isCancelled()) {
                 mCamera = camera;
                 if (mCamera == null) {
