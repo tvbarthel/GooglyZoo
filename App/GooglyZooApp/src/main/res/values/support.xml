@@ -9,14 +9,14 @@
     <color name="support_bar_progress">#df7d321a</color>
     <color name="support_bar_background">#dfffffff</color>
     <color name="support_card_background">#55000000</color>
-    <color name="support_card_background_pressed">#88cccccc</color>
+    <color name="support_card_background_pressed">#22000000</color>
     <color name="support_text">#ffffff</color>
 
     <!-- Theme !-->
     <style name="SupportTheme" parent="android:Theme.Holo.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/SupportTheme.ActionBarStyle</item>
-        <item name="android:windowShowWallpaper">true</item>
-        <item name="android:windowBackground">@color/support_transparent_black</item>
+        <!--<item name="android:windowShowWallpaper">true</item>
+        <item name="android:windowBackground">@color/support_transparent_black</item>!-->
     </style>
     <style name="SupportTheme.ActionBarStyle" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@color/support_second_color</item>
