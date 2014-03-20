@@ -438,23 +438,21 @@ public class MainActivity extends Activity
 
             if (mCamera == null) {
                 MainActivity.this.finish();
-            }
-
-            mFaceDetectionPreview = new FacePreviewDetection(MainActivity.this, mCamera, new FacePreviewDetection.FacePreviewDetectionCallback() {
-                @Override
-                public void onFaceDetectionStart(boolean supported) {
-                    if (!supported) {
-                        makeToast(R.string.face_detection_not_support);
+            } else {
+                mFaceDetectionPreview = new FacePreviewDetection(MainActivity.this, mCamera, new FacePreviewDetection.FacePreviewDetectionCallback() {
+                    @Override
+                    public void onFaceDetectionStart(boolean supported) {
+                        if (!supported) {
+                            makeToast(R.string.face_detection_not_support);
+                        }
                     }
-                }
-            });
-            mPreview = (FrameLayout) findViewById(R.id.container);
-
-            mPreview.addView(mFaceDetectionPreview);
-            mPreview.addView(mGooglyPetView, mPetParams);
-            mCamera.setFaceDetectionListener(mCurrentListener);
-
-            setCameraDisplayOrientation(mCamera);
+                });
+                mPreview = (FrameLayout) findViewById(R.id.container);
+                mPreview.addView(mFaceDetectionPreview);
+                mPreview.addView(mGooglyPetView, mPetParams);
+                mCamera.setFaceDetectionListener(mCurrentListener);
+                setCameraDisplayOrientation(mCamera);
+            }
         }
     }
 
