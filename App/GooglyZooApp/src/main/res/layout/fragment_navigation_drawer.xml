@@ -10,4 +10,5 @@
     android:scrollbarStyle="outsideOverlay"
     android:clipToPadding="false"
     android:scrollbarThumbVertical="@drawable/scroll_bar"
+    android:listSelector="@android:color/transparent"
     tools:context="fr.tvbarthel.attempt.googlyzooapp.fragments.NavigationDrawerFragment" />
