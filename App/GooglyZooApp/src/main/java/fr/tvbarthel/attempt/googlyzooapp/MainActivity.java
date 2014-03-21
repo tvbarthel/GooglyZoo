@@ -132,6 +132,11 @@ public class MainActivity extends Activity
      */
     private boolean mHasDonate;
 
+    /**
+     * An {@link android.os.AsyncTask} used to openned the camera.
+     */
+    private CameraAsyncTask mCameraAsyncTask;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -217,12 +222,15 @@ public class MainActivity extends Activity
         mGooglyPetView = new GooglyPetView(this, mGooglyPet);
 
         //start camera in background for avoiding black screen
-        new CameraAsyncTask().execute();
+        mCameraAsyncTask = new CameraAsyncTask();
+        mCameraAsyncTask.execute();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        // Cancel the Camera AsyncTask.
+        mCameraAsyncTask.cancel(true);
 
         //remove listener from googly pet
         if (mGooglyPet != null) {
@@ -434,27 +442,35 @@ public class MainActivity extends Activity
         protected void onPostExecute(Camera camera) {
             super.onPostExecute(camera);
 
-            mCamera = camera;
-
-            if (mCamera == null) {
-                MainActivity.this.finish();
-            }
-
-            mFaceDetectionPreview = new FacePreviewDetection(MainActivity.this, mCamera, new FacePreviewDetection.FacePreviewDetectionCallback() {
-                @Override
-                public void onFaceDetectionStart(boolean supported) {
-                    if (!supported) {
-                        makeToast(R.string.face_detection_not_support);
-                    }
+            // Check if the task is cancelled before trying to use the camera.
+            if(!isCancelled()) {
+                mCamera = camera;
+                if (mCamera == null) {
+                    MainActivity.this.finish();
+                } else {
+                    mFaceDetectionPreview = new FacePreviewDetection(MainActivity.this, mCamera, new FacePreviewDetection.FacePreviewDetectionCallback() {
+                        @Override
+                        public void onFaceDetectionStart(boolean supported) {
+                            if (!supported) {
+                                makeToast(R.string.face_detection_not_support);
+                            }
+                        }
+                    });
+                    mPreview = (FrameLayout) findViewById(R.id.container);
+                    mPreview.addView(mFaceDetectionPreview);
+                    mPreview.addView(mGooglyPetView, mPetParams);
+                    mCamera.setFaceDetectionListener(mCurrentListener);
+                    setCameraDisplayOrientation(mCamera);
                 }
-            });
-            mPreview = (FrameLayout) findViewById(R.id.container);
+            }
+        }
 
-            mPreview.addView(mFaceDetectionPreview);
-            mPreview.addView(mGooglyPetView, mPetParams);
-            mCamera.setFaceDetectionListener(mCurrentListener);
-
-            setCameraDisplayOrientation(mCamera);
+        @Override
+        protected void onCancelled(Camera camera) {
+            super.onCancelled(camera);
+            if(camera != null) {
+                camera.release();
+            }
         }
     }
 

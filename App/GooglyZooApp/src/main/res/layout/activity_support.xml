@@ -16,7 +16,8 @@
         android:layout_alignParentTop="true"
         android:clipToPadding="false"
         android:scrollbarThumbVertical="@drawable/support_scroll_bar"
-        android:scrollbarStyle="outsideOverlay"/>
+        android:scrollbarStyle="outsideOverlay"
+        android:listSelector="@android:color/transparent"/>
 
     <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"
