@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.android.vending.billing.IabHelper;
 import com.android.vending.billing.IabResult;
 import com.android.vending.billing.Inventory;
+import com.android.vending.billing.tvbarthel.DonateCheckActivity;
 import com.android.vending.billing.tvbarthel.SupportActivity;
 import com.android.vending.billing.tvbarthel.utils.SupportUtils;
 
@@ -40,7 +41,7 @@ import fr.tvbarthel.attempt.googlyzooapp.utils.FaceDetectionUtils;
 import fr.tvbarthel.attempt.googlyzooapp.utils.GooglyPetUtils;
 import fr.tvbarthel.attempt.googlyzooapp.utils.SharedPreferencesUtils;
 
-public class MainActivity extends Activity
+public class MainActivity extends DonateCheckActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
     /**
      * Log cat
@@ -123,17 +124,7 @@ public class MainActivity extends Activity
     private Camera.FaceDetectionListener mCurrentListener;
 
     /**
-     * use to manage Toast well
-     */
-    private Toast mToast;
-
-    /**
-     * used to know if user as donate
-     */
-    private boolean mHasDonate;
-
-    /**
-     * An {@link android.os.AsyncTask} used to openned the camera.
+     * An {@link android.os.AsyncTask} used to opened the camera.
      */
     private CameraAsyncTask mCameraAsyncTask;
 
@@ -148,7 +139,7 @@ public class MainActivity extends Activity
                 GooglyPetUtils.GOOGLY_PET_ZEBRA);
 
         //init model
-        mGooglyPet = GooglyPetFactory.createGooglyPet(mSelectedGooglyPet,this);
+        mGooglyPet = GooglyPetFactory.createGooglyPet(mSelectedGooglyPet, this);
 
         //init pet event listener
         mGooglyPetListener = new GooglyPetListener() {
@@ -209,9 +200,6 @@ public class MainActivity extends Activity
     @Override
     protected void onResume() {
         super.onResume();
-
-        //check donation history
-        checkDonation();
 
         //register listener on googly pet
         if (mGooglyPet != null) {
@@ -392,26 +380,12 @@ public class MainActivity extends Activity
         }
     }
 
-    /**
-     * avoid Toast queue, only one Toast for this activity
-     *
-     * @param text toast message
-     */
-    private void makeToast(int text) {
-        if (mToast != null) {
-            mToast.cancel();
-        }
-        mToast = Toast.makeText(this, text, Toast.LENGTH_LONG);
-        mToast.show();
-    }
-
-
     @Override
     public void onNavigationDrawerItemSelected(GooglyPetEntry petSelected) {
         final int googlyName = petSelected.getName();
         mSelectedGooglyPet = petSelected.getPetId();
-        mTitle = "<b>" + getResources().getString(googlyName) + "</b>" +"<i>"+
-                getResources().getString(R.string.googly_name_ext)+"</i>";
+        mTitle = "<b>" + getResources().getString(googlyName) + "</b>" + "<i>" +
+                getResources().getString(R.string.googly_name_ext) + "</i>";
         mActionBarIcon = petSelected.getBlackAndWhiteIcon();
 
         //remove listener from the old pet
@@ -420,7 +394,7 @@ public class MainActivity extends Activity
         }
 
         //create the selected Googly pet
-        mGooglyPet = GooglyPetFactory.createGooglyPet(mSelectedGooglyPet,this);
+        mGooglyPet = GooglyPetFactory.createGooglyPet(mSelectedGooglyPet, this);
 
         //register listener on the new pet
         mGooglyPet.addListener(mGooglyPetListener);
@@ -428,6 +402,7 @@ public class MainActivity extends Activity
         if (mGooglyPetView != null) {
             mGooglyPetView.setModel(mGooglyPet);
         }
+
     }
 
 
@@ -443,7 +418,7 @@ public class MainActivity extends Activity
             super.onPostExecute(camera);
 
             // Check if the task is cancelled before trying to use the camera.
-            if(!isCancelled()) {
+            if (!isCancelled()) {
                 mCamera = camera;
                 if (mCamera == null) {
                     MainActivity.this.finish();
@@ -468,63 +443,9 @@ public class MainActivity extends Activity
         @Override
         protected void onCancelled(Camera camera) {
             super.onCancelled(camera);
-            if(camera != null) {
+            if (camera != null) {
                 camera.release();
             }
         }
     }
-
-
-    /**
-     * Unlock small advantages for supporter, at least greet them
-     */
-    public void checkDonation() {
-        mHasDonate = false;
-        final SharedPreferences sharedPreferences =
-                PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        final int donateState = sharedPreferences.getInt(SupportUtils.SUPPORT_SHARED_KEY,
-                SupportUtils.SUPPORT_UNSET);
-        switch (donateState) {
-            case SupportUtils.SUPPORT_UNSET:
-                //retrieve info
-                final IabHelper helper = new IabHelper(getApplicationContext(),
-                        getResources().getString(R.string.support_key));
-                helper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-                    @Override
-                    public void onIabSetupFinished(IabResult result) {
-                        if (result.isSuccess()) {
-                            helper.queryInventoryAsync(new IabHelper.QueryInventoryFinishedListener() {
-                                @Override
-                                public void onQueryInventoryFinished(IabResult result, Inventory inv) {
-                                    if (result.isSuccess()) {
-                                        if (SupportUtils.hasPurchased(inv)) {
-                                            mHasDonate = true;
-                                            makeToast(R.string.support_has_supported_us);
-
-                                            //save it
-                                            final SharedPreferences.Editor editor = sharedPreferences.edit();
-                                            editor.putInt(SupportUtils.SUPPORT_SHARED_KEY, SupportUtils.SUPPORT_DONATE);
-                                            editor.commit();
-
-                                            //release resources
-                                            helper.dispose();
-                                        }
-                                    }
-                                }
-                            });
-                        }
-                    }
-                });
-                break;
-            case SupportUtils.SUPPORT_DONATE:
-                //user already support us
-                mHasDonate = true;
-                makeToast(R.string.support_has_supported_us);
-                break;
-            case SupportUtils.SUPPORT_NOT_YET:
-                //user doesn't support us yet
-                break;
-        }
-    }
-
 }

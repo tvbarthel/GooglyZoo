@@ -20,6 +20,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.android.vending.billing.tvbarthel.DonateCheckActivity;
+
 import java.util.ArrayList;
 
 import fr.tvbarthel.attempt.googlyzooapp.R;
@@ -44,6 +46,11 @@ public class NavigationDrawerFragment extends Fragment {
      * A pointer to the current callbacks instance (the Activity).
      */
     private NavigationDrawerCallbacks mCallbacks;
+
+    /**
+     * A pointer to the current Donate check activity
+     */
+    private DonateCheckActivity mDonationCheck;
 
     /**
      * Helper component that ties the action bar to the navigation drawer.
@@ -144,6 +151,7 @@ public class NavigationDrawerFragment extends Fragment {
                         R.drawable.tbarthel_ic,
                         GooglyPetUtils.GOOGLY_PET_TBARTHEL));
     }
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -269,15 +277,27 @@ public class NavigationDrawerFragment extends Fragment {
      * @param position
      */
     private void selectItem(int position) {
-        mCurrentSelectedPosition = position;
-        if (mCallbacks != null) {
-            mCallbacks.onNavigationDrawerItemSelected(mAvailableGooglyPets.get(position));
+        GooglyPetEntry entrySelected = mAvailableGooglyPets.get(position);
+
+        //check content for donor
+        if (entrySelected.getPetId() == GooglyPetUtils.GOOGLY_PET_TBARTHEL &&
+                !mDonationCheck.hasDonate()) {
+            //content for donor but user hasn't donate yet
+            mDonationCheck.makeToast(R.string.donor_compensation);
+
+        } else {
+            mCurrentSelectedPosition = position;
+            if (mCallbacks != null) {
+                mCallbacks.onNavigationDrawerItemSelected(entrySelected);
+            }
+            if (mDrawerLayout != null) {
+                mDrawerLayout.closeDrawer(mFragmentContainerView);
+            }
+
         }
-        if (mDrawerLayout != null) {
-            mDrawerLayout.closeDrawer(mFragmentContainerView);
-        }
+
         if (mDrawerListView != null) {
-            updateSelectedEntry(position);
+            updateSelectedEntry(mCurrentSelectedPosition);
         }
     }
 
@@ -302,12 +322,19 @@ public class NavigationDrawerFragment extends Fragment {
         } catch (ClassCastException e) {
             throw new ClassCastException("Activity must implement NavigationDrawerCallbacks.");
         }
+
+        try {
+            mDonationCheck = (DonateCheckActivity) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Activity must extends DonationCheckActivity.");
+        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mCallbacks = null;
+        mDonationCheck = null;
     }
 
     @Override
