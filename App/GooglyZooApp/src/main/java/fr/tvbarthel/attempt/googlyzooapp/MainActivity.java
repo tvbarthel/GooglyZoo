@@ -4,12 +4,17 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.hardware.Camera;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.StyleSpan;
+import android.text.style.TypefaceSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -56,7 +61,7 @@ public class MainActivity extends DonateCheckActivity
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
-    private CharSequence mTitle;
+    private SpannableString mTitle;
 
     /**
      * Used to display icon from selected pet
@@ -162,7 +167,7 @@ public class MainActivity extends DonateCheckActivity
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
 
-        mTitle = getTitle();
+        mTitle = new SpannableString(getTitle());
         mActionBarIcon = R.drawable.ic_launcher;
 
         mNavigationDrawerFragment.selectEntry(mSelectedGooglyPet);
@@ -247,7 +252,7 @@ public class MainActivity extends DonateCheckActivity
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(Html.fromHtml(mTitle.toString()));
+        actionBar.setTitle(mTitle);
         actionBar.setIcon(mActionBarIcon);
     }
 
@@ -384,8 +389,14 @@ public class MainActivity extends DonateCheckActivity
     public void onNavigationDrawerItemSelected(GooglyPetEntry petSelected) {
         final int googlyName = petSelected.getName();
         mSelectedGooglyPet = petSelected.getPetId();
-        mTitle = "<b>" + getResources().getString(googlyName) + "</b>" + "<i>" +
-                getResources().getString(R.string.googly_name_ext) + "</i>";
+
+        final String petName = getResources().getString(googlyName);
+        final String oogly = getResources().getString(R.string.googly_name_ext);
+        mTitle = new SpannableString(getResources().getString(googlyName) + oogly);
+        mTitle.setSpan(new StyleSpan(Typeface.BOLD), 0, petName.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mTitle.setSpan(new TypefaceSpan("sans-serif-light"), petName.length() - 1, mTitle.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         mActionBarIcon = petSelected.getBlackAndWhiteIcon();
 
         //remove listener from the old pet
