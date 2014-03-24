@@ -47,7 +47,7 @@
 
     <!-- About dialog Fragment -->
     <string name="dialog_about_title">About</string>
-    <string name="dialog_about_content">GooglyZoo is an open-source application developed by Thomas \"tbarthel\" Barthélémy and Vincent \"vbarthel\" Barthélémy, two student in Computer Engineering.\n\nCode source: https://github.com/tvbarthel/GooglyZoo\n\nThis application is an head tracking attempt based on SmoothFaceDetectionListerner https://github.com/tvbarthel/GooglyZoo/blob/master/App/GooglyZooApp/src/main/java/fr/tvbarthel/attempt/googlyzooapp/listener/SmoothFaceDetectionListener.java \n\nImages, which come from clker.com, are under the latest version of the creative commons CC0 public domain dedication:\nhttp://creativecommons.org/publicdomain/zero/1.0/ </string>
+    <string name="dialog_about_content">GooglyZoo is an open-source application developed by Thomas \"tbarthel\" Barthélémy and Vincent \"vbarthel\" Barthélémy, two students in Computer Engineering.\n\nCode source: https://github.com/tvbarthel/GooglyZoo\n\nThis application is an head tracking attempt based on SmoothFaceDetectionListerner https://github.com/tvbarthel/GooglyZoo/blob/master/App/GooglyZooApp/src/main/java/fr/tvbarthel/attempt/googlyzooapp/listener/SmoothFaceDetectionListener.java \n\nImages, which come from clker.com, are under the latest version of the creative commons CC0 public domain dedication:\nhttp://creativecommons.org/publicdomain/zero/1.0/ </string>
 
 
     <!-- dialog fragments -->
