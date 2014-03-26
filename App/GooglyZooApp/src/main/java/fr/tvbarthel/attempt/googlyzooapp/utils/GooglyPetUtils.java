@@ -65,5 +65,10 @@ public class GooglyPetUtils {
      */
     public static final int GOOGLY_PET_TBARTHEL = 0x00000012;
 
+    /**
+     * vbarthel
+     */
+    public static final int GOOGLY_PET_VBARTHEL = 0x00000013;
+
 
 }

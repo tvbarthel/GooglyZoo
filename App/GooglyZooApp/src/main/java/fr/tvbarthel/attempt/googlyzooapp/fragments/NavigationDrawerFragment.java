@@ -150,6 +150,12 @@ public class NavigationDrawerFragment extends Fragment {
                         R.drawable.tbarthel_ic_bw,
                         R.drawable.tbarthel_ic,
                         GooglyPetUtils.GOOGLY_PET_TBARTHEL));
+
+        mAvailableGooglyPets.add(
+                new GooglyPetEntry(R.string.googly_vbarthel_name,
+                        R.drawable.vbarthel_ic_bw,
+                        R.drawable.vbarthel_ic,
+                        GooglyPetUtils.GOOGLY_PET_VBARTHEL));
     }
 
 
@@ -279,8 +285,9 @@ public class NavigationDrawerFragment extends Fragment {
     private void selectItem(int position) {
         GooglyPetEntry entrySelected = mAvailableGooglyPets.get(position);
 
-        //check content for donor
-        if (entrySelected.getPetId() == GooglyPetUtils.GOOGLY_PET_TBARTHEL &&
+        //if Tbarthoogly or Vbarthoogly, and hasn't user donate : toast gift content
+        if ((entrySelected.getPetId() == GooglyPetUtils.GOOGLY_PET_TBARTHEL ||
+                entrySelected.getPetId() == GooglyPetUtils.GOOGLY_PET_VBARTHEL) &&
                 !mDonationCheck.hasDonate()) {
             //content for donor but user hasn't donate yet
             mDonationCheck.makeToast(R.string.donor_compensation);
