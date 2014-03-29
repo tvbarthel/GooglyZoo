@@ -6,7 +6,7 @@ import android.view.View;
 /**
  * Created by tbarthel on 10/02/14.
  */
-public class FaceDetectionUtils {
+public final class FaceDetectionUtils {
 
     /**
      * process values from FaceDetectionListener to retrieve relative position
@@ -43,6 +43,9 @@ public class FaceDetectionUtils {
         }
 
         return relativePosition;
+    }
 
+    //Non instantiable class.
+    private FaceDetectionUtils() {
     }
 }

@@ -3,7 +3,7 @@ package fr.tvbarthel.attempt.googlyzooapp.utils;
 /**
  * Created by tbarthel on 23/02/14.
  */
-public class GooglyPetUtils {
+public final class GooglyPetUtils {
 
     /**
      * zebra
@@ -70,5 +70,7 @@ public class GooglyPetUtils {
      */
     public static final int GOOGLY_PET_VBARTHEL = 0x00000013;
 
-
+    //Non instantiable class.
+    private GooglyPetUtils() {
+    }
 }

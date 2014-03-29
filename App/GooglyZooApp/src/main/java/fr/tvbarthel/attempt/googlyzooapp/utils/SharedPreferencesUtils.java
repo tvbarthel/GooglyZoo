@@ -3,7 +3,7 @@ package fr.tvbarthel.attempt.googlyzooapp.utils;
 /**
  * Created by tbarthel on 23/02/14.
  */
-public class SharedPreferencesUtils {
+public final class SharedPreferencesUtils {
 
     /**
      * Per the design guidelines, you should show the drawer on launch until the user manually
@@ -15,4 +15,8 @@ public class SharedPreferencesUtils {
      * Tracks the last selected pet between two launch
      */
     public static final String PREF_USER_GOOGLY_PET_SELECTED = "googly_pet_selected";
+
+    //Non instantiable class.
+    private SharedPreferencesUtils() {
+    }
 }

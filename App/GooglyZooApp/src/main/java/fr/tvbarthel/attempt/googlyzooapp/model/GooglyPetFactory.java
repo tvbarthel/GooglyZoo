@@ -8,7 +8,7 @@ import fr.tvbarthel.attempt.googlyzooapp.utils.GooglyPetUtils;
 /**
  * Created by tbarthel on 16/02/14.
  */
-public class GooglyPetFactory {
+public final class GooglyPetFactory {
 
     /**
      * relative values for zebra's eyes position
@@ -134,7 +134,7 @@ public class GooglyPetFactory {
      * @param id id from GooglyPetUtils
      * @return
      */
-    public static GooglyPet createGooglyPet(int id,Context context) {
+    public static GooglyPet createGooglyPet(int id, Context context) {
         final GooglyPet createdPet;
         switch (id) {
             case GooglyPetUtils.GOOGLY_PET_ZEBRA:
@@ -388,5 +388,9 @@ public class GooglyPetFactory {
                 VBARTHEL_RIGHT_EYE_Y,
                 context.getResources().getDimensionPixelSize(R.dimen.eye_diameter_vbarthel),
                 VBARTHEL_BODY_PROPORTION);
+    }
+
+    //Non instantiable class.
+    private GooglyPetFactory() {
     }
 }
