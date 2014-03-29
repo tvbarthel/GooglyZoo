@@ -16,7 +16,7 @@ import java.util.List;
 public class FacePreviewDetection extends SurfaceView implements SurfaceHolder.Callback {
 
     private static final String TAG = FacePreviewDetection.class.getName();
-    private static final double ASPECT_TOLERANCE = 0.2;
+    private static final double ASPECT_TOLERANCE = 0.15;
 
     private SurfaceHolder mHolder;
     private Camera mCamera;
