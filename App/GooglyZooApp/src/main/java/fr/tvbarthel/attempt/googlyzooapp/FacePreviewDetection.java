@@ -1,6 +1,7 @@
 package fr.tvbarthel.attempt.googlyzooapp;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.hardware.Camera;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -96,6 +97,12 @@ public class FacePreviewDetection extends SurfaceView implements SurfaceHolder.C
      * @return
      */
     private Camera.Size getOptimalSize(List<Camera.Size> sizes, int surfaceWidth, int surfaceHeight) {
+        if (isPortrait()) {
+            // Inverse surfaceWidth and surfaceHeight since the sizes are all in landscape mode.
+            surfaceHeight = surfaceHeight + surfaceWidth;
+            surfaceWidth = surfaceHeight - surfaceWidth;
+            surfaceHeight = surfaceHeight - surfaceWidth;
+        }
         double targetRatio = (double) surfaceWidth / surfaceHeight;
         Camera.Size optimalSize = null;
         double optimalArea = 0;
@@ -125,6 +132,10 @@ public class FacePreviewDetection extends SurfaceView implements SurfaceHolder.C
         }
 
         return optimalSize;
+    }
+
+    public boolean isPortrait() {
+        return (getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
     }
 
     private void startFaceDetection() {
