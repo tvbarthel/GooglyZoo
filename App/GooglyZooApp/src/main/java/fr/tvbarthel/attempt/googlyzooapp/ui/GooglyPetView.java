@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 
+import fr.tvbarthel.attempt.googlyzooapp.R;
 import fr.tvbarthel.attempt.googlyzooapp.listener.GooglyPetListener;
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyEye;
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPet;
@@ -23,9 +24,9 @@ public class GooglyPetView extends ImageView {
     private static final String TAG = GooglyPetView.class.getName();
 
     /**
-     * radius used for eye navigation
+     * pupil radius
      */
-    private static final float EYE_RADIUS = 15f;
+    private float mPupilRadius;
 
     /**
      * Paint used to draw eyes
@@ -54,6 +55,8 @@ public class GooglyPetView extends ImageView {
 
         setModel(model);
         mFirstDisplay = true;
+
+        mPupilRadius = context.getResources().getDimensionPixelSize(R.dimen.eye_pupil_diameter);
     }
 
     /**
@@ -84,14 +87,14 @@ public class GooglyPetView extends ImageView {
                 //draw left eye
                 canvas.drawCircle(leftEye.getCenterX() * middleW + leftEye.getOrientationX(),
                         leftEye.getCenterY() * middleH + leftEye.getOrientationY(),
-                        EYE_RADIUS, mPaint);
+                        mPupilRadius, mPaint);
             }
 
             if (rightEye != null && rightEye.isOpened()) {
                 //draw right eye
                 canvas.drawCircle(rightEye.getCenterX() * middleW + rightEye.getOrientationX(),
                         rightEye.getCenterY() * middleH + rightEye.getOrientationY(),
-                        EYE_RADIUS, mPaint);
+                        mPupilRadius, mPaint);
             }
         }
     }
