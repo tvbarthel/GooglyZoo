@@ -7,6 +7,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by tbarthel on 06/02/14.
@@ -14,6 +15,7 @@ import java.io.IOException;
 public class FacePreviewDetection extends SurfaceView implements SurfaceHolder.Callback {
 
     private static final String TAG = FacePreviewDetection.class.getName();
+    private static final double ASPECT_TOLERANCE = 0.2;
 
     private SurfaceHolder mHolder;
     private Camera mCamera;
@@ -74,8 +76,8 @@ public class FacePreviewDetection extends SurfaceView implements SurfaceHolder.C
             //get best size for preview for landscape orientation
             //based on whishes ratio;
             Camera.Parameters params = mCamera.getParameters();
-            Camera.Size bestSize = getBestPreviewSize(w, h, params);
-            params.setPreviewSize(bestSize.width, bestSize.height);
+            Camera.Size optimalSize = getOptimalSize(params.getSupportedPreviewSizes(), w, h);
+            params.setPreviewSize(optimalSize.width, optimalSize.height);
             mCamera.setParameters(params);
             mCamera.startPreview();
             startFaceDetection();
@@ -86,31 +88,43 @@ public class FacePreviewDetection extends SurfaceView implements SurfaceHolder.C
     }
 
     /**
-     * give the best size based of wishes ratio
+     * Calculate the optimal size of camera preview
      *
-     * @param width      wishes width
-     * @param height     wishes height
-     * @param parameters camera parameters to get supported preview sizes
+     * @param sizes
+     * @param surfaceWidth
+     * @param surfaceHeight
      * @return
      */
-    private Camera.Size getBestPreviewSize(int width, int height, Camera.Parameters parameters) {
-        Camera.Size result = null;
-        final Camera.Parameters p = mCamera.getParameters();
-        for (Camera.Size size : p.getSupportedPreviewSizes()) {
-            if (size.width <= width && size.height <= height) {
-                if (result == null) {
-                    result = size;
-                } else {
-                    final int resultArea = result.width * result.height;
-                    final int newArea = size.width * size.height;
+    private Camera.Size getOptimalSize(List<Camera.Size> sizes, int surfaceWidth, int surfaceHeight) {
+        double targetRatio = (double) surfaceWidth / surfaceHeight;
+        Camera.Size optimalSize = null;
+        double optimalArea = 0;
 
-                    if (newArea > resultArea) {
-                        result = size;
-                    }
+        // Try to find the size that matches the target ratio and has the max area.
+        for (Camera.Size candidateSize : sizes) {
+            double candidateRatio = (double) candidateSize.width / candidateSize.height;
+            double candidateArea = candidateSize.width * candidateSize.height;
+            double ratioDifference = Math.abs(candidateRatio - targetRatio);
+            if (ratioDifference < ASPECT_TOLERANCE && candidateArea > optimalArea) {
+                optimalSize = candidateSize;
+                optimalArea = candidateArea;
+            }
+        }
+
+        // Cannot find a size that matches the target ratio.
+        // Try to find the size that has the max area.
+        if (optimalSize == null) {
+            optimalArea = 0;
+            for (Camera.Size candidateSize : sizes) {
+                double candidateArea = candidateSize.width * candidateSize.height;
+                if (candidateArea > optimalArea) {
+                    optimalSize = candidateSize;
+                    optimalArea = candidateArea;
                 }
             }
         }
-        return result;
+
+        return optimalSize;
     }
 
     private void startFaceDetection() {
