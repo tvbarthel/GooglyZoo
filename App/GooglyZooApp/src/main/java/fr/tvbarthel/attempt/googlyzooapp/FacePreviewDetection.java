@@ -115,13 +115,12 @@ public class FacePreviewDetection extends SurfaceView implements SurfaceHolder.C
 
     private void startFaceDetection() {
         Camera.Parameters params = mCamera.getParameters();
-
+        boolean supported = false;
         if (params.getMaxNumDetectedFaces() > 0) {
             mCamera.startFaceDetection();
-            Log.e(TAG, "Face Detection started");
-        } else {
-            Log.e(TAG, "Face Detection not supported");
+            supported = true;
         }
+        mCallback.onFaceDetectionStart(supported);
     }
 
     public interface FacePreviewDetectionCallback {

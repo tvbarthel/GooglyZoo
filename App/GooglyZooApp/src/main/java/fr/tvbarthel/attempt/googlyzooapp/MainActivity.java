@@ -1,7 +1,6 @@
 package fr.tvbarthel.attempt.googlyzooapp;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
@@ -10,7 +9,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
-import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StyleSpan;
@@ -23,14 +21,9 @@ import android.view.Surface;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
-import com.android.vending.billing.IabHelper;
-import com.android.vending.billing.IabResult;
-import com.android.vending.billing.Inventory;
 import com.android.vending.billing.tvbarthel.DonateCheckActivity;
 import com.android.vending.billing.tvbarthel.SupportActivity;
-import com.android.vending.billing.tvbarthel.utils.SupportUtils;
 
 import fr.tvbarthel.attempt.googlyzooapp.fragments.AboutDialogFragment;
 import fr.tvbarthel.attempt.googlyzooapp.fragments.LicenseDialogFragment;
