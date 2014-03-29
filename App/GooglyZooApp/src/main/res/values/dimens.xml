@@ -28,5 +28,6 @@
     <dimen name="eye_diameter_bee">21dp</dimen>
     <dimen name="eye_diameter_tbarthel">21dp</dimen>
     <dimen name="eye_diameter_vbarthel">21dp</dimen>
+    <dimen name="eye_pupil_diameter">9dp</dimen>
 
 </resources>
