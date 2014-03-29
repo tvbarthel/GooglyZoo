@@ -58,7 +58,7 @@ public class SupportAdapter extends ArrayAdapter<CoffeeEntry> {
                     ((ProgressBar) rowView.findViewById(R.id.support_detail_energy_bar));
             viewHolder.energyValue =
                     ((TextView) rowView.findViewById(R.id.support_detail_energy_value));
-            viewHolder.cnadyBar =
+            viewHolder.candyBar =
                     ((ProgressBar) rowView.findViewById(R.id.support_detail_candy_bar));
             viewHolder.candyValue =
                     ((TextView) rowView.findViewById(R.id.support_detail_candy_value));
@@ -83,7 +83,7 @@ public class SupportAdapter extends ArrayAdapter<CoffeeEntry> {
         holder.energyBar.setProgress(currentEntry.getEnergyRate());
         holder.energyValue.setText(getContext().getString(R.string.support_bar_text,
                 currentEntry.getEnergyRate()));
-        holder.cnadyBar.setProgress(currentEntry.getCandyRate());
+        holder.candyBar.setProgress(currentEntry.getCandyRate());
         holder.candyValue.setText(getContext().getString(R.string.support_bar_text,
                 currentEntry.getCandyRate()));
 
@@ -103,6 +103,6 @@ public class SupportAdapter extends ArrayAdapter<CoffeeEntry> {
         public TextView candyValue;
         public ProgressBar coffeeBar;
         public ProgressBar energyBar;
-        public ProgressBar cnadyBar;
+        public ProgressBar candyBar;
     }
 }
