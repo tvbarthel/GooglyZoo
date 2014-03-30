@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/drawer_entry"
-                android:id="@+id/googly_drawer_entry">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/drawer_entry"
+    android:id="@+id/googly_drawer_entry">
 
     <TextView
         android:id="@+id/googly_drawer_pet_name"
@@ -15,7 +15,7 @@
         android:textColor="@color/white"
         android:layout_centerVertical="true"
         android:layout_alignParentStart="true"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin_half"/>
+        android:layout_marginLeft="@dimen/activity_horizontal_margin_half" />
 
     <TextView
         android:id="@+id/googly_drawer_oogly"
@@ -27,7 +27,7 @@
         android:textColor="@color/white"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/googly_drawer_pet_name"
-        android:layout_marginRight="@dimen/support_horizontal_margin"/>
+        android:layout_marginRight="@dimen/support_horizontal_margin" />
 
     <ImageView
         android:id="@+id/googly_drawer_pet_ic"
@@ -39,5 +39,5 @@
         android:layout_alignParentEnd="true"
         android:paddingLeft="@dimen/navigation_drawer_list_horizontal_padding"
         android:layout_marginRight="@dimen/navigation_drawer_list_horizontal_padding"
-        android:layout_marginBottom="@dimen/navigation_drawer_list_vertical_padding"/>
+        android:layout_marginBottom="@dimen/navigation_drawer_list_vertical_padding" />
 </RelativeLayout>

@@ -18,6 +18,7 @@
         <!--<item name="android:windowShowWallpaper">true</item>
         <item name="android:windowBackground">@color/support_transparent_black</item>!-->
     </style>
+
     <style name="SupportTheme.ActionBarStyle" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@color/support_second_color</item>
     </style>

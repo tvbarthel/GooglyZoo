@@ -9,8 +9,7 @@
                 android:centerColor="@color/support_bar_background"
                 android:centerY="0.75"
                 android:endColor="@color/support_transparent_black"
-                android:angle="270"
-                />
+                android:angle="270" />
         </shape>
     </item>
 
@@ -22,8 +21,7 @@
                     android:centerColor="@color/support_bar_progress"
                     android:centerY="0.75"
                     android:endColor="@color/support_transparent_black"
-                    android:angle="270"
-                    />
+                    android:angle="270" />
             </shape>
         </clip>
     </item>
@@ -36,8 +34,7 @@
                     android:centerColor="@color/support_bar_progress"
                     android:centerY="0.75"
                     android:endColor="@color/support_transparent_black"
-                    android:angle="270"
-                    />
+                    android:angle="270" />
             </shape>
         </clip>
     </item>

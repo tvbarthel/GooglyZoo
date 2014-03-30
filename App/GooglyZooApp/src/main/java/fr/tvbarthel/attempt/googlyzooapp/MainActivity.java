@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.hardware.Camera;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -290,6 +291,16 @@ public class MainActivity extends DonateCheckActivity
             return true;
         } else if (id == R.id.action_support) {
             startActivity(new Intent(this, SupportActivity.class));
+            return true;
+        } else if (id == R.id.action_contact_us) {
+            String contactUriString = getString(R.string.contact_send_to_uri,
+                    Uri.encode(getString(R.string.contact_mail)),
+                    Uri.encode(getString(R.string.contact_default_subject)));
+            Uri contactUri = Uri.parse(contactUriString);
+            Intent sendMail = new Intent(Intent.ACTION_SENDTO);
+            sendMail.setData(contactUri);
+            startActivity(sendMail);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

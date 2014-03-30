@@ -26,6 +26,13 @@
     <string name="action_license_title">License</string>
     <string name="action_about_title">About</string>
     <string name="action_beta_title">Beta</string>
+    <string name="action_support">Buy us a coffee</string>
+    <string name="action_contact_us">Contact us</string>
+
+    <!-- Contact Us -->
+    <string name="contact_mail">tvbarthel@gmail.com</string>
+    <string name="contact_default_subject">[GooglyZoo] Hi there!</string>
+    <string name="contact_send_to_uri">mailto:%1$s?subject=%2$s</string>
 
     <!-- Toast !-->
     <string name="face_detection_not_support">Sorry, your device doesn\'t support Face Detection :(</string>

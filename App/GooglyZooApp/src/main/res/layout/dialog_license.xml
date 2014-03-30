@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/transparent_grey">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent_grey">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,7 +18,7 @@
             android:text="@string/dialog_license_title"
             android:id="@+id/textView"
             android:fontFamily="sans-serif-light"
-            android:textColor="@color/holo_blue"/>
+            android:textColor="@color/holo_blue" />
 
         <TextView
             android:layout_width="fill_parent"
@@ -28,7 +28,7 @@
             android:id="@+id/dialog_license_content"
             android:fontFamily="sans-serif-light"
             android:layout_marginTop="8dp"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black" />
 
     </LinearLayout>
 

@@ -1,18 +1,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/action_license"
+    <item
+        android:id="@+id/action_license"
         android:title="@string/action_license_title"
         android:orderInCategory="100"
         android:showAsAction="never" />
-    <item android:id="@+id/action_about"
-          android:title="@string/action_about_title"
-          android:orderInCategory="90"
-          android:showAsAction="never" />
-    <item android:id="@+id/action_beta"
-          android:title="@string/action_beta_title"
-          android:orderInCategory="80"
-          android:showAsAction="never" />
-    <item android:id="@+id/action_more_projects"
-          android:title="@string/googly_action_more_projects"
-          android:orderInCategory="101"
-          android:showAsAction="never" />
+    <item
+        android:id="@+id/action_about"
+        android:title="@string/action_about_title"
+        android:orderInCategory="90"
+        android:showAsAction="never" />
+    <item
+        android:id="@+id/action_beta"
+        android:title="@string/action_beta_title"
+        android:orderInCategory="80"
+        android:showAsAction="never" />
+    <item
+        android:id="@+id/action_more_projects"
+        android:title="@string/googly_action_more_projects"
+        android:orderInCategory="101"
+        android:showAsAction="never" />
 </menu>
