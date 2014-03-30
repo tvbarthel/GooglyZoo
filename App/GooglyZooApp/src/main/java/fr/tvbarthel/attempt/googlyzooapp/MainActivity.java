@@ -3,6 +3,7 @@ package fr.tvbarthel.attempt.googlyzooapp;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.hardware.Camera;
 import android.os.AsyncTask;
@@ -35,6 +36,7 @@ import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPet;
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPetEntry;
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPetFactory;
 import fr.tvbarthel.attempt.googlyzooapp.ui.GooglyPetView;
+import fr.tvbarthel.attempt.googlyzooapp.utils.CameraUtils;
 import fr.tvbarthel.attempt.googlyzooapp.utils.FaceDetectionUtils;
 import fr.tvbarthel.attempt.googlyzooapp.utils.GooglyPetUtils;
 import fr.tvbarthel.attempt.googlyzooapp.utils.SharedPreferencesUtils;
@@ -80,6 +82,11 @@ public class MainActivity extends DonateCheckActivity
      * layout params used to center | bottom googly pet view
      */
     private FrameLayout.LayoutParams mPetParams;
+
+    /**
+     * layout params used to render a proportional camera preview
+     */
+    private FrameLayout.LayoutParams mPreviewParams;
 
     /**
      * camera preview
@@ -130,6 +137,8 @@ public class MainActivity extends DonateCheckActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mPreview = (FrameLayout) findViewById(R.id.container);
 
         //get last pet used
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
@@ -409,12 +418,52 @@ public class MainActivity extends DonateCheckActivity
 
     }
 
+    /**
+     * used to check orientation
+     *
+     * @return
+     */
+    public boolean isPortrait() {
+        return (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
+    }
+
 
     private class CameraAsyncTask extends AsyncTask<Void, Void, Camera> {
 
         @Override
         protected Camera doInBackground(Void... params) {
-            return getCameraInstance();
+            Camera camera = getCameraInstance();
+            if (camera == null) {
+                MainActivity.this.finish();
+            } else {
+                //configure Camera parameters
+                Camera.Parameters cameraParameters = camera.getParameters();
+
+                //get optimal camera preview size according to the layout used to display it
+                Camera.Size bestSize = CameraUtils.getBestPreviewSize(
+                        cameraParameters.getSupportedPreviewSizes()
+                        , mPreview.getWidth()
+                        , mPreview.getHeight()
+                        , isPortrait());
+                //set optimal camera preview
+                cameraParameters.setPreviewSize(bestSize.width, bestSize.height);
+                camera.setParameters(cameraParameters);
+
+                //set camera orientation to match with current device orientation
+                setCameraDisplayOrientation(camera);
+
+                //get proportional dimension for the layout used to display preview according to the preview size used
+                int[] adaptedDimension = CameraUtils.getProportionalDimension(
+                        bestSize
+                        , mPreview.getWidth()
+                        , mPreview.getHeight()
+                        , isPortrait());
+
+                //set up params for the layout used to display the preview
+                mPreviewParams = new FrameLayout.LayoutParams(adaptedDimension[0], adaptedDimension[1]);
+                mPreviewParams.gravity = Gravity.CENTER;
+            }
+            return camera;
         }
 
         @Override
@@ -427,19 +476,21 @@ public class MainActivity extends DonateCheckActivity
                 if (mCamera == null) {
                     MainActivity.this.finish();
                 } else {
-                    mFaceDetectionPreview = new FacePreviewDetection(MainActivity.this, mCamera, new FacePreviewDetection.FacePreviewDetectionCallback() {
-                        @Override
-                        public void onFaceDetectionStart(boolean supported) {
-                            if (!supported) {
-                                makeToast(R.string.face_detection_not_support);
-                            }
-                        }
-                    });
-                    mPreview = (FrameLayout) findViewById(R.id.container);
-                    mPreview.addView(mFaceDetectionPreview);
+                    //set up face detection preview
+                    mFaceDetectionPreview = new FacePreviewDetection(
+                            MainActivity.this,
+                            mCamera,
+                            new FacePreviewDetection.FacePreviewDetectionCallback() {
+                                @Override
+                                public void onFaceDetectionStart(boolean supported) {
+                                    if (!supported) {
+                                        makeToast(R.string.face_detection_not_support);
+                                    }
+                                }
+                            });
+                    mPreview.addView(mFaceDetectionPreview, mPreviewParams);
                     mPreview.addView(mGooglyPetView, mPetParams);
                     mCamera.setFaceDetectionListener(mCurrentListener);
-                    setCameraDisplayOrientation(mCamera);
                 }
             }
         }
