@@ -21,4 +21,8 @@
         android:title="@string/action_support"
         android:icon="@drawable/ic_support"
         android:showAsAction="ifRoom"/>
+    <item android:id="@+id/action_contact_us"
+        android:title="@string/action_contact_us"
+        android:orderInCategory="200"
+        android:showAsAction="never"/>
 </menu>
