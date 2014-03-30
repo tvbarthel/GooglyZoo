@@ -122,9 +122,9 @@ public final class GooglyPetFactory {
      * relative values for vbarthel's eyes position
      */
     private static final float VBARTHEL_LEFT_EYE_X = 0.385f;
-    private static final float VBARTHEL_LEFT_EYE_Y = 0.42f;
+    private static final float VBARTHEL_LEFT_EYE_Y = 0.40f;
     private static final float VBARTHEL_RIGHT_EYE_X = 0.60f;
-    private static final float VBARTHEL_RIGHT_EYE_Y = 0.42f;
+    private static final float VBARTHEL_RIGHT_EYE_Y = 0.40f;
     private static final float VBARTHEL_BODY_PROPORTION = 0.80f;
 
 
