@@ -26,6 +26,7 @@
     <string name="action_license_title">License</string>
     <string name="action_about_title">About</string>
     <string name="action_beta_title">Beta</string>
+    <string name="action_support">Buy us a coffee</string>
 
     <!-- Toast !-->
     <string name="face_detection_not_support">Sorry, your device doesn\'t support Face Detection :(</string>
