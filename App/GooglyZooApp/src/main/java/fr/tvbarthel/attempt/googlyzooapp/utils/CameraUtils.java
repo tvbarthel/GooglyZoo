@@ -67,8 +67,8 @@ public final class CameraUtils {
      * @param isPortrait indicate if current orientation is portrait since the camera sizes are all in landscape mode
      * @return dimension which matches camera preview size ratio
      */
-    public static double[] getProportionalDimension(Camera.Size size, int targetW, int targetH, boolean isPortrait) {
-        double[] adaptedDimension = new double[2];
+    public static int[] getProportionalDimension(Camera.Size size, int targetW, int targetH, boolean isPortrait) {
+        int[] adaptedDimension = new int[2];
         double previewRatio;
 
         if (isPortrait) {
@@ -79,10 +79,10 @@ public final class CameraUtils {
 
         if (((double) targetW / targetH) > previewRatio) {
             adaptedDimension[0] = targetW;
-            adaptedDimension[1] = adaptedDimension[0] / previewRatio;
+            adaptedDimension[1] = (int) (adaptedDimension[0] / previewRatio);
         } else {
             adaptedDimension[1] = targetH;
-            adaptedDimension[0] = adaptedDimension[1] * previewRatio;
+            adaptedDimension[0] = (int) (adaptedDimension[1] * previewRatio);
         }
 
         return adaptedDimension;
