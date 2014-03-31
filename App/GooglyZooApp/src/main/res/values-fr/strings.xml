@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">GooglyZoo</string>
+    <string name="navigation_drawer_open">Ouvrir le panneau de navigation</string>
+    <string name="navigation_drawer_close">Fermer le panneau de navigation</string>
+    <string name="googly_zebra_name">Zebr</string>
+    <string name="googly_gnu_name">Gn</string>
+    <string name="googly_hippo_name">Hipp</string>
+    <string name="googly_bee_name">Abeill</string>
+    <string name="googly_elephant_name">Eleph</string>
+    <string name="googly_cow_name">Vach</string>
+    <string name="googly_goat_name">Chèvr</string>
+    <string name="googly_elk_name">El</string>
+    <string name="googly_horse_name">Cheval</string>
+    <string name="googly_pig_name">Cochon</string>
+    <string name="googly_triceratops_name">Tricerat</string>
+    <string name="googly_tbarthel_name">Tbarth</string>
+    <string name="googly_vbarthel_name">Vbarth</string>
+    <string name="googly_name_ext">oogly</string>
+
+
+    <!-- Action bar !-->
+    <string name="googly_drawer_instruction">Choisissez votre Googly Pet</string>
+    <string name="googly_action_more_projects">Plus de projets</string>
+    <string name="action_license_title">Licence</string>
+    <string name="action_about_title">A propos</string>
+    <string name="action_beta_title">Beta</string>
+    <string name="action_support">Aidez nous avec un café</string>
+    <string name="action_contact_us">Contactez nous</string>
+
+    <!-- Contact Us -->
+    <string name="contact_mail">tvbarthel@gmail.com</string>
+    <string name="contact_default_subject">[GooglyZoo] Salut!</string>
+    <string name="contact_send_to_uri">mailto:%1$s?subject=%2$s</string>
+
+    <!-- Toast !-->
+    <string name="face_detection_not_support">Désolé, votre téléphone ne supporte pas la détection de visage :(</string>
+    <string name="basic_face_detection">SmoothFaceDetection OFF</string>
+    <string name="smooth_face_detection">SmoothFaceDetection ON</string>
+    <string name="donor_compensation">Contenu de remerciement pour les donateurs</string>
+
+    <!-- More project dialog Fragment!-->
+    <string name="dialog_more_fragment_title">Suivez d\'autres projets</string>
+    <string name="dialog_more_fragment_chasy_title">Chase Whisply</string>
+    <string name="dialog_more_fragment_simple_thermometer_title">Simple Thermometer</string>
+    <string name="dialog_more_fragment_simplethermometer_package_name">fr.tvbarthel.apps.simplethermometer</string>
+    <string name="dialog_more_fragment_chase_whisply_package_name">fr.tvbarthel.games.chasewhisply</string>
+
+    <!-- License dialog Fragment -->
+    <string name="dialog_license_title">Licence</string>
+    <string name="dialog_license_content">
+        Copyright © 2013 tvbarthel.\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program. If not, see http://www.gnu.org/licenses/.
+    </string>
+
+    <!-- About dialog Fragment -->
+    <string name="dialog_about_title">A propos</string>
+    <string name="dialog_about_content">GooglyZoo est une application open-source développée par Thomas \"tbarthel\" Barthélémy and Vincent \"vbarthel\" Barthélémy, deux étudiants en génie informatique.\n\nCode source: https://github.com/tvbarthel/GooglyZoo\n\nCette application est une tentative de détection de visage basée sur SmoothFaceDetectionListerner https://github.com/tvbarthel/GooglyZoo/blob/master/App/GooglyZooApp/src/main/java/fr/tvbarthel/attempt/googlyzooapp/listener/SmoothFaceDetectionListener.java \n\nLes images, issues du site clker.com, sont sous la dernière version de la licence \" creative commons CC0 public domain dedication \" :\nhttp://creativecommons.org/publicdomain/zero/1.0/ </string>
+
+
+    <!-- dialog fragments -->
+    <string name="dialog_ok">OK</string>
+</resources>
