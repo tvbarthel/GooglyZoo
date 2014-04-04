@@ -5,7 +5,34 @@ GooglyZoo
 
 Googly Zoo is an augmented virtuality experience. Choose your favorite virtual Googly pet and simply move your face in front of your smartphone to wake it up. Once your virtual pet is awake, its Googly Eyes will track you for hours without blinking! Even if your new virtual pet doesn't show any signs of tiredness, it will automatically fall asleep as soon as you disappear from your screen.
 
+[https://www.youtube.com/watch?v=hu4kZRP5mZA](Short video on YouTube)
+
+SmoothFaceDetectionListener
+=========
+
 Googly Zoo is an head tracking attempt developed to experiment FaceDetection listener. Based on Camera.FaceDetectionListener small changes have been implemented to add simulated head positions between two real detected ones. Due to those simulated values motions of eyes are smoother, especially when lightness doesn't allow continued detection. The drawback is a short delay (100ms) used to perform the animation.
+
+[https://github.com/tvbarthel/GooglyZoo/blob/master/App/GooglyZooApp/src/main/java/fr/tvbarthel/attempt/googlyzooapp/listener/SmoothFaceDetectionListener.java](SmoothFaceDetectionListener on GitHub)
+
+Simple usage
+=========
+
+<pre>
+  mCamera.setFaceDetectionListener(new SmoothFaceDetectionListener() {
+     @Override
+        public void onSmoothFaceDetection(float[] smoothFacePosition) {
+           // do your stuff here
+        }
+     }
+  );
+</pre>
+
+TODO
+=========
+
+SmoothFaceDetectionListener : support multiple faces.
+SmoothFaceDetectionListener : return face object, not only position
+Googly Zoo : add some interactions 
 
 Credits and License
 ========
