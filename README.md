@@ -7,6 +7,8 @@ Googly Zoo is an augmented virtuality experience. Choose your favorite virtual G
 
 [Short video on YouTube](https://www.youtube.com/watch?v=hu4kZRP5mZA)
 
+[Become a beta tester](https://plus.google.com/101426573110982697753/posts/5vQ9rJWFFQk)
+
 SmoothFaceDetectionListener
 =========
 
