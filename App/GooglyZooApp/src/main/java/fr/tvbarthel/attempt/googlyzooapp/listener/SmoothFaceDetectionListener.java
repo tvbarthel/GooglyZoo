@@ -85,7 +85,7 @@ public abstract class SmoothFaceDetectionListener implements Camera.FaceDetectio
 
         //if smooth motion already running, cancel it
         if (mSmoothPositionAnimator.isRunning()) {
-            mSmoothPositionAnimator.end();
+            mSmoothPositionAnimator.cancel();
         }
 
         //set new detected position as end value
