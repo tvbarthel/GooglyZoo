@@ -285,10 +285,6 @@ public class MainActivity extends DonateCheckActivity
         } else if (id == R.id.action_about) {
             (new AboutDialogFragment()).show(getFragmentManager(), "dialog_about");
             return true;
-        } else if (id == R.id.action_beta) {
-            mCurrentListener = switchListener();
-            mCamera.setFaceDetectionListener(mCurrentListener);
-            return true;
         } else if (id == R.id.action_support) {
             startActivity(new Intent(this, SupportActivity.class));
             return true;
@@ -498,7 +494,8 @@ public class MainActivity extends DonateCheckActivity
                                         makeToast(R.string.face_detection_not_support);
                                     }
                                 }
-                            });
+                            }
+                    );
                     mPreview.addView(mFaceDetectionPreview, mPreviewParams);
                     mPreview.addView(mGooglyPetView, mPetParams);
                     mCamera.setFaceDetectionListener(mCurrentListener);
