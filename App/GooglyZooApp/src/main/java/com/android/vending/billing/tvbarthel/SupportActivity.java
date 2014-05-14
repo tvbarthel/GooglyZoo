@@ -107,12 +107,12 @@ public class SupportActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_support);
+        setContentView(fr.tvbarthel.attempt.googlyzooapp.R.layout.activity_support);
 
         //get ui components
-        mCoffeeListView = (ListView) findViewById(R.id.support_purchase_list);
-        mLoader = (ProgressBar) findViewById(R.id.support_progressbar);
-        mErrorPlaceholder = (TextView) findViewById(R.id.support_error_placeholder);
+        mCoffeeListView = (ListView) findViewById(fr.tvbarthel.attempt.googlyzooapp.R.id.support_purchase_list);
+        mLoader = (ProgressBar) findViewById(fr.tvbarthel.attempt.googlyzooapp.R.id.support_progressbar);
+        mErrorPlaceholder = (TextView) findViewById(fr.tvbarthel.attempt.googlyzooapp.R.id.support_error_placeholder);
 
         //init coffee adapter
         mCoffeeAdapter = new SupportAdapter(getBaseContext(), new ArrayList<CoffeeEntry>());
@@ -130,7 +130,7 @@ public class SupportActivity extends Activity {
             }
         });
 
-        String base64EncodedPublicKey = getResources().getString(R.string.support_key);
+        String base64EncodedPublicKey = getResources().getString(fr.tvbarthel.attempt.googlyzooapp.R.string.support_key);
         mIabHelper = new IabHelper(this, base64EncodedPublicKey);
 
         //dev purpose
@@ -245,11 +245,7 @@ public class SupportActivity extends Activity {
                         //workaround to get the purchase since info == null when already owned
                         mIabHelper.consumeAsync(mPurchaseList.get(mSelectedPurchase), mConsumeListener);
                     }
-                } else {
-                    //display error
-                    makeToast(result.getMessage().substring(0, result.getMessage().indexOf('(')));
                 }
-
             }
         };
     }
@@ -376,12 +372,12 @@ public class SupportActivity extends Activity {
         AlertDialog.Builder build = new AlertDialog.Builder(this);
         build.setPositiveButton("Thanks !", null);
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        View thanksView = inflater.inflate(R.layout.support_thanks, null);
+        View thanksView = inflater.inflate(fr.tvbarthel.attempt.googlyzooapp.R.layout.support_thanks, null);
         if (thanksView != null) {
             final TextView thanksMessage =
-                    (TextView) thanksView.findViewById(R.id.support_thanks_message);
+                    (TextView) thanksView.findViewById(fr.tvbarthel.attempt.googlyzooapp.R.id.support_thanks_message);
             thanksMessage.setText(String.format(
-                    getResources().getString(R.string.support_thanks), info.getSku()));
+                    getResources().getString(fr.tvbarthel.attempt.googlyzooapp.R.string.support_thanks), info.getSku()));
             build.setView(thanksView);
             build.create().show();
         }
