@@ -268,15 +268,6 @@ public class MainActivity extends DonateCheckActivity
         editor.commit();
     }
 
-    public void restoreActionBar() {
-        ActionBar actionBar = getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
-        actionBar.setIcon(mActionBarIcon);
-    }
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
@@ -318,6 +309,71 @@ public class MainActivity extends DonateCheckActivity
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onNavigationDrawerItemSelected(GooglyPetEntry petSelected) {
+        final int googlyName = petSelected.getName();
+        mSelectedGooglyPet = petSelected.getPetId();
+
+        final String petName = getResources().getString(googlyName);
+        final String oogly = getResources().getString(R.string.googly_name_ext);
+        mTitle = new SpannableString(getResources().getString(googlyName) + oogly);
+        mTitle.setSpan(new StyleSpan(Typeface.BOLD), 0, petName.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mTitle.setSpan(new TypefaceSpan("sans-serif-light"), petName.length() - 1, mTitle.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mActionBarIcon = petSelected.getBlackAndWhiteIcon();
+
+        //remove listener from the old pet
+        if (mGooglyPet != null) {
+            mGooglyPet.removeListener(mGooglyPetListener);
+        }
+
+        //create the selected Googly pet
+        mGooglyPet = GooglyPetFactory.createGooglyPet(mSelectedGooglyPet, this);
+
+        //register listener on the new pet
+        mGooglyPet.addListener(mGooglyPetListener);
+
+        if (mGooglyPetView != null) {
+            mGooglyPetView.setModel(mGooglyPet);
+        }
+
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_UP:
+                if (mCameraInstructions.getVisibility() == View.VISIBLE) {
+                    mCameraInstructions.setVisibility(View.GONE);
+                }
+                break;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        mCameraInstructions.setVisibility(View.VISIBLE);
+        return false;
+    }
+
+    public void restoreActionBar() {
+        ActionBar actionBar = getActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setTitle(mTitle);
+        actionBar.setIcon(mActionBarIcon);
+    }
+
+    /**
+     * used to check orientation
+     *
+     * @return
+     */
+    public boolean isPortrait() {
+        return (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
+    }
 
     /**
      * Camera part
@@ -439,66 +495,6 @@ public class MainActivity extends DonateCheckActivity
         mCameraInstructionsParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         mCameraInstructionsParams.gravity = Gravity.CENTER;
     }
-
-    @Override
-    public void onNavigationDrawerItemSelected(GooglyPetEntry petSelected) {
-        final int googlyName = petSelected.getName();
-        mSelectedGooglyPet = petSelected.getPetId();
-
-        final String petName = getResources().getString(googlyName);
-        final String oogly = getResources().getString(R.string.googly_name_ext);
-        mTitle = new SpannableString(getResources().getString(googlyName) + oogly);
-        mTitle.setSpan(new StyleSpan(Typeface.BOLD), 0, petName.length(),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mTitle.setSpan(new TypefaceSpan("sans-serif-light"), petName.length() - 1, mTitle.length(),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mActionBarIcon = petSelected.getBlackAndWhiteIcon();
-
-        //remove listener from the old pet
-        if (mGooglyPet != null) {
-            mGooglyPet.removeListener(mGooglyPetListener);
-        }
-
-        //create the selected Googly pet
-        mGooglyPet = GooglyPetFactory.createGooglyPet(mSelectedGooglyPet, this);
-
-        //register listener on the new pet
-        mGooglyPet.addListener(mGooglyPetListener);
-
-        if (mGooglyPetView != null) {
-            mGooglyPetView.setModel(mGooglyPet);
-        }
-
-    }
-
-    /**
-     * used to check orientation
-     *
-     * @return
-     */
-    public boolean isPortrait() {
-        return (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
-    }
-
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_UP:
-                if (mCameraInstructions.getVisibility() == View.VISIBLE) {
-                    mCameraInstructions.setVisibility(View.GONE);
-                }
-                break;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean onLongClick(View v) {
-        mCameraInstructions.setVisibility(View.VISIBLE);
-        return false;
-    }
-
 
     private class CameraAsyncTask extends AsyncTask<Void, Void, Camera> {
 
