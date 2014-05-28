@@ -16,13 +16,17 @@ import android.text.Spanned;
 import android.text.style.StyleSpan;
 import android.text.style.TypefaceSpan;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.Surface;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.android.vending.billing.tvbarthel.DonateCheckActivity;
 import com.android.vending.billing.tvbarthel.SupportActivity;
@@ -43,7 +47,7 @@ import fr.tvbarthel.attempt.googlyzooapp.utils.GooglyPetUtils;
 import fr.tvbarthel.attempt.googlyzooapp.utils.SharedPreferencesUtils;
 
 public class MainActivity extends DonateCheckActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, View.OnLongClickListener, View.OnTouchListener {
     /**
      * Log cat
      */
@@ -134,6 +138,16 @@ public class MainActivity extends DonateCheckActivity
      */
     private CameraAsyncTask mCameraAsyncTask;
 
+    /**
+     * instructions to take a screenshot
+     */
+    private TextView mCameraInstructions;
+
+    /**
+     * layout params for camera instructions
+     */
+    private FrameLayout.LayoutParams mCameraInstructionsParams;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -162,6 +176,9 @@ public class MainActivity extends DonateCheckActivity
                 mGooglyPetView.moveDown();
             }
         };
+
+        //set up instruction for sharing screen shot
+        setUpInstructions();
 
         //set up params for googlyPetView
         mPetParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -364,6 +381,7 @@ public class MainActivity extends DonateCheckActivity
         }
         if (mPreview != null) {
             mPreview.removeView(mGooglyPetView);
+            mPreview.removeView(mCameraInstructions);
         }
     }
 
@@ -392,6 +410,34 @@ public class MainActivity extends DonateCheckActivity
             makeToast(R.string.smooth_face_detection);
             return mSmoothFaceDetectionListener;
         }
+    }
+
+    /**
+     * build instructions components
+     */
+    private void setUpInstructions() {
+        mCameraInstructions = new TextView(this);
+        mCameraInstructions.setText(R.string.camera_instructions);
+        mCameraInstructions.setTextColor(getResources().getColor(R.color.white));
+        mCameraInstructions.setTextSize(15.0f);
+        mCameraInstructions.setBackgroundColor(getResources().getColor(R.color.transparent_black));
+        mCameraInstructions.setCompoundDrawablesWithIntrinsicBounds(
+                null,
+                getResources().getDrawable(R.drawable.ic_camera),
+                null,
+                null
+        );
+        int padding = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                10,
+                getResources().getDisplayMetrics()
+        );
+        mCameraInstructions.setPadding(padding, padding, padding, padding);
+        mCameraInstructions.setVisibility(View.GONE);
+
+
+        mCameraInstructionsParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        mCameraInstructionsParams.gravity = Gravity.CENTER;
     }
 
     @Override
@@ -432,6 +478,25 @@ public class MainActivity extends DonateCheckActivity
      */
     public boolean isPortrait() {
         return (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
+    }
+
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_UP:
+                if (mCameraInstructions.getVisibility() == View.VISIBLE) {
+                    mCameraInstructions.setVisibility(View.GONE);
+                }
+                break;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        mCameraInstructions.setVisibility(View.VISIBLE);
+        return false;
     }
 
 
@@ -498,6 +563,9 @@ public class MainActivity extends DonateCheckActivity
                     );
                     mPreview.addView(mFaceDetectionPreview, mPreviewParams);
                     mPreview.addView(mGooglyPetView, mPetParams);
+                    mPreview.addView(mCameraInstructions, mCameraInstructionsParams);
+                    mPreview.setOnTouchListener(MainActivity.this);
+                    mPreview.setOnLongClickListener(MainActivity.this);
                     mCamera.setFaceDetectionListener(mCurrentListener);
                 }
             }

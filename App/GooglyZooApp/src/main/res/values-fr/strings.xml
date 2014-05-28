@@ -4,6 +4,7 @@
     <string name="app_name">GooglyZoo</string>
     <string name="navigation_drawer_open">Ouvrir le panneau de navigation</string>
     <string name="navigation_drawer_close">Fermer le panneau de navigation</string>
+    <string name="camera_instructions">Double tap pour partager une photo!</string>
     <string name="googly_zebra_name">Zebr</string>
     <string name="googly_gnu_name">Gn</string>
     <string name="googly_hippo_name">Hipp</string>
