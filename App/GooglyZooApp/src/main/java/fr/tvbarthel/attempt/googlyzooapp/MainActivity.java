@@ -25,6 +25,8 @@ import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -147,6 +149,16 @@ public class MainActivity extends DonateCheckActivity
      * layout params for camera instructions
      */
     private FrameLayout.LayoutParams mCameraInstructionsParams;
+
+    /**
+     * animation used to show instructions
+     */
+    private Animation mInstructionsIn;
+
+    /**
+     * animation used to hide instructions
+     */
+    private Animation mInstructionOut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -345,7 +357,9 @@ public class MainActivity extends DonateCheckActivity
         switch (event.getAction()) {
             case MotionEvent.ACTION_UP:
                 if (mCameraInstructions.getVisibility() == View.VISIBLE) {
-                    mCameraInstructions.setVisibility(View.GONE);
+                    if (mInstructionOut != null) {
+                        mCameraInstructions.startAnimation(mInstructionOut);
+                    }
                 }
                 break;
         }
@@ -354,7 +368,10 @@ public class MainActivity extends DonateCheckActivity
 
     @Override
     public boolean onLongClick(View v) {
-        mCameraInstructions.setVisibility(View.VISIBLE);
+        if (mInstructionsIn != null) {
+            mCameraInstructions.setVisibility(View.VISIBLE);
+            mCameraInstructions.startAnimation(mInstructionsIn);
+        }
         return false;
     }
 
@@ -472,16 +489,18 @@ public class MainActivity extends DonateCheckActivity
      * build instructions components
      */
     private void setUpInstructions() {
+        //set up textview
         mCameraInstructions = new TextView(this);
         mCameraInstructions.setText(R.string.camera_instructions);
         mCameraInstructions.setTextColor(getResources().getColor(R.color.white));
         mCameraInstructions.setTextSize(15.0f);
-        mCameraInstructions.setBackgroundColor(getResources().getColor(R.color.transparent_black));
+        mCameraInstructions.setGravity(Gravity.CENTER);
+        mCameraInstructions.setBackgroundColor(getResources().getColor(R.color.instruction_background));
         mCameraInstructions.setCompoundDrawablesWithIntrinsicBounds(
                 null,
-                getResources().getDrawable(R.drawable.ic_camera),
                 null,
-                null
+                null,
+                getResources().getDrawable(R.drawable.ic_camera)
         );
         int padding = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
@@ -491,9 +510,33 @@ public class MainActivity extends DonateCheckActivity
         mCameraInstructions.setPadding(padding, padding, padding, padding);
         mCameraInstructions.setVisibility(View.GONE);
 
-
-        mCameraInstructionsParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        //set up layout params
+        mCameraInstructionsParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         mCameraInstructionsParams.gravity = Gravity.CENTER;
+
+        //set up animation in
+        mInstructionsIn = AnimationUtils.loadAnimation(this, R.anim.in_bis);
+
+        //setup animation out
+        mInstructionOut = AnimationUtils.loadAnimation(this, R.anim.out_bis);
+        if (mInstructionOut != null) {
+            mInstructionOut.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    mCameraInstructions.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+        }
     }
 
     private class CameraAsyncTask extends AsyncTask<Void, Void, Camera> {
