@@ -32,6 +32,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.android.vending.billing.tvbarthel.DonateCheckActivity;
@@ -194,7 +195,17 @@ public class MainActivity extends DonateCheckActivity
     /**
      * callback used to used to capture picture
      */
-    private Camera.PictureCallback mPicture;
+    private Camera.PictureCallback mPictureCallback;
+
+    /**
+     * screen capture byte
+     */
+    private byte[] mPicture;
+
+    /**
+     * button used to save screen capture
+     */
+    private ImageButton mSaveButton;
 
 
     @Override
@@ -402,13 +413,15 @@ public class MainActivity extends DonateCheckActivity
                 }
                 break;
             case MotionEvent.ACTION_DOWN:
-                long newTimeStamp = event.getEventTime();
-                final long delay = newTimeStamp - mLastTouchTimeStamp;
-                if (mLastTouchTimeStamp != 0 && delay < DOUBLE_TOUCH_DELAY_IN_MILLI) {
-                    newTimeStamp = 0;
+                //hide save button if shown
+                if (mSaveButton != null) {
+                    hideSavingButton();
+                }
+
+                //process event to throw double touch
+                if (isDoubleTouch(event)) {
                     captureScreenShot();
                 }
-                mLastTouchTimeStamp = newTimeStamp;
                 break;
         }
         return false;
@@ -486,10 +499,15 @@ public class MainActivity extends DonateCheckActivity
      * Callback used when Camera.takePicture is called
      */
     private void initCameraPictureCallback() {
-        mPicture = new Camera.PictureCallback() {
+        mPictureCallback = new Camera.PictureCallback() {
 
             @Override
             public void onPictureTaken(byte[] data, Camera camera) {
+                //restore preview and face detection
+                mCamera.startPreview();
+                mCamera.startFaceDetection();
+
+                //build screen capture
                 new CaptureAsyncTask().execute(data);
             }
         };
@@ -501,10 +519,10 @@ public class MainActivity extends DonateCheckActivity
     private void captureScreenShot() {
         if (mGooglyPet.isAwake()) {
             //TODO implement screen shot
-            if (mPicture == null) {
+            if (mPictureCallback == null) {
                 initCameraPictureCallback();
             }
-            mCamera.takePicture(null, null, mPicture);
+            mCamera.takePicture(null, null, mPictureCallback);
             mCamera.stopFaceDetection();
         } else {
             //pet not awake = no face detected, don't take a screen
@@ -521,7 +539,7 @@ public class MainActivity extends DonateCheckActivity
      * @param screenBytes
      * @return path of the file
      */
-    private Uri writeScreenBytesToExternalStorage(ByteArrayOutputStream screenBytes) {
+    private Uri writeScreenBytesToExternalStorage(byte[] screenBytes) {
         try {
             final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_HH_ss");
             final String filePrefix = "screen_";
@@ -533,7 +551,7 @@ public class MainActivity extends DonateCheckActivity
             }
             f.createNewFile();
             final FileOutputStream fo = new FileOutputStream(f);
-            fo.write(screenBytes.toByteArray());
+            fo.write(screenBytes);
             fo.close();
             return Uri.fromFile(f);
         } catch (IOException e) {
@@ -597,6 +615,24 @@ public class MainActivity extends DonateCheckActivity
     }
 
     /**
+     * process motion event to detect double touch
+     *
+     * @param event should be an ACTION_DOWN event
+     * @return true if double touch motion
+     */
+    private boolean isDoubleTouch(MotionEvent event) {
+        boolean isDoubleTouch = false;
+        long newTimeStamp = event.getEventTime();
+        final long delay = newTimeStamp - mLastTouchTimeStamp;
+        if (mLastTouchTimeStamp != 0 && delay < DOUBLE_TOUCH_DELAY_IN_MILLI) {
+            newTimeStamp = 0;
+            isDoubleTouch = true;
+        }
+        mLastTouchTimeStamp = newTimeStamp;
+        return isDoubleTouch;
+    }
+
+    /**
      * build instructions components
      */
     private void setUpInstructions() {
@@ -655,6 +691,66 @@ public class MainActivity extends DonateCheckActivity
      */
     private void buildWiggleAnimation() {
         mWiggleAnimation = AnimationUtils.loadAnimation(this, R.anim.wiggle);
+    }
+
+    /**
+     * display save button used to save screen capture
+     */
+    private void displaySavingButton() {
+        //set up layout params
+        final FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.gravity = Gravity.BOTTOM | Gravity.LEFT;
+        params.setMargins(10, 0, 0, 10);
+
+        if (mSaveButton == null) {
+            //set up button
+            mSaveButton = new ImageButton(this);
+            mSaveButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_save));
+            mSaveButton.setBackgroundResource(R.drawable.round_button);
+            mSaveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new SaveAsyncTask().execute(mPicture);
+                }
+            });
+        }
+
+
+        //display button
+        final Animation enterFromLeft = AnimationUtils.loadAnimation(this, R.anim.in_from_left);
+        if (enterFromLeft != null && mSaveButton.getAnimation() == null) {
+            mPreview.addView(mSaveButton, params);
+            mSaveButton.startAnimation(enterFromLeft);
+        }
+
+    }
+
+    /**
+     * hide saved button
+     */
+    private void hideSavingButton() {
+        final Animation outFromLeft = AnimationUtils.loadAnimation(this, R.anim.out_from_left);
+        if (outFromLeft != null) {
+            outFromLeft.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    mPreview.removeView(mSaveButton);
+                    mSaveButton = null;
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+            mSaveButton.startAnimation(outFromLeft);
+        }
     }
 
     /**
@@ -742,11 +838,11 @@ public class MainActivity extends DonateCheckActivity
     }
 
     /**
-     * async task used to process screen capture from Camera.takePicture
+     * async task used to build screen capture from Camera.takePicture
      */
-    private class CaptureAsyncTask extends AsyncTask<byte[], Void, Uri> {
+    private class CaptureAsyncTask extends AsyncTask<byte[], Void, Void> {
         @Override
-        protected Uri doInBackground(byte[]... params) {
+        protected Void doInBackground(byte[]... params) {
             // Recover picture from camera
             byte[] data = params[0];
             Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
@@ -760,7 +856,28 @@ public class MainActivity extends DonateCheckActivity
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             mirroredBitmap.compress(Bitmap.CompressFormat.JPEG, BITMAP_QUALITY, bytes);
 
-            final Uri uriToShare = writeScreenBytesToExternalStorage(bytes);
+            mPicture = bytes.toByteArray();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void param) {
+            super.onPostExecute(param);
+            //allow user to save the screen capture
+            displaySavingButton();
+        }
+    }
+
+    /**
+     * async task used to save screen capture into media center
+     */
+    private class SaveAsyncTask extends AsyncTask<byte[], Void, Uri> {
+        @Override
+        protected Uri doInBackground(byte[]... params) {
+            // Recover picture from camera
+            byte[] data = params[0];
+
+            final Uri uriToShare = writeScreenBytesToExternalStorage(data);
             return uriToShare;
         }
 
@@ -772,14 +889,16 @@ public class MainActivity extends DonateCheckActivity
                 Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                 mediaScanIntent.setData(uri);
                 sendBroadcast(mediaScanIntent);
+
+                //inform user
+                makeToast(R.string.screen_capture);
             }
 
-            //restore preview and face detection
-            mCamera.startPreview();
-            mCamera.startFaceDetection();
+            //disable saving options
+            hideSavingButton();
 
-            //inform user
-            makeToast(R.string.screen_capture);
+            //free memory
+            mPicture = null;
         }
     }
 }

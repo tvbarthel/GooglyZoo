@@ -18,4 +18,6 @@
     <color name="transparent_black">#55000000</color>
     <color name="drawer_background">#22000000</color>
     <color name="instruction_background">#BB000000</color>
+    <color name="round_button_main">#55000000</color>
+    <color name="round_button_pressed">#55222222</color>
 </resources>
