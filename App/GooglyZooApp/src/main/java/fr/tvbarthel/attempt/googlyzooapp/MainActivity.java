@@ -4,11 +4,15 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
 import android.text.SpannableString;
@@ -32,6 +36,13 @@ import android.widget.TextView;
 
 import com.android.vending.billing.tvbarthel.DonateCheckActivity;
 import com.android.vending.billing.tvbarthel.SupportActivity;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import fr.tvbarthel.attempt.googlyzooapp.fragments.AboutDialogFragment;
 import fr.tvbarthel.attempt.googlyzooapp.fragments.LicenseDialogFragment;
@@ -59,6 +70,11 @@ public class MainActivity extends DonateCheckActivity
      * delay between two touch required to throw double touch event
      */
     private static final long DOUBLE_TOUCH_DELAY_IN_MILLI = 500;
+
+    /**
+     * quality of the picture
+     */
+    private static final int BITMAP_QUALITY = 80;
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -174,6 +190,11 @@ public class MainActivity extends DonateCheckActivity
      * last touch timestamp use to detected double touch
      */
     private long mLastTouchTimeStamp;
+
+    /**
+     * callback used to used to capture picture
+     */
+    private Camera.PictureCallback mPicture;
 
 
     @Override
@@ -448,14 +469,30 @@ public class MainActivity extends DonateCheckActivity
                 break;
         }
 
-        int result;
+        int previewResult = 0;
+        int pictureResult = 0;
         if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-            result = (info.orientation + degrees) % 360;
-            result = (360 - result) % 360;  // compensate the mirror
-        } else {  // back-facing
-            result = (info.orientation - degrees + 360) % 360;
+            previewResult = (info.orientation + degrees) % 360;
+            pictureResult = previewResult;
+            previewResult = (360 - previewResult) % 360;  // compensate the mirror
         }
-        camera.setDisplayOrientation(result);
+        final Camera.Parameters params = camera.getParameters();
+        params.setRotation(pictureResult);
+        camera.setParameters(params);
+        camera.setDisplayOrientation(previewResult);
+    }
+
+    /**
+     * Callback used when Camera.takePicture is called
+     */
+    private void initCameraPictureCallback() {
+        mPicture = new Camera.PictureCallback() {
+
+            @Override
+            public void onPictureTaken(byte[] data, Camera camera) {
+                new CaptureAsyncTask().execute(data);
+            }
+        };
     }
 
     /**
@@ -464,12 +501,44 @@ public class MainActivity extends DonateCheckActivity
     private void captureScreenShot() {
         if (mGooglyPet.isAwake()) {
             //TODO implement screen shot
+            if (mPicture == null) {
+                initCameraPictureCallback();
+            }
+            mCamera.takePicture(null, null, mPicture);
+            mCamera.stopFaceDetection();
         } else {
             //pet not awake = no face detected, don't take a screen
             if (mWiggleAnimation == null) {
                 buildWiggleAnimation();
             }
             mGooglyPetView.startAnimation(mWiggleAnimation);
+        }
+    }
+
+    /**
+     * Save screen capture into external storage
+     *
+     * @param screenBytes
+     * @return path of the file
+     */
+    private Uri writeScreenBytesToExternalStorage(ByteArrayOutputStream screenBytes) {
+        try {
+            final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_HH_ss");
+            final String filePrefix = "screen_";
+            final String fileSuffix = ".jpg";
+            final String fileName = filePrefix + simpleDateFormat.format(new Date()) + fileSuffix;
+            final File f = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + File.separator + "GooglyZoo", fileName);
+            if (!f.getParentFile().isDirectory()) {
+                f.getParentFile().mkdirs();
+            }
+            f.createNewFile();
+            final FileOutputStream fo = new FileOutputStream(f);
+            fo.write(screenBytes.toByteArray());
+            fo.close();
+            return Uri.fromFile(f);
+        } catch (IOException e) {
+            Log.e(TAG, "error while saving screen", e);
+            return null;
         }
     }
 
@@ -588,6 +657,9 @@ public class MainActivity extends DonateCheckActivity
         mWiggleAnimation = AnimationUtils.loadAnimation(this, R.anim.wiggle);
     }
 
+    /**
+     * Async task used to configure and start camera
+     */
     private class CameraAsyncTask extends AsyncTask<Void, Void, Camera> {
 
         @Override
@@ -607,6 +679,7 @@ public class MainActivity extends DonateCheckActivity
                         , isPortrait());
                 //set optimal camera preview
                 cameraParameters.setPreviewSize(bestSize.width, bestSize.height);
+                cameraParameters.setPictureSize(bestSize.width, bestSize.height);
                 camera.setParameters(cameraParameters);
 
                 //set camera orientation to match with current device orientation
@@ -665,6 +738,48 @@ public class MainActivity extends DonateCheckActivity
             if (camera != null) {
                 camera.release();
             }
+        }
+    }
+
+    /**
+     * async task used to process screen capture from Camera.takePicture
+     */
+    private class CaptureAsyncTask extends AsyncTask<byte[], Void, Uri> {
+        @Override
+        protected Uri doInBackground(byte[]... params) {
+            // Recover picture from camera
+            byte[] data = params[0];
+            Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+
+            // Process picture for mirror effect
+            Matrix matrix = new Matrix();
+            matrix.preScale(-1.0f, 1.0f);
+            Bitmap mirroredBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, false);
+
+            // Compress the bitmap before saving and sharing
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            mirroredBitmap.compress(Bitmap.CompressFormat.JPEG, BITMAP_QUALITY, bytes);
+
+            final Uri uriToShare = writeScreenBytesToExternalStorage(bytes);
+            return uriToShare;
+        }
+
+        @Override
+        protected void onPostExecute(Uri uri) {
+            super.onPostExecute(uri);
+            if (uri != null) {
+                // Add the screen to the Media Provider's database.
+                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                mediaScanIntent.setData(uri);
+                sendBroadcast(mediaScanIntent);
+            }
+
+            //restore preview and face detection
+            mCamera.startPreview();
+            mCamera.startFaceDetection();
+
+            //inform user
+            makeToast(R.string.screen_capture);
         }
     }
 }

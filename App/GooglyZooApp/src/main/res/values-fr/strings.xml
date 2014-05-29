@@ -40,6 +40,7 @@
     <string name="basic_face_detection">SmoothFaceDetection OFF</string>
     <string name="smooth_face_detection">SmoothFaceDetection ON</string>
     <string name="donor_compensation">Contenu de remerciement pour les donateurs</string>
+    <string name="screen_capture">Enregistré dans la galerie !</string>
 
     <!-- More project dialog Fragment!-->
     <string name="dialog_more_fragment_title">Suivez d\'autres projets</string>
