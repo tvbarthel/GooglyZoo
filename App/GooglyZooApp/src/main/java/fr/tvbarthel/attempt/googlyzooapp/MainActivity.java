@@ -56,6 +56,11 @@ public class MainActivity extends DonateCheckActivity
     private static final String TAG = MainActivity.class.getName();
 
     /**
+     * delay between two touch required to throw double touch event
+     */
+    private static final long DOUBLE_TOUCH_DELAY_IN_MILLI = 500;
+
+    /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
@@ -160,12 +165,25 @@ public class MainActivity extends DonateCheckActivity
      */
     private Animation mInstructionOut;
 
+    /**
+     * animation used when pet isn't awake and capture is requested
+     */
+    private Animation mWiggleAnimation;
+
+    /**
+     * last touch timestamp use to detected double touch
+     */
+    private long mLastTouchTimeStamp;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         mPreview = (FrameLayout) findViewById(R.id.container);
+
+        mLastTouchTimeStamp = 0;
 
         //get last pet used
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
@@ -362,6 +380,15 @@ public class MainActivity extends DonateCheckActivity
                     }
                 }
                 break;
+            case MotionEvent.ACTION_DOWN:
+                long newTimeStamp = event.getEventTime();
+                final long delay = newTimeStamp - mLastTouchTimeStamp;
+                if (mLastTouchTimeStamp != 0 && delay < DOUBLE_TOUCH_DELAY_IN_MILLI) {
+                    newTimeStamp = 0;
+                    captureScreenShot();
+                }
+                mLastTouchTimeStamp = newTimeStamp;
+                break;
         }
         return false;
     }
@@ -429,6 +456,21 @@ public class MainActivity extends DonateCheckActivity
             result = (info.orientation - degrees + 360) % 360;
         }
         camera.setDisplayOrientation(result);
+    }
+
+    /**
+     * used to take a picture of the user
+     */
+    private void captureScreenShot() {
+        if (mGooglyPet.isAwake()) {
+            //TODO implement screen shot
+        } else {
+            //pet not awake = no face detected, don't take a screen
+            if (mWiggleAnimation == null) {
+                buildWiggleAnimation();
+            }
+            mGooglyPetView.startAnimation(mWiggleAnimation);
+        }
     }
 
     /**
@@ -537,6 +579,13 @@ public class MainActivity extends DonateCheckActivity
                 }
             });
         }
+    }
+
+    /**
+     * build wiggle animation
+     */
+    private void buildWiggleAnimation() {
+        mWiggleAnimation = AnimationUtils.loadAnimation(this, R.anim.wiggle);
     }
 
     private class CameraAsyncTask extends AsyncTask<Void, Void, Camera> {
