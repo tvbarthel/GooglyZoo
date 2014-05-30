@@ -20,7 +20,6 @@ import android.text.Spanned;
 import android.text.style.StyleSpan;
 import android.text.style.TypefaceSpan;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -61,7 +60,7 @@ import fr.tvbarthel.attempt.googlyzooapp.utils.GooglyPetUtils;
 import fr.tvbarthel.attempt.googlyzooapp.utils.SharedPreferencesUtils;
 
 public class MainActivity extends DonateCheckActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, View.OnLongClickListener, View.OnTouchListener {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, View.OnTouchListener {
     /**
      * Log cat
      */
@@ -367,6 +366,12 @@ public class MainActivity extends DonateCheckActivity
             sendMail.setData(contactUri);
             startActivity(sendMail);
             return true;
+        } else if (id == R.id.action_camera) {
+            if (mCameraInstructions.getVisibility() != View.VISIBLE && mInstructionsIn != null) {
+                mCameraInstructions.setVisibility(View.VISIBLE);
+                mCameraInstructions.startAnimation(mInstructionsIn);
+            }
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -405,33 +410,24 @@ public class MainActivity extends DonateCheckActivity
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
-            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_DOWN:
+                //hide instructions
                 if (mCameraInstructions.getVisibility() == View.VISIBLE) {
-                    if (mInstructionOut != null) {
+                    if (mInstructionOut != null && mCameraInstructions.getAnimation() != mInstructionOut) {
                         mCameraInstructions.startAnimation(mInstructionOut);
+                    }
+                } else {
+                    //hide save button if shown
+                    if (mSaveButton != null) {
+                        hideSavingButton();
+                    }
+
+                    //process event to throw double touch
+                    if (isDoubleTouch(event)) {
+                        captureScreenShot();
                     }
                 }
                 break;
-            case MotionEvent.ACTION_DOWN:
-                //hide save button if shown
-                if (mSaveButton != null) {
-                    hideSavingButton();
-                }
-
-                //process event to throw double touch
-                if (isDoubleTouch(event)) {
-                    captureScreenShot();
-                }
-                break;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean onLongClick(View v) {
-        if (mInstructionsIn != null) {
-            mCameraInstructions.setVisibility(View.VISIBLE);
-            mCameraInstructions.startAnimation(mInstructionsIn);
         }
         return false;
     }
@@ -643,18 +639,6 @@ public class MainActivity extends DonateCheckActivity
         mCameraInstructions.setTextSize(15.0f);
         mCameraInstructions.setGravity(Gravity.CENTER);
         mCameraInstructions.setBackgroundColor(getResources().getColor(R.color.instruction_background));
-        mCameraInstructions.setCompoundDrawablesWithIntrinsicBounds(
-                null,
-                null,
-                null,
-                getResources().getDrawable(R.drawable.ic_camera)
-        );
-        int padding = (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                10,
-                getResources().getDisplayMetrics()
-        );
-        mCameraInstructions.setPadding(padding, padding, padding, padding);
         mCameraInstructions.setVisibility(View.GONE);
 
         //set up layout params
@@ -822,7 +806,6 @@ public class MainActivity extends DonateCheckActivity
                     mPreview.addView(mGooglyPetView, mPetParams);
                     mPreview.addView(mCameraInstructions, mCameraInstructionsParams);
                     mPreview.setOnTouchListener(MainActivity.this);
-                    mPreview.setOnLongClickListener(MainActivity.this);
                     mCamera.setFaceDetectionListener(mCurrentListener);
                 }
             }

@@ -28,6 +28,7 @@
     <string name="action_about_title">About</string>
     <string name="action_beta_title">Beta</string>
     <string name="action_support">Buy us a coffee</string>
+    <string name="action_camera">Camera</string>
     <string name="action_contact_us">Contact us</string>
 
     <!-- Contact Us -->
