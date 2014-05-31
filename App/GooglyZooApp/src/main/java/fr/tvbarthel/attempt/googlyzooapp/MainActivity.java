@@ -54,6 +54,7 @@ import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPet;
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPetEntry;
 import fr.tvbarthel.attempt.googlyzooapp.model.GooglyPetFactory;
 import fr.tvbarthel.attempt.googlyzooapp.ui.GooglyPetView;
+import fr.tvbarthel.attempt.googlyzooapp.ui.RoundedOverlay;
 import fr.tvbarthel.attempt.googlyzooapp.utils.CameraUtils;
 import fr.tvbarthel.attempt.googlyzooapp.utils.FaceDetectionUtils;
 import fr.tvbarthel.attempt.googlyzooapp.utils.GooglyPetUtils;
@@ -167,6 +168,11 @@ public class MainActivity extends DonateCheckActivity
     private TextView mCameraInstructions;
 
     /**
+     * rounded overlay used when camera instruction are requested
+     */
+    private RoundedOverlay mRoundedOverlay;
+
+    /**
      * layout params for camera instructions
      */
     private FrameLayout.LayoutParams mCameraInstructionsParams;
@@ -237,6 +243,9 @@ public class MainActivity extends DonateCheckActivity
                 mGooglyPetView.moveDown();
             }
         };
+
+        //set up rounded overlay opened when instruction are requested
+        setUpRoundedOverlay();
 
         //set up instruction for sharing screen shot
         setUpInstructions();
@@ -367,9 +376,8 @@ public class MainActivity extends DonateCheckActivity
             startActivity(sendMail);
             return true;
         } else if (id == R.id.action_camera) {
-            if (mCameraInstructions.getVisibility() != View.VISIBLE && mInstructionsIn != null) {
-                mCameraInstructions.setVisibility(View.VISIBLE);
-                mCameraInstructions.startAnimation(mInstructionsIn);
+            if (mRoundedOverlay.getVisibility() != View.VISIBLE) {
+                mRoundedOverlay.open();
             }
             return true;
         }
@@ -412,10 +420,8 @@ public class MainActivity extends DonateCheckActivity
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 //hide instructions
-                if (mCameraInstructions.getVisibility() == View.VISIBLE) {
-                    if (mInstructionOut != null && mCameraInstructions.getAnimation() != mInstructionOut) {
-                        mCameraInstructions.startAnimation(mInstructionOut);
-                    }
+                if (mRoundedOverlay.getVisibility() == View.VISIBLE) {
+                    mRoundedOverlay.close();
                 } else {
                     //hide save button if shown
                     if (mSaveButton != null) {
@@ -579,7 +585,7 @@ public class MainActivity extends DonateCheckActivity
         }
         if (mPreview != null) {
             mPreview.removeView(mGooglyPetView);
-            mPreview.removeView(mCameraInstructions);
+            mPreview.removeView(mRoundedOverlay);
         }
     }
 
@@ -629,6 +635,16 @@ public class MainActivity extends DonateCheckActivity
     }
 
     /**
+     * initialize rounded overlay
+     */
+    private void setUpRoundedOverlay() {
+        mRoundedOverlay = new RoundedOverlay(this);
+        mRoundedOverlay.setOpenDuration(500);
+        mRoundedOverlay.setCloseDuration(300);
+        mRoundedOverlay.setVisibility(View.GONE);
+    }
+
+    /**
      * build instructions components
      */
     private void setUpInstructions() {
@@ -642,8 +658,8 @@ public class MainActivity extends DonateCheckActivity
         mCameraInstructions.setVisibility(View.GONE);
 
         //set up layout params
-        mCameraInstructionsParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        mCameraInstructionsParams.gravity = Gravity.CENTER;
+        mCameraInstructionsParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        mCameraInstructionsParams.gravity = Gravity.RIGHT;
 
         //set up animation in
         mInstructionsIn = AnimationUtils.loadAnimation(this, R.anim.in_bis);
@@ -804,7 +820,7 @@ public class MainActivity extends DonateCheckActivity
                     );
                     mPreview.addView(mFaceDetectionPreview, mPreviewParams);
                     mPreview.addView(mGooglyPetView, mPetParams);
-                    mPreview.addView(mCameraInstructions, mCameraInstructionsParams);
+                    mPreview.addView(mRoundedOverlay);
                     mPreview.setOnTouchListener(MainActivity.this);
                     mCamera.setFaceDetectionListener(mCurrentListener);
                 }
