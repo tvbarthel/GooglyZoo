@@ -420,8 +420,8 @@ public class MainActivity extends DonateCheckActivity
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 //hide instructions
-                if (mRoundedOverlay.getVisibility() == View.VISIBLE) {
-                    mRoundedOverlay.close();
+                if (mCameraInstructions.getVisibility() == View.VISIBLE && mCameraInstructions.getAnimation() != mInstructionOut) {
+                    mCameraInstructions.startAnimation(mInstructionOut);
                 } else {
                     //hide save button if shown
                     if (mSaveButton != null) {
@@ -586,6 +586,7 @@ public class MainActivity extends DonateCheckActivity
         if (mPreview != null) {
             mPreview.removeView(mGooglyPetView);
             mPreview.removeView(mRoundedOverlay);
+            mPreview.removeView(mCameraInstructions);
         }
     }
 
@@ -642,6 +643,17 @@ public class MainActivity extends DonateCheckActivity
         mRoundedOverlay.setOpenDuration(500);
         mRoundedOverlay.setCloseDuration(300);
         mRoundedOverlay.setVisibility(View.GONE);
+
+        //catch onOpen event to display instructions once overlay is opened
+        mRoundedOverlay.setOnOpenListener(new RoundedOverlay.OpenListener() {
+            @Override
+            public void onOpen() {
+                if (mCameraInstructions.getVisibility() != View.VISIBLE) {
+                    mCameraInstructions.setVisibility(View.VISIBLE);
+                    mCameraInstructions.startAnimation(mInstructionsIn);
+                }
+            }
+        });
     }
 
     /**
@@ -654,18 +666,17 @@ public class MainActivity extends DonateCheckActivity
         mCameraInstructions.setTextColor(getResources().getColor(R.color.white));
         mCameraInstructions.setTextSize(15.0f);
         mCameraInstructions.setGravity(Gravity.CENTER);
-        mCameraInstructions.setBackgroundColor(getResources().getColor(R.color.instruction_background));
         mCameraInstructions.setVisibility(View.GONE);
 
         //set up layout params
-        mCameraInstructionsParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        mCameraInstructionsParams.gravity = Gravity.RIGHT;
+        mCameraInstructionsParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        mCameraInstructionsParams.gravity = Gravity.CENTER;
 
         //set up animation in
-        mInstructionsIn = AnimationUtils.loadAnimation(this, R.anim.in_bis);
+        mInstructionsIn = AnimationUtils.loadAnimation(this, R.anim.in_from_bottom);
 
         //setup animation out
-        mInstructionOut = AnimationUtils.loadAnimation(this, R.anim.out_bis);
+        mInstructionOut = AnimationUtils.loadAnimation(this, R.anim.out_from_bottom);
         if (mInstructionOut != null) {
             mInstructionOut.setAnimationListener(new Animation.AnimationListener() {
                 @Override
@@ -675,6 +686,7 @@ public class MainActivity extends DonateCheckActivity
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
+                    mRoundedOverlay.close();
                     mCameraInstructions.setVisibility(View.GONE);
                 }
 
@@ -821,6 +833,7 @@ public class MainActivity extends DonateCheckActivity
                     mPreview.addView(mFaceDetectionPreview, mPreviewParams);
                     mPreview.addView(mGooglyPetView, mPetParams);
                     mPreview.addView(mRoundedOverlay);
+                    mPreview.addView(mCameraInstructions, mCameraInstructionsParams);
                     mPreview.setOnTouchListener(MainActivity.this);
                     mCamera.setFaceDetectionListener(mCurrentListener);
                 }
