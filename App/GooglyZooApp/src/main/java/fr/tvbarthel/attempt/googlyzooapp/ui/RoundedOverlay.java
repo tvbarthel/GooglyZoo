@@ -77,6 +77,16 @@ public class RoundedOverlay extends View {
      */
     private ValueAnimator mCloseAnimator;
 
+    /**
+     * current listener to catch open event
+     */
+    private OpenListener mOpenListener;
+
+    /**
+     * current listener to catch close event
+     */
+    private CloseListener mCloseListener;
+
 
     public RoundedOverlay(Context context) {
         this(context, DEFAULT_OVERLAY_COLOR);
@@ -125,8 +135,8 @@ public class RoundedOverlay extends View {
      * show circular overlay
      */
     public void open() {
-        if (mOpenAnimator.isRunning()) {
-            mOpenAnimator.end();
+        if (mCloseAnimator.isRunning()) {
+            mCloseAnimator.cancel();
         }
 
         if (this.getVisibility() != View.VISIBLE) {
@@ -140,8 +150,8 @@ public class RoundedOverlay extends View {
      * hide circular overlay
      */
     public void close() {
-        if (mCloseAnimator.isRunning()) {
-            mCloseAnimator.end();
+        if (mOpenAnimator.isRunning()) {
+            mOpenAnimator.cancel();
         }
         mCloseAnimator.start();
     }
@@ -162,6 +172,24 @@ public class RoundedOverlay extends View {
      */
     public void setCloseDuration(int duration) {
         mCloseAnimator.setDuration(duration);
+    }
+
+    /**
+     * set listener to catch onOpen event
+     *
+     * @param listener OpenListener
+     */
+    public void setOnOpenListener(OpenListener listener) {
+        mOpenListener = listener;
+    }
+
+    /**
+     * set listener to catch onClose event
+     *
+     * @param listener CloseListener
+     */
+    public void setOnCloseListener(CloseListener listener) {
+        mCloseListener = listener;
     }
 
     /**
@@ -220,6 +248,43 @@ public class RoundedOverlay extends View {
                 upDateCircle(mCurrentRadius);
             }
         });
+
+
+        //listener used to throw onOpen event
+        mOpenAnimator.addListener(new Animator.AnimatorListener() {
+
+            /**
+             * since .cancel also calls end, should distinguish if animation stop normally or
+             * from a .cancel call
+             */
+            private boolean fromCanceled = false;
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if (mOpenListener != null) {
+                    if (fromCanceled) {
+                        fromCanceled = false;
+                    } else {
+                        mOpenListener.onOpen();
+                    }
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                fromCanceled = true;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
     }
 
     /**
@@ -236,7 +301,15 @@ public class RoundedOverlay extends View {
         mCloseAnimator.setInterpolator(new AccelerateInterpolator());
 
         //add listener to completely hide overlay once hiding animation ends
+        //as well as throwing onClose event
         mCloseAnimator.addListener(new Animator.AnimatorListener() {
+
+            /**
+             * since .cancel also calls end, should distinguish if animation stop normally or
+             * from a .cancel call
+             */
+            private boolean fromCanceled = false;
+
             @Override
             public void onAnimationStart(Animator animation) {
 
@@ -245,11 +318,18 @@ public class RoundedOverlay extends View {
             @Override
             public void onAnimationEnd(Animator animation) {
                 RoundedOverlay.this.setVisibility(View.GONE);
+                if (mCloseListener != null) {
+                    if (fromCanceled) {
+                        fromCanceled = false;
+                    } else {
+                        mCloseListener.onClose();
+                    }
+                }
             }
 
             @Override
             public void onAnimationCancel(Animator animation) {
-
+                fromCanceled = true;
             }
 
             @Override
@@ -271,6 +351,20 @@ public class RoundedOverlay extends View {
                 upDateCircle(newRadius);
             }
         });
+    }
+
+    /**
+     * callback for open event
+     */
+    public interface OpenListener {
+        public void onOpen();
+    }
+
+    /**
+     * callback for close event
+     */
+    public interface CloseListener {
+        public void onClose();
     }
 
 }
