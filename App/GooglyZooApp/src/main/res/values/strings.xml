@@ -4,7 +4,6 @@
     <string name="app_name">GooglyZoo</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="camera_instructions">Double touch to share a picture!</string>
     <string name="googly_zebra_name">Zebr</string>
     <string name="googly_gnu_name">Gn</string>
     <string name="googly_hippo_name">Hipp</string>
@@ -19,6 +18,12 @@
     <string name="googly_tbarthel_name">Tbarth</string>
     <string name="googly_vbarthel_name">Vbarth</string>
     <string name="googly_name_ext">oogly</string>
+
+    <!-- Instructions !-->
+    <string name="instructions_title">Capture, save and share</string>
+    <string name="instructions_capture">Tap your screen <b>twice</b> to take a picture at any time.</string>
+    <string name="instructions_save">Once picture is taken, you can <b>save</b> it in your gallery&#8230;</string>
+    <string name="instructions_share">&#8230;as well as <b>share</b> it with your friends!</string>
 
 
     <!-- Action bar !-->
