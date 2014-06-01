@@ -21,6 +21,7 @@ import android.text.style.StyleSpan;
 import android.text.style.TypefaceSpan;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -32,7 +33,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 
 import com.android.vending.billing.tvbarthel.DonateCheckActivity;
 import com.android.vending.billing.tvbarthel.SupportActivity;
@@ -165,17 +166,12 @@ public class MainActivity extends DonateCheckActivity
     /**
      * instructions to take a screenshot
      */
-    private TextView mCameraInstructions;
+    private LinearLayout mCameraInstructions;
 
     /**
      * rounded overlay used when camera instruction are requested
      */
     private RoundedOverlay mRoundedOverlay;
-
-    /**
-     * layout params for camera instructions
-     */
-    private FrameLayout.LayoutParams mCameraInstructionsParams;
 
     /**
      * animation used to show instructions
@@ -378,6 +374,8 @@ public class MainActivity extends DonateCheckActivity
         } else if (id == R.id.action_camera) {
             if (mRoundedOverlay.getVisibility() != View.VISIBLE) {
                 mRoundedOverlay.open();
+            } else {
+                hideInstructions();
             }
             return true;
         }
@@ -420,9 +418,7 @@ public class MainActivity extends DonateCheckActivity
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 //hide instructions
-                if (mCameraInstructions.getVisibility() == View.VISIBLE && mCameraInstructions.getAnimation() != mInstructionOut) {
-                    mCameraInstructions.startAnimation(mInstructionOut);
-                } else {
+                if (!hideInstructions()) {
                     //hide save button if shown
                     if (mSaveButton != null) {
                         hideSavingButton();
@@ -660,17 +656,10 @@ public class MainActivity extends DonateCheckActivity
      * build instructions components
      */
     private void setUpInstructions() {
-        //set up textview
-        mCameraInstructions = new TextView(this);
-        mCameraInstructions.setText(R.string.camera_instructions);
-        mCameraInstructions.setTextColor(getResources().getColor(R.color.white));
-        mCameraInstructions.setTextSize(15.0f);
-        mCameraInstructions.setGravity(Gravity.CENTER);
+        final LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        //set up instructions view
+        mCameraInstructions = (LinearLayout) inflater.inflate(R.layout.instructions, null);
         mCameraInstructions.setVisibility(View.GONE);
-
-        //set up layout params
-        mCameraInstructionsParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        mCameraInstructionsParams.gravity = Gravity.CENTER;
 
         //set up animation in
         mInstructionsIn = AnimationUtils.loadAnimation(this, R.anim.in_from_bottom);
@@ -699,6 +688,19 @@ public class MainActivity extends DonateCheckActivity
     }
 
     /**
+     * used to hide camera instructions
+     */
+    private boolean hideInstructions() {
+        //hide only if visible and animation not already running
+        if (mCameraInstructions.getVisibility() == View.VISIBLE
+                && mCameraInstructions.getAnimation() != mInstructionOut) {
+            mCameraInstructions.startAnimation(mInstructionOut);
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * build wiggle animation
      */
     private void buildWiggleAnimation() {
@@ -718,7 +720,7 @@ public class MainActivity extends DonateCheckActivity
         if (mSaveButton == null) {
             //set up button
             mSaveButton = new ImageButton(this);
-            mSaveButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_save));
+            mSaveButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_content_save));
             mSaveButton.setBackgroundResource(R.drawable.round_button);
             mSaveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -833,7 +835,7 @@ public class MainActivity extends DonateCheckActivity
                     mPreview.addView(mFaceDetectionPreview, mPreviewParams);
                     mPreview.addView(mGooglyPetView, mPetParams);
                     mPreview.addView(mRoundedOverlay);
-                    mPreview.addView(mCameraInstructions, mCameraInstructionsParams);
+                    mPreview.addView(mCameraInstructions);
                     mPreview.setOnTouchListener(MainActivity.this);
                     mCamera.setFaceDetectionListener(mCurrentListener);
                 }
