@@ -2,6 +2,13 @@
 
 <set xmlns:android="http://schemas.android.com/apk/res/android"
      android:interpolator="@android:interpolator/accelerate_cubic">
+    <rotate
+        android:fromDegrees="0"
+        android:toDegrees="-25"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:duration="400"
+        />
     <translate
         android:fromYDelta="0%"
         android:toYDelta="100%"
@@ -9,6 +16,6 @@
         />
     <alpha
         android:fromAlpha="1.0"
-        android:toAlpha="0.0"
+        android:toAlpha="0.7"
         android:duration="400"/>
 </set>
