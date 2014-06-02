@@ -7,7 +7,7 @@ Googly Zoo is an augmented virtuality experience. Choose your favorite virtual G
 
 [Short video on YouTube](https://www.youtube.com/watch?v=hu4kZRP5mZA)
 
-[Become a beta tester](https://plus.google.com/101426573110982697753/posts/5vQ9rJWFFQk)
+[Available on the Google Play](https://play.google.com/store/apps/details?id=fr.tvbarthel.attempt.googlyzooapp)
 
 SmoothFaceDetectionListener
 =========
@@ -29,12 +29,66 @@ Simple usage
   );
 </pre>
 
+Supported Devices
+=========
+Since there is no uses-feature to filter devices which support Camera.OnFaceDetection, here is such a list.
+
+If your device isn't listed bellow, don't hesite to make your input (= (see make your input section) 
+
+We hope it will be useful for many of developers!
+
+FaceDectection Available on front Camera
+<pre>
+  Nexus 4 | stock rom | 4.4.2
+  Nexus 5 | stock rom | 4.4.2
+  Nexus 5 | Cyanogenmod 11 M2 | 4.4.2 (Thanks to NoctisIgnem)
+  Galaxy S4 | TouchWiz | 4.4.2
+  Galaxy S3 | TouchWiz | 4.1.1
+  HTC One (m7) | Revolution HD 6.1 Rom | 4.4.2 (Thanks to Eoinoc)
+  HTC One (M8) | stock rom | 4.4.2 (Thanks to ThatLilChestnut)
+  HTC Evo 3D | HTC Sense 3.6 | 4.0.3
+  Moto G (Boost Mobile) | stock rom | 4.4.2 (Thanks to IAmJordanX)
+  Moto X | stock rom | 4.4.2 (Thanks to omniuni)
+  Wiko Cink Five | WiTE1 | 4.2 (Thanks to bartthebest)
+</pre>
+
+FaceDetection UnAvailable on front Camera
+<pre>
+  HTC one S | CyanogenMod 10.1.3-ville | 4.2.2
+</pre>
+
+Make your input
+=========
+Is it available on your device ? (Added in API level 14)
+
+According to the [Official documentation](http://developer.android.com/reference/android/hardware/Camera.Parameters.html)
+
+“If the return value is 0, face detection of the specified type is not supported.”
+
+<pre>
+  /**
+  * code snippet to test if a given camera supports FaceDetectionListener
+  */
+  private boolean isFaceDetectionAvailable(Camera.Parameters params) {
+          boolean supported = false;
+          if (params.getMaxNumDetectedFaces() > 0) {
+              supported = true;
+          }
+          return supported;
+  }
+</pre>
+
+You can also use our small app, which will prompt a Toast according to the code snippet above.
+
+
 TODO
 =========
 
 SmoothFaceDetectionListener : support multiple faces.
+
 SmoothFaceDetectionListener : return face object, not only position
-Googly Zoo : add some interactions 
+
+Googly Zoo : add capture / save / share features
 
 Credits and License
 ========
