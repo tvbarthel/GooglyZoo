@@ -6,7 +6,11 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.hardware.Camera;
 import android.net.Uri;
@@ -865,6 +869,36 @@ public class MainActivity extends DonateCheckActivity
             Matrix matrix = new Matrix();
             matrix.preScale(-1.0f, 1.0f);
             Bitmap mirroredBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, false);
+
+            //retrieve drawing cache from pet view
+            mGooglyPetView.buildDrawingCache();
+            Bitmap pet = mGooglyPetView.getDrawingCache();
+
+            if (pet != null) {
+                //evaluate visible height due to translation
+                final int visibleHeight = pet.getHeight() - (int) mGooglyPetView.getTranslationY();
+
+                //build drawing source boundaries
+                final Rect srcRect = new Rect(0, 0, pet.getWidth(), visibleHeight);
+
+                //evaluate destination height and width according to source ration
+                final float destHeight = visibleHeight / (float) mPreview.getHeight() * bitmap.getHeight();
+                final float destWidth = mGooglyPetView.getWidth() / (float) mPreview.getWidth() * bitmap.getWidth();
+
+                //evaluate destination rectangle
+                final float destBottom = mGooglyPetView.getBottom() / (float) mPreview.getHeight() * bitmap.getHeight();
+                final float destRight = mGooglyPetView.getRight() / (float) mPreview.getWidth() * bitmap.getWidth();
+                final float destTop = destBottom - destHeight;
+                final float destLeft = destRight - destWidth;
+
+                //build drawing destination boundaries
+                final RectF destRect = new RectF(destLeft, destTop, destRight, destBottom);
+
+                //draw pet on picture
+                Canvas c = new Canvas(mirroredBitmap);
+                Paint paint = new Paint();
+                c.drawBitmap(pet, srcRect, destRect, paint);
+            }
 
             // Compress the bitmap before saving and sharing
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
