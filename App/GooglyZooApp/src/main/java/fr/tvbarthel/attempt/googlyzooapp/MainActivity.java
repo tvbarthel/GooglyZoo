@@ -199,6 +199,16 @@ public class MainActivity extends DonateCheckActivity
     private Animation mAnimationOut;
 
     /**
+     * animation used to show saving button
+     */
+    private Animation mAnimationInFromLeft;
+
+    /**
+     * animation used to hide saving button
+     */
+    private Animation mAnimationOutFromLeft;
+
+    /**
      * animation used when pet isn't awake and capture is requested
      */
     private Animation mWiggleAnimation;
@@ -217,6 +227,11 @@ public class MainActivity extends DonateCheckActivity
      * screen capture byte
      */
     private Bitmap mPicture;
+
+    /**
+     * layout params for saved button
+     */
+    private FrameLayout.LayoutParams mSaveButtonParams;
 
     /**
      * button used to save screen capture
@@ -271,6 +286,9 @@ public class MainActivity extends DonateCheckActivity
 
         //set up capture preview
         setUpCapturePreview();
+
+        //set up saving button
+        setUpSavingButton();
 
         //set up params for googlyPetView
         mPetParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -445,10 +463,6 @@ public class MainActivity extends DonateCheckActivity
             case MotionEvent.ACTION_DOWN:
                 //hide instructions
                 if (!hideAdditionalContent()) {
-                    //hide save button if shown
-                    if (mSaveButton != null) {
-                        hideSavingButton();
-                    }
 
                     //process event to throw double touch
                     if (isDoubleTouch(event)) {
@@ -608,6 +622,7 @@ public class MainActivity extends DonateCheckActivity
             mPreview.removeView(mRoundedOverlay);
             mPreview.removeView(mCameraInstructions);
             mPreview.removeView(mCapturePreview);
+            mPreview.removeView(mSaveButton);
         }
     }
 
@@ -701,6 +716,27 @@ public class MainActivity extends DonateCheckActivity
     private void setUpAnimations() {
         //set up animation in
         mAnimationIn = AnimationUtils.loadAnimation(this, R.anim.in_from_bottom);
+        if (mAnimationIn != null) {
+            mAnimationIn.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    if (mPreviewRequested) {
+                        displaySavingButton();
+                    }
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+        }
+
 
         //setup animation out
         mAnimationOut = AnimationUtils.loadAnimation(this, R.anim.out_from_bottom);
@@ -715,11 +751,32 @@ public class MainActivity extends DonateCheckActivity
                 public void onAnimationEnd(Animation animation) {
                     mRoundedOverlay.close();
                     if (mPreviewRequested) {
-                        mPreviewRequested = false;
-                        mCapturePreview.setVisibility(View.GONE);
+                        hideCapturePreview();
                     } else if (mCameraInstructions.getVisibility() == View.VISIBLE) {
                         mCameraInstructions.setVisibility(View.GONE);
                     }
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+        }
+
+        mAnimationInFromLeft = AnimationUtils.loadAnimation(this, R.anim.in_from_left);
+
+        mAnimationOutFromLeft = AnimationUtils.loadAnimation(this, R.anim.out_from_left);
+        if (mAnimationOutFromLeft != null) {
+            mAnimationOutFromLeft.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    mSaveButton.setVisibility(View.INVISIBLE);
                 }
 
                 @Override
@@ -743,9 +800,31 @@ public class MainActivity extends DonateCheckActivity
     }
 
     /**
+     * display capture preview
+     */
+    private void displayCapturePreview() {
+        mCapturePreview.setImageBitmap(mPicture);
+        mPreviewRequested = true;
+        mRoundedOverlay.open();
+    }
+
+    /**
+     * hide capture preview
+     */
+    private void hideCapturePreview() {
+        mPreviewRequested = false;
+        mCapturePreview.setVisibility(View.GONE);
+    }
+
+    /**
      * used to hide additional content
      */
     private boolean hideAdditionalContent() {
+        //hide save button if shown
+        if (mSaveButton.getVisibility() == View.VISIBLE) {
+            hideSavingButton();
+        }
+
         //hide only if visible and animation not already running
         if (mPreviewRequested && mCapturePreview.getAnimation() != mAnimationOut) {
             mCapturePreview.startAnimation(mAnimationOut);
@@ -766,65 +845,47 @@ public class MainActivity extends DonateCheckActivity
     }
 
     /**
+     * set up saving button used to save screen capture
+     */
+    private void setUpSavingButton() {
+        mSaveButtonParams = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        mSaveButtonParams.gravity = Gravity.CENTER_VERTICAL | Gravity.LEFT;
+
+        //set up button
+        mSaveButton = new ImageButton(this);
+        mSaveButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_content_save_white));
+        mSaveButton.setBackgroundResource(R.drawable.support_card);
+        mSaveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Compress the bitmap before saving and capture_preview
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                mPicture.compress(Bitmap.CompressFormat.JPEG, BITMAP_QUALITY, bytes);
+                new SaveAsyncTask().execute(bytes.toByteArray());
+
+            }
+        });
+        mSaveButton.setVisibility(View.INVISIBLE);
+    }
+
+    /**
      * display save button used to save screen capture
      */
     private void displaySavingButton() {
-        //set up layout params
-        final FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.gravity = Gravity.BOTTOM | Gravity.LEFT;
-        params.setMargins(10, 0, 0, 10);
-
-        if (mSaveButton == null) {
-            //set up button
-            mSaveButton = new ImageButton(this);
-            mSaveButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_content_save));
-            mSaveButton.setBackgroundResource(R.drawable.round_button);
-            mSaveButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Compress the bitmap before saving and capture_preview
-                    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                    mPicture.compress(Bitmap.CompressFormat.JPEG, BITMAP_QUALITY, bytes);
-                    new SaveAsyncTask().execute(bytes.toByteArray());
-                }
-            });
-        }
-
-
         //display button
-        final Animation enterFromLeft = AnimationUtils.loadAnimation(this, R.anim.in_from_left);
-        if (enterFromLeft != null && mSaveButton.getAnimation() == null) {
-            mPreview.addView(mSaveButton, params);
-            mSaveButton.startAnimation(enterFromLeft);
+        if (mAnimationInFromLeft != null && mSaveButton.getAnimation() == null) {
+            mSaveButton.setVisibility(View.VISIBLE);
+            mSaveButton.startAnimation(mAnimationInFromLeft);
         }
-
     }
 
     /**
      * hide saved button
      */
     private void hideSavingButton() {
-        final Animation outFromLeft = AnimationUtils.loadAnimation(this, R.anim.out_from_left);
-        if (outFromLeft != null) {
-            outFromLeft.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    mPreview.removeView(mSaveButton);
-                    mSaveButton = null;
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-
-                }
-            });
-            mSaveButton.startAnimation(outFromLeft);
+        if (mAnimationOutFromLeft != null) {
+            mSaveButton.startAnimation(mAnimationOutFromLeft);
         }
     }
 
@@ -898,6 +959,7 @@ public class MainActivity extends DonateCheckActivity
                     mPreview.addView(mRoundedOverlay);
                     mPreview.addView(mCameraInstructions);
                     mPreview.addView(mCapturePreview, mCapturePreviewParams);
+                    mPreview.addView(mSaveButton, mSaveButtonParams);
                     mPreview.setOnTouchListener(MainActivity.this);
                     mCamera.setFaceDetectionListener(mCurrentListener);
                 }
@@ -966,9 +1028,8 @@ public class MainActivity extends DonateCheckActivity
         protected void onPostExecute(Void param) {
             super.onPostExecute(param);
 
-            mCapturePreview.setImageBitmap(mPicture);
-            mPreviewRequested = true;
-            mRoundedOverlay.open();
+            //display capture preview after capture built
+            displayCapturePreview();
         }
     }
 
