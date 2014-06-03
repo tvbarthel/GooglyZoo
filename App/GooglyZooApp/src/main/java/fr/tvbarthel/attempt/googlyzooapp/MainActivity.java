@@ -37,6 +37,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.android.vending.billing.tvbarthel.DonateCheckActivity;
@@ -173,19 +174,29 @@ public class MainActivity extends DonateCheckActivity
     private LinearLayout mCameraInstructions;
 
     /**
+     * captured picture preview
+     */
+    private ImageView mCapturePreview;
+
+    /**
+     * captured picture preview layout params
+     */
+    private FrameLayout.LayoutParams mCapturePreviewParams;
+
+    /**
      * rounded overlay used when camera instruction are requested
      */
     private RoundedOverlay mRoundedOverlay;
 
     /**
-     * animation used to show instructions
+     * animation used to show additional content
      */
-    private Animation mInstructionsIn;
+    private Animation mAnimationIn;
 
     /**
-     * animation used to hide instructions
+     * animation used to hide additional content
      */
-    private Animation mInstructionOut;
+    private Animation mAnimationOut;
 
     /**
      * animation used when pet isn't awake and capture is requested
@@ -205,12 +216,17 @@ public class MainActivity extends DonateCheckActivity
     /**
      * screen capture byte
      */
-    private byte[] mPicture;
+    private Bitmap mPicture;
 
     /**
      * button used to save screen capture
      */
     private ImageButton mSaveButton;
+
+    /**
+     * boolean used to know if preview has been requested
+     */
+    private boolean mPreviewRequested;
 
 
     @Override
@@ -249,6 +265,12 @@ public class MainActivity extends DonateCheckActivity
 
         //set up instruction for sharing screen shot
         setUpInstructions();
+
+        //set up animations
+        setUpAnimations();
+
+        //set up capture preview
+        setUpCapturePreview();
 
         //set up params for googlyPetView
         mPetParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -379,7 +401,7 @@ public class MainActivity extends DonateCheckActivity
             if (mRoundedOverlay.getVisibility() != View.VISIBLE) {
                 mRoundedOverlay.open();
             } else {
-                hideInstructions();
+                hideAdditionalContent();
             }
             return true;
         }
@@ -422,7 +444,7 @@ public class MainActivity extends DonateCheckActivity
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 //hide instructions
-                if (!hideInstructions()) {
+                if (!hideAdditionalContent()) {
                     //hide save button if shown
                     if (mSaveButton != null) {
                         hideSavingButton();
@@ -505,9 +527,8 @@ public class MainActivity extends DonateCheckActivity
 
             @Override
             public void onPictureTaken(byte[] data, Camera camera) {
-                //restore preview and face detection
+                //restart preview
                 mCamera.startPreview();
-                mCamera.startFaceDetection();
 
                 //build screen capture
                 new CaptureAsyncTask().execute(data);
@@ -525,7 +546,6 @@ public class MainActivity extends DonateCheckActivity
                 initCameraPictureCallback();
             }
             mCamera.takePicture(null, null, mPictureCallback);
-            mCamera.stopFaceDetection();
         } else {
             //pet not awake = no face detected, don't take a screen
             if (mWiggleAnimation == null) {
@@ -587,6 +607,7 @@ public class MainActivity extends DonateCheckActivity
             mPreview.removeView(mGooglyPetView);
             mPreview.removeView(mRoundedOverlay);
             mPreview.removeView(mCameraInstructions);
+            mPreview.removeView(mCapturePreview);
         }
     }
 
@@ -645,33 +666,46 @@ public class MainActivity extends DonateCheckActivity
         mRoundedOverlay.setVisibility(View.GONE);
 
         //catch onOpen event to display instructions once overlay is opened
-        mRoundedOverlay.setOnOpenListener(new RoundedOverlay.OpenListener() {
-            @Override
-            public void onOpen() {
-                if (mCameraInstructions.getVisibility() != View.VISIBLE) {
-                    mCameraInstructions.setVisibility(View.VISIBLE);
-                    mCameraInstructions.startAnimation(mInstructionsIn);
+        mRoundedOverlay.setOnOpenListener(
+                new RoundedOverlay.OpenListener() {
+                    @Override
+                    public void onOpen() {
+                        if (mPreviewRequested) {
+                            mCapturePreview.setVisibility(View.VISIBLE);
+                            mCapturePreview.startAnimation(mAnimationIn);
+                        } else if (mCameraInstructions.getVisibility() != View.VISIBLE) {
+                            mCameraInstructions.setVisibility(View.VISIBLE);
+                            mCameraInstructions.startAnimation(mAnimationIn);
+                        }
+                    }
                 }
-            }
-        });
+        );
     }
 
     /**
      * build instructions components
      */
+
     private void setUpInstructions() {
         final LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         //set up instructions view
         mCameraInstructions = (LinearLayout) inflater.inflate(R.layout.instructions, null);
-        mCameraInstructions.setVisibility(View.GONE);
+        if (mCameraInstructions != null) {
+            mCameraInstructions.setVisibility(View.GONE);
+        }
+    }
 
+    /**
+     * load animations
+     */
+    private void setUpAnimations() {
         //set up animation in
-        mInstructionsIn = AnimationUtils.loadAnimation(this, R.anim.in_from_bottom);
+        mAnimationIn = AnimationUtils.loadAnimation(this, R.anim.in_from_bottom);
 
         //setup animation out
-        mInstructionOut = AnimationUtils.loadAnimation(this, R.anim.out_from_bottom);
-        if (mInstructionOut != null) {
-            mInstructionOut.setAnimationListener(new Animation.AnimationListener() {
+        mAnimationOut = AnimationUtils.loadAnimation(this, R.anim.out_from_bottom);
+        if (mAnimationOut != null) {
+            mAnimationOut.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
 
@@ -680,7 +714,12 @@ public class MainActivity extends DonateCheckActivity
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     mRoundedOverlay.close();
-                    mCameraInstructions.setVisibility(View.GONE);
+                    if (mPreviewRequested) {
+                        mPreviewRequested = false;
+                        mCapturePreview.setVisibility(View.GONE);
+                    } else if (mCameraInstructions.getVisibility() == View.VISIBLE) {
+                        mCameraInstructions.setVisibility(View.GONE);
+                    }
                 }
 
                 @Override
@@ -692,13 +731,28 @@ public class MainActivity extends DonateCheckActivity
     }
 
     /**
-     * used to hide camera instructions
+     * build captured preview layout
      */
-    private boolean hideInstructions() {
+    private void setUpCapturePreview() {
+        mCapturePreview = new ImageView(this);
+        mCapturePreview.setScaleType(ImageView.ScaleType.FIT_XY);
+        mCapturePreviewParams = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        mCapturePreview.setVisibility(View.GONE);
+        mPreviewRequested = false;
+    }
+
+    /**
+     * used to hide additional content
+     */
+    private boolean hideAdditionalContent() {
         //hide only if visible and animation not already running
-        if (mCameraInstructions.getVisibility() == View.VISIBLE
-                && mCameraInstructions.getAnimation() != mInstructionOut) {
-            mCameraInstructions.startAnimation(mInstructionOut);
+        if (mPreviewRequested && mCapturePreview.getAnimation() != mAnimationOut) {
+            mCapturePreview.startAnimation(mAnimationOut);
+            return true;
+        } else if (mCameraInstructions.getVisibility() == View.VISIBLE
+                && mCameraInstructions.getAnimation() != mAnimationOut) {
+            mCameraInstructions.startAnimation(mAnimationOut);
             return true;
         }
         return false;
@@ -729,7 +783,10 @@ public class MainActivity extends DonateCheckActivity
             mSaveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    new SaveAsyncTask().execute(mPicture);
+                    // Compress the bitmap before saving and capture_preview
+                    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                    mPicture.compress(Bitmap.CompressFormat.JPEG, BITMAP_QUALITY, bytes);
+                    new SaveAsyncTask().execute(bytes.toByteArray());
                 }
             });
         }
@@ -840,6 +897,7 @@ public class MainActivity extends DonateCheckActivity
                     mPreview.addView(mGooglyPetView, mPetParams);
                     mPreview.addView(mRoundedOverlay);
                     mPreview.addView(mCameraInstructions);
+                    mPreview.addView(mCapturePreview, mCapturePreviewParams);
                     mPreview.setOnTouchListener(MainActivity.this);
                     mCamera.setFaceDetectionListener(mCurrentListener);
                 }
@@ -868,11 +926,11 @@ public class MainActivity extends DonateCheckActivity
             // Process picture for mirror effect
             Matrix matrix = new Matrix();
             matrix.preScale(-1.0f, 1.0f);
-            Bitmap mirroredBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, false);
+            mPicture = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, false);
             bitmap.recycle();
 
             //retrieve drawing cache from pet view
-            mGooglyPetView.buildDrawingCache();
+            mGooglyPetView.setDrawingCacheEnabled(true);
             Bitmap pet = mGooglyPetView.getDrawingCache();
 
             if (pet != null) {
@@ -896,24 +954,21 @@ public class MainActivity extends DonateCheckActivity
                 final RectF destRect = new RectF(destLeft, destTop, destRight, destBottom);
 
                 //draw pet on picture
-                Canvas c = new Canvas(mirroredBitmap);
+                Canvas c = new Canvas(mPicture);
                 Paint paint = new Paint();
                 c.drawBitmap(pet, srcRect, destRect, paint);
+                mGooglyPetView.setDrawingCacheEnabled(false);
             }
-
-            // Compress the bitmap before saving and sharing
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            mirroredBitmap.compress(Bitmap.CompressFormat.JPEG, BITMAP_QUALITY, bytes);
-
-            mPicture = bytes.toByteArray();
             return null;
         }
 
         @Override
         protected void onPostExecute(Void param) {
             super.onPostExecute(param);
-            //allow user to save the screen capture
-            displaySavingButton();
+
+            mCapturePreview.setImageBitmap(mPicture);
+            mPreviewRequested = true;
+            mRoundedOverlay.open();
         }
     }
 
