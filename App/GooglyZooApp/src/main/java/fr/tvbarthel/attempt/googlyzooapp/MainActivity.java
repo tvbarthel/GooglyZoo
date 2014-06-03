@@ -66,6 +66,9 @@ import fr.tvbarthel.attempt.googlyzooapp.utils.FaceDetectionUtils;
 import fr.tvbarthel.attempt.googlyzooapp.utils.GooglyPetUtils;
 import fr.tvbarthel.attempt.googlyzooapp.utils.SharedPreferencesUtils;
 
+/**
+ * TODO refactor, 1000+ lines of codes is unacceptable!
+ */
 public class MainActivity extends DonateCheckActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, View.OnTouchListener {
     /**
