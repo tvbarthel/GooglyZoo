@@ -212,6 +212,16 @@ public class MainActivity extends DonateCheckActivity
     private Animation mAnimationOutFromLeft;
 
     /**
+     * animation used to show saving button
+     */
+    private Animation mAnimationInFromRight;
+
+    /**
+     * animation used to hide saving button
+     */
+    private Animation mAnimationOutFromRight;
+
+    /**
      * animation used when pet isn't awake and capture is requested
      */
     private Animation mWiggleAnimation;
@@ -242,9 +252,24 @@ public class MainActivity extends DonateCheckActivity
     private ImageButton mSaveButton;
 
     /**
+     * layout params for sharing button
+     */
+    private FrameLayout.LayoutParams mShareButtonParams;
+
+    /**
+     * button used to share screen capture
+     */
+    private ImageButton mShareButton;
+
+    /**
      * boolean used to know if preview has been requested
      */
     private boolean mPreviewRequested;
+
+    /**
+     * use temp file since apps such as Hangout delete file used as EXTRA_STREAM
+     */
+    private Uri mTempFileForSharing;
 
 
     @Override
@@ -292,6 +317,9 @@ public class MainActivity extends DonateCheckActivity
 
         //set up saving button
         setUpSavingButton();
+
+        //set up sharing button
+        setUpSharingButton();
 
         //set up params for googlyPetView
         mPetParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -626,6 +654,7 @@ public class MainActivity extends DonateCheckActivity
             mPreview.removeView(mCameraInstructions);
             mPreview.removeView(mCapturePreview);
             mPreview.removeView(mSaveButton);
+            mPreview.removeView(mShareButton);
         }
     }
 
@@ -730,6 +759,7 @@ public class MainActivity extends DonateCheckActivity
                 public void onAnimationEnd(Animation animation) {
                     if (mPreviewRequested) {
                         displaySavingButton();
+                        displaySharingButton();
                     }
                 }
 
@@ -788,6 +818,28 @@ public class MainActivity extends DonateCheckActivity
                 }
             });
         }
+
+        mAnimationInFromRight = AnimationUtils.loadAnimation(this, R.anim.in_from_right);
+
+        mAnimationOutFromRight = AnimationUtils.loadAnimation(this, R.anim.out_from_right);
+        if (mAnimationOutFromRight != null) {
+            mAnimationOutFromRight.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    mShareButton.setVisibility(View.INVISIBLE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+        }
     }
 
     /**
@@ -828,9 +880,24 @@ public class MainActivity extends DonateCheckActivity
             hideSavingButton();
         }
 
+        //hide sharing button if shown
+        if (mShareButton.getVisibility() == View.VISIBLE) {
+            hideSharingButton();
+        }
+
         //hide only if visible and animation not already running
         if (mPreviewRequested && mCapturePreview.getAnimation() != mAnimationOut) {
             mCapturePreview.startAnimation(mAnimationOut);
+
+            //reset and free memory
+            mPicture = null;
+
+            //delete temp file use for sharing
+            if (mTempFileForSharing != null) {
+                File temp = new File(mTempFileForSharing.getPath());
+                temp.delete();
+                mTempFileForSharing = null;
+            }
             return true;
         } else if (mCameraInstructions.getVisibility() == View.VISIBLE
                 && mCameraInstructions.getAnimation() != mAnimationOut) {
@@ -848,6 +915,47 @@ public class MainActivity extends DonateCheckActivity
     }
 
     /**
+     * set up sharing buttonused to share screen capture
+     */
+    private void setUpSharingButton() {
+        mShareButtonParams = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        mShareButtonParams.gravity = Gravity.CENTER_VERTICAL | Gravity.RIGHT;
+
+        //set up button
+        mShareButton = new ImageButton(this);
+        mShareButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_social_share_white));
+        mShareButton.setBackgroundResource(R.drawable.support_card);
+        mShareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new ShareAsyncTask().execute();
+            }
+        });
+        mShareButton.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * display sharing button used to share screen capture
+     */
+    private void displaySharingButton() {
+        //display button
+        if (mAnimationInFromRight != null && mShareButton.getAnimation() == null) {
+            mShareButton.setVisibility(View.VISIBLE);
+            mShareButton.startAnimation(mAnimationInFromRight);
+        }
+    }
+
+    /**
+     * hide sharing button
+     */
+    private void hideSharingButton() {
+        if (mAnimationOutFromRight != null) {
+            mShareButton.startAnimation(mAnimationOutFromRight);
+        }
+    }
+
+    /**
      * set up saving button used to save screen capture
      */
     private void setUpSavingButton() {
@@ -862,10 +970,7 @@ public class MainActivity extends DonateCheckActivity
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Compress the bitmap before saving and capture_preview
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                mPicture.compress(Bitmap.CompressFormat.JPEG, BITMAP_QUALITY, bytes);
-                new SaveAsyncTask().execute(bytes.toByteArray());
+                new SaveAsyncTask().execute();
 
             }
         });
@@ -963,6 +1068,7 @@ public class MainActivity extends DonateCheckActivity
                     mPreview.addView(mCameraInstructions);
                     mPreview.addView(mCapturePreview, mCapturePreviewParams);
                     mPreview.addView(mSaveButton, mSaveButtonParams);
+                    mPreview.addView(mShareButton, mShareButtonParams);
                     mPreview.setOnTouchListener(MainActivity.this);
                     mCamera.setFaceDetectionListener(mCurrentListener);
                 }
@@ -1039,20 +1145,21 @@ public class MainActivity extends DonateCheckActivity
     /**
      * async task used to save screen capture into media center
      */
-    private class SaveAsyncTask extends AsyncTask<byte[], Void, Uri> {
+    private class SaveAsyncTask extends AsyncTask<Void, Void, Uri> {
         @Override
-        protected Uri doInBackground(byte[]... params) {
-            // Recover picture from camera
-            byte[] data = params[0];
+        protected Uri doInBackground(Void... params) {
 
-            final Uri uriToShare = writeScreenBytesToExternalStorage(data);
-            return uriToShare;
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            mPicture.compress(Bitmap.CompressFormat.JPEG, BITMAP_QUALITY, bytes);
+
+            return writeScreenBytesToExternalStorage(bytes.toByteArray());
         }
 
         @Override
         protected void onPostExecute(Uri uri) {
             super.onPostExecute(uri);
             if (uri != null) {
+
                 // Add the screen to the Media Provider's database.
                 Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                 mediaScanIntent.setData(uri);
@@ -1062,11 +1169,37 @@ public class MainActivity extends DonateCheckActivity
                 makeToast(R.string.screen_capture);
             }
 
-            //disable saving options
+            //hide saving options
             hideSavingButton();
+        }
+    }
 
-            //free memory
-            mPicture = null;
+    private class ShareAsyncTask extends AsyncTask<Void, Void, Uri> {
+
+        @Override
+        protected Uri doInBackground(Void... params) {
+
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            mPicture.compress(Bitmap.CompressFormat.JPEG, BITMAP_QUALITY, bytes);
+            mTempFileForSharing = writeScreenBytesToExternalStorage(bytes.toByteArray());
+            return mTempFileForSharing;
+        }
+
+        @Override
+        protected void onPostExecute(Uri uri) {
+            super.onPostExecute(uri);
+
+            if (uri != null) {
+                // Share intent
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                shareIntent.setType("image/*");
+                shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                startActivity(shareIntent);
+            }
+
+            //hide sharing options
+            hideSharingButton();
         }
     }
 }
