@@ -157,11 +157,6 @@ public class MainActivity extends DonateCheckActivity
     private SmoothFaceDetectionListener mSmoothFaceDetectionListener;
 
     /**
-     * current listener
-     */
-    private Camera.FaceDetectionListener mCurrentListener;
-
-    /**
      * An {@link android.os.AsyncTask} used to opened the camera.
      */
     private CameraAsyncTask mCameraAsyncTask;
@@ -337,8 +332,6 @@ public class MainActivity extends DonateCheckActivity
                 mGooglyPetView.animatePetEyes(relativePosition);
             }
         };
-
-        mCurrentListener = mSmoothFaceDetectionListener;
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
@@ -1039,7 +1032,7 @@ public class MainActivity extends DonateCheckActivity
                     mPreview.addView(mSaveButton, mSaveButtonParams);
                     mPreview.addView(mShareButton, mShareButtonParams);
                     mPreview.setOnTouchListener(MainActivity.this);
-                    mCamera.setFaceDetectionListener(mCurrentListener);
+                    mCamera.setFaceDetectionListener(mSmoothFaceDetectionListener);
                 }
             }
         }
