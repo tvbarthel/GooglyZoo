@@ -157,11 +157,6 @@ public class MainActivity extends DonateCheckActivity
     private SmoothFaceDetectionListener mSmoothFaceDetectionListener;
 
     /**
-     * Basic listener
-     */
-    private Camera.FaceDetectionListener mBasicFaceDetectionListener;
-
-    /**
      * current listener
      */
     private Camera.FaceDetectionListener mCurrentListener;
@@ -340,18 +335,6 @@ public class MainActivity extends DonateCheckActivity
                 final float[] relativePosition = FaceDetectionUtils.getRelativeHeadPosition(
                         smoothFacePosition, mFaceDetectionPreview, mCurrentRotation);
                 mGooglyPetView.animatePetEyes(relativePosition);
-            }
-        };
-
-        mBasicFaceDetectionListener = new Camera.FaceDetectionListener() {
-            @Override
-            public void onFaceDetection(Camera.Face[] faces, Camera camera) {
-                if (faces.length > 0) {
-                    final float[] relativePosition = FaceDetectionUtils.getRelativeHeadPosition(
-                            new float[]{faces[0].rect.centerX(), faces[0].rect.centerY()},
-                            mFaceDetectionPreview, mCurrentRotation);
-                    mGooglyPetView.animatePetEyes(relativePosition);
-                }
             }
         };
 
@@ -670,20 +653,6 @@ public class MainActivity extends DonateCheckActivity
         }
     }
 
-    /**
-     * switch listener
-     *
-     * @return unused listener
-     */
-    private Camera.FaceDetectionListener switchListener() {
-        if (mCurrentListener == mSmoothFaceDetectionListener) {
-            makeToast(R.string.basic_face_detection);
-            return mBasicFaceDetectionListener;
-        } else {
-            makeToast(R.string.smooth_face_detection);
-            return mSmoothFaceDetectionListener;
-        }
-    }
 
     /**
      * process motion event to detect double touch
