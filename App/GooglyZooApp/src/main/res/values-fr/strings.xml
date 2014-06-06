@@ -34,11 +34,11 @@
     <string name="action_beta_title">Beta</string>
     <string name="action_support">Aidez nous avec un café</string>
     <string name="action_camera">Camera</string>
-    <string name="action_contact_us">Contactez nous</string>
+    <string name="action_report_bug">Signaler un problème</string>
 
     <!-- Contact Us -->
     <string name="contact_mail">tvbarthel@gmail.com</string>
-    <string name="contact_default_subject">[GooglyZoo] Salut!</string>
+    <string name="contact_default_subject">[GooglyZoo] Signaler un problème</string>
     <string name="contact_send_to_uri">mailto:%1$s?subject=%2$s</string>
 
     <!-- Toast !-->

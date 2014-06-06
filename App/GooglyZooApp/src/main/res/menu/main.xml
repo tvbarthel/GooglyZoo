@@ -28,7 +28,7 @@
         android:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_contact_us"
-        android:title="@string/action_contact_us"
+        android:title="@string/action_report_bug"
         android:orderInCategory="200"
         android:showAsAction="never"/>
 </menu>
