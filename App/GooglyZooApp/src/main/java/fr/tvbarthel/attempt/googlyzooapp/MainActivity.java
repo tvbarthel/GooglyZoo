@@ -573,9 +573,10 @@ public class MainActivity extends DonateCheckActivity
      */
     private void setUpCapturePreview() {
         mCapturePreview = new ImageView(this);
-        mCapturePreview.setScaleType(ImageView.ScaleType.FIT_XY);
+        mCapturePreview.setScaleType(ImageView.ScaleType.CENTER_CROP);
         mCapturePreviewParams = new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        mCapturePreviewParams.gravity = Gravity.CENTER;
         mCapturePreview.setVisibility(View.GONE);
         mPreviewRequested = false;
     }
