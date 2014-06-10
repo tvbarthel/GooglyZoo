@@ -772,9 +772,6 @@ public class MainActivity extends DonateCheckActivity
                 shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
                 startActivity(shareIntent);
             }
-
-            //hide sharing options
-            hideSharingButton();
         }
     }
 }
