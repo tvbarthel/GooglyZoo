@@ -471,6 +471,7 @@ public class PetTrackerFragment extends Fragment {
 
                     //set face detection listener for face tracking
                     mCamera.setFaceDetectionListener(mSmoothFaceDetectionListener);
+
                 }
             }
         }

@@ -645,7 +645,7 @@ public class MainActivity extends DonateCheckActivity
         //set up button
         mShareButton = new ImageButton(this);
         mShareButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_social_share_white));
-        mShareButton.setBackgroundResource(R.drawable.support_card);
+        mShareButton.setBackgroundResource(R.drawable.rounded_left_corners);
         mShareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -686,7 +686,7 @@ public class MainActivity extends DonateCheckActivity
         //set up button
         mSaveButton = new ImageButton(this);
         mSaveButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_content_save_white));
-        mSaveButton.setBackgroundResource(R.drawable.support_card);
+        mSaveButton.setBackgroundResource(R.drawable.rounded_right_corners);
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
