@@ -14,9 +14,8 @@ import fr.tvbarthel.attempt.googlyzooapp.R;
 
 /**
  * Use to check donation state
- * Created by tbarthel on 23/03/14.
  */
-public class DonateCheckActivity extends FragmentActivity {
+public abstract class DonateCheckActivity extends FragmentActivity {
 
     /**
      * used to know if user as donate
