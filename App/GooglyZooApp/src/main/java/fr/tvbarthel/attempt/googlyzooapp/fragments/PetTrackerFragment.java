@@ -110,6 +110,13 @@ public class PetTrackerFragment extends Fragment {
     private Animation mWiggleAnimation;
 
     /**
+     * Bitmap used to capture pet view before taking a picture
+     * <p/>
+     * On some device, takePicture stop faceDetection
+     */
+    private Bitmap mPetCapture;
+
+    /**
      * callback used to used to capture picture
      */
     private Camera.PictureCallback mPictureCallback;
@@ -272,10 +279,15 @@ public class PetTrackerFragment extends Fragment {
      */
     public void captureScreenShot() {
         if (mGooglyPet.isAwake()) {
-            //TODO implement screen shot
             if (mPictureCallback == null) {
                 initCameraPictureCallback();
             }
+
+            //retrieve drawing cache from pet view before takePicture
+            //since takePicture seems to stop faceDetection on some device
+            mGooglyPetView.setDrawingCacheEnabled(true);
+            mPetCapture = mGooglyPetView.getDrawingCache(true);
+
             mCamera.takePicture(null, null, mPictureCallback);
         } else {
             //pet not awake = no face detected, don't take a screen
@@ -334,6 +346,9 @@ public class PetTrackerFragment extends Fragment {
             public void onPictureTaken(byte[] data, Camera camera) {
                 //restart preview
                 mCamera.startPreview();
+
+                //restart face detection
+                mCamera.startFaceDetection();
 
                 //build screen shot
                 new CaptureAsyncTask().execute(data);
@@ -504,16 +519,12 @@ public class PetTrackerFragment extends Fragment {
             picture = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, false);
             bitmap.recycle();
 
-            //retrieve drawing cache from pet view
-            mGooglyPetView.setDrawingCacheEnabled(true);
-            Bitmap pet = mGooglyPetView.getDrawingCache();
-
-            if (pet != null) {
+            if (mPetCapture != null) {
                 //evaluate visible height due to translation
-                final int visibleHeight = pet.getHeight() - (int) mGooglyPetView.getTranslationY();
+                final int visibleHeight = mPetCapture.getHeight() - (int) mGooglyPetView.getTranslationY();
 
                 //build drawing source boundaries
-                final Rect srcRect = new Rect(0, 0, pet.getWidth(), visibleHeight);
+                final Rect srcRect = new Rect(0, 0, mPetCapture.getWidth(), visibleHeight);
 
                 //evaluate destination height and width according to source ration
                 final float destHeight = visibleHeight / (float) mPreview.getHeight() * bitmap.getHeight();
@@ -531,8 +542,11 @@ public class PetTrackerFragment extends Fragment {
                 //draw pet on picture
                 Canvas c = new Canvas(picture);
                 Paint paint = new Paint();
-                c.drawBitmap(pet, srcRect, destRect, paint);
+                c.drawBitmap(mPetCapture, srcRect, destRect, paint);
                 mGooglyPetView.setDrawingCacheEnabled(false);
+
+                //release bitmap
+                mPetCapture.recycle();
             }
 
             return picture;
