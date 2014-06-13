@@ -1,23 +1,22 @@
 package fr.tvbarthel.attempt.googlyzooapp;
 
 import android.content.Context;
+import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.util.Log;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
+import android.view.TextureView;
 
 /**
- * Created by tbarthel on 06/02/14.
+ * Texture view used to render camera preview
  */
-public class FacePreviewDetection extends SurfaceView implements SurfaceHolder.Callback {
+public class FacePreviewDetection extends TextureView implements TextureView.SurfaceTextureListener {
 
     private static final String TAG = FacePreviewDetection.class.getName();
 
     private Camera mCamera;
 
-
     /**
-     * fire faceDectection state (enable | not supported)
+     * fire faceDetection state (enable | not supported)
      */
     private FacePreviewDetectionCallback mCallback;
 
@@ -27,33 +26,11 @@ public class FacePreviewDetection extends SurfaceView implements SurfaceHolder.C
 
         // Install a SurfaceHolder.Callback so we get notified when the
         // underlying surface is created and destroyed.
-        SurfaceHolder surfaceHolder = getHolder();
-        if (surfaceHolder != null) {
-            surfaceHolder.addCallback(this);
-        }
+        this.setSurfaceTextureListener(this);
 
         mCallback = callback;
     }
 
-    public void surfaceCreated(SurfaceHolder holder) {
-        // The Surface has been created, now tell the camera where to draw the preview.
-        try {
-            mCamera.setPreviewDisplay(holder);
-            mCamera.startPreview();
-            startFaceDetection();
-        } catch (Exception e) {
-            Log.d(TAG, "Error starting camera preview: " + e.getMessage());
-        }
-    }
-
-    public void surfaceDestroyed(SurfaceHolder holder) {
-        // empty. Take care of releasing the Camera preview in your activity.
-    }
-
-    public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
-        // Since we don't need to adapt anything to structural changes of the surface,
-        // we do nothing here.
-    }
 
     private void startFaceDetection() {
         Camera.Parameters params = mCamera.getParameters();
@@ -63,6 +40,33 @@ public class FacePreviewDetection extends SurfaceView implements SurfaceHolder.C
             supported = true;
         }
         mCallback.onFaceDetectionStart(supported);
+    }
+
+    @Override
+    public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+        // The Surface has been created, now tell the camera where to draw the preview.
+        try {
+            mCamera.setPreviewTexture(surface);
+            mCamera.startPreview();
+            startFaceDetection();
+        } catch (Exception e) {
+            Log.d(TAG, "Error starting camera preview: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+
+    }
+
+    @Override
+    public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+        return false;
+    }
+
+    @Override
+    public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+
     }
 
 
