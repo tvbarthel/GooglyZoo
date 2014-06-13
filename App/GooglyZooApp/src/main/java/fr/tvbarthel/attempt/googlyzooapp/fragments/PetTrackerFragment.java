@@ -122,6 +122,16 @@ public class PetTrackerFragment extends Fragment {
     private Camera.PictureCallback mPictureCallback;
 
     /**
+     * animation used to show real time preview
+     */
+    private Animation mIn;
+
+    /**
+     * animation used to hide real time preview
+     */
+    private Animation mOut;
+
+    /**
      * dummy callback used when fragment is not attached
      */
     private static Callbacks sDummyCallabacks = new Callbacks() {
@@ -297,6 +307,25 @@ public class PetTrackerFragment extends Fragment {
             mGooglyPetView.startAnimation(mWiggleAnimation);
         }
     }
+
+    /**
+     * show real time preview
+     */
+    public void showPreview() {
+        if (mIn == null) {
+            //retrieve animation is not loaded yet
+            mIn = AnimationUtils.loadAnimation(getActivity(), R.anim.in);
+        }
+
+        //animate preview as well as googly pet view
+        mFaceDetectionPreview.setAnimation(mIn);
+        mGooglyPetView.setAnimation(mIn);
+        mFaceDetectionPreview.setVisibility(View.VISIBLE);
+        mGooglyPetView.setVisibility(View.VISIBLE);
+        mIn.start();
+
+    }
+
 
     /**
      * used to adapt camera preview to the current device orientation
@@ -553,11 +582,38 @@ public class PetTrackerFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(Bitmap picture) {
+        protected void onPostExecute(final Bitmap picture) {
             super.onPostExecute(picture);
 
-            //send build picture to the calling activity
-            mCallbacks.onPictureTaken(picture);
+            if (mOut == null) {
+                //retrieve out animation if not loaded yet
+                mOut = AnimationUtils.loadAnimation(getActivity(), R.anim.out);
+            }
+
+            mOut.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    //send build picture to the calling activity
+                    mFaceDetectionPreview.setVisibility(View.GONE);
+                    mGooglyPetView.setVisibility(View.GONE);
+                    mCallbacks.onPictureTaken(picture);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+
+            //hide preview as well as googly pet view
+            mFaceDetectionPreview.setAnimation(mOut);
+            mGooglyPetView.setAnimation(mOut);
+            mOut.start();
         }
     }
 

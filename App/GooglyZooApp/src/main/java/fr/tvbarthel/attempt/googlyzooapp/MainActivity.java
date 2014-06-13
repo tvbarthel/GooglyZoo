@@ -323,13 +323,18 @@ public class MainActivity extends DonateCheckActivity
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                //hide instructions
-                if (!hideAdditionalContent()) {
+                if (mCameraInstructions.getVisibility() == View.VISIBLE) {
+
+                    //can't perform a screen if instruction are displayed
+                    hideInstructions();
+
+                } else if (isDoubleTouch(event) && !mPreviewRequested) {
+
+                    //capture preview requested
+                    mPreviewRequested = true;
 
                     //process event to throw double touch
-                    if (isDoubleTouch(event)) {
-                        mPetTrackerFragment.captureScreenShot();
-                    }
+                    mPetTrackerFragment.captureScreenShot();
                 }
                 break;
         }
@@ -454,6 +459,19 @@ public class MainActivity extends DonateCheckActivity
                     }
                 }
         );
+
+        mRoundedOverlay.setOnCloseListener(new RoundedOverlay.CloseListener() {
+            @Override
+            public void onClose() {
+                if (mPreviewRequested) {
+
+                    //show live preview
+                    mPetTrackerFragment.showPreview();
+
+                    mPreviewRequested = false;
+                }
+            }
+        });
     }
 
     /**
@@ -510,6 +528,7 @@ public class MainActivity extends DonateCheckActivity
                 public void onAnimationEnd(Animation animation) {
                     mRoundedOverlay.close();
                     if (mPreviewRequested) {
+                        //hide capture preview
                         hideCapturePreview();
                     } else if (mCameraInstructions.getVisibility() == View.VISIBLE) {
                         mCameraInstructions.setVisibility(View.GONE);
@@ -586,7 +605,6 @@ public class MainActivity extends DonateCheckActivity
      */
     private void displayCapturePreview() {
         mCapturePreview.setImageBitmap(mPicture);
-        mPreviewRequested = true;
         mRoundedOverlay.open();
     }
 
@@ -594,7 +612,6 @@ public class MainActivity extends DonateCheckActivity
      * hide capture preview
      */
     private void hideCapturePreview() {
-        mPreviewRequested = false;
         mCapturePreview.setVisibility(View.GONE);
     }
 
@@ -626,7 +643,18 @@ public class MainActivity extends DonateCheckActivity
                 mTempFileForSharing = null;
             }
             return true;
-        } else if (mCameraInstructions.getVisibility() == View.VISIBLE
+        } else {
+            return hideInstructions();
+        }
+    }
+
+    /**
+     * hide camera instructions
+     *
+     * @return true if instruction has been hidden
+     */
+    private boolean hideInstructions() {
+        if (mCameraInstructions.getVisibility() == View.VISIBLE
                 && mCameraInstructions.getAnimation() != mAnimationOut) {
             mCameraInstructions.startAnimation(mAnimationOut);
             return true;
