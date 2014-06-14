@@ -123,6 +123,16 @@ public class MainActivity extends DonateCheckActivity
     private Animation mAnimationOutFromRight;
 
     /**
+     * animation used to show close button
+     */
+    private Animation mAnimationInFromBottom;
+
+    /**
+     * animation used to hide close button
+     */
+    private Animation mAnimationOutFromBottom;
+
+    /**
      * last touch timestamp use to detected double touch
      */
     private long mLastTouchTimeStamp;
@@ -161,6 +171,16 @@ public class MainActivity extends DonateCheckActivity
      * button used to share screen capture
      */
     private ImageButton mShareButton;
+
+    /**
+     * layout params for sharing button
+     */
+    private FrameLayout.LayoutParams mCloseButtonParams;
+
+    /**
+     * button used to share screen capture
+     */
+    private ImageButton mCloseButton;
 
     /**
      * boolean used to know if preview has been requested
@@ -223,6 +243,9 @@ public class MainActivity extends DonateCheckActivity
 
         //set up sharing button
         setUpSharingButton();
+
+        //set up close button
+        setUpCloseButton();
 
         mLastTouchTimeStamp = 0;
 
@@ -348,6 +371,7 @@ public class MainActivity extends DonateCheckActivity
         preview.addView(mCapturePreview, mCapturePreviewParams);
         preview.addView(mSaveButton, mSaveButtonParams);
         preview.addView(mShareButton, mShareButtonParams);
+        preview.addView(mCloseButton, mCloseButtonParams);
         preview.setOnTouchListener(MainActivity.this);
     }
 
@@ -358,6 +382,7 @@ public class MainActivity extends DonateCheckActivity
         preview.removeView(mCapturePreview);
         preview.removeView(mSaveButton);
         preview.removeView(mShareButton);
+        preview.removeView(mCloseButton);
     }
 
     @Override
@@ -504,6 +529,7 @@ public class MainActivity extends DonateCheckActivity
                     if (mPreviewRequested) {
                         displaySavingButton();
                         displaySharingButton();
+                        displayCloseButton();
                     }
                 }
 
@@ -585,6 +611,28 @@ public class MainActivity extends DonateCheckActivity
                 }
             });
         }
+
+        mAnimationInFromBottom = AnimationUtils.loadAnimation(this, R.anim.in_from_bottom);
+
+        mAnimationOutFromBottom = AnimationUtils.loadAnimation(this, R.anim.out_from_bottom);
+        if (mAnimationOutFromBottom != null) {
+            mAnimationOutFromBottom.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    mCloseButton.setVisibility(View.INVISIBLE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+        }
     }
 
     /**
@@ -629,6 +677,11 @@ public class MainActivity extends DonateCheckActivity
             hideSharingButton();
         }
 
+        //hide close button if shown
+        if (mCloseButton.getVisibility() == View.VISIBLE) {
+            hideCloseButton();
+        }
+
         //hide only if visible and animation not already running
         if (mPreviewRequested && mCapturePreview.getAnimation() != mAnimationOut) {
             mCapturePreview.startAnimation(mAnimationOut);
@@ -663,7 +716,7 @@ public class MainActivity extends DonateCheckActivity
     }
 
     /**
-     * set up sharing buttonused to share screen capture
+     * set up sharing button used to share screen capture
      */
     private void setUpSharingButton() {
         mShareButtonParams = new FrameLayout.LayoutParams(
@@ -684,6 +737,28 @@ public class MainActivity extends DonateCheckActivity
     }
 
     /**
+     * set up close button used to hide capture preview
+     */
+    private void setUpCloseButton() {
+        mCloseButtonParams = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        mCloseButtonParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
+
+        //set up button
+        mCloseButton = new ImageButton(this);
+        mCloseButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_close));
+        mCloseButton.setBackgroundResource(R.drawable.rounded_top_corners);
+        mCloseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideAdditionalContent();
+            }
+        });
+        mCloseButton.setVisibility(View.INVISIBLE);
+
+    }
+
+    /**
      * display sharing button used to share screen capture
      */
     private void displaySharingButton() {
@@ -700,6 +775,26 @@ public class MainActivity extends DonateCheckActivity
     private void hideSharingButton() {
         if (mAnimationOutFromRight != null) {
             mShareButton.startAnimation(mAnimationOutFromRight);
+        }
+    }
+
+    /**
+     * display close button used to hide screen capture
+     */
+    private void displayCloseButton() {
+        //display button
+        if (mAnimationInFromBottom != null && mCloseButton.getAnimation() == null) {
+            mCloseButton.setVisibility(View.VISIBLE);
+            mCloseButton.startAnimation(mAnimationInFromBottom);
+        }
+    }
+
+    /**
+     * hide close button
+     */
+    private void hideCloseButton() {
+        if (mAnimationOutFromBottom != null) {
+            mCloseButton.startAnimation(mAnimationOutFromBottom);
         }
     }
 
