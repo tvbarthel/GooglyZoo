@@ -557,11 +557,12 @@ public class PetTrackerFragment extends Fragment {
     /**
      * async task used to build screen capture from Camera.takePicture
      */
-    private class CaptureAsyncTask extends AsyncTask<byte[], Void, Bitmap> {
+    private class CaptureAsyncTask extends AsyncTask<byte[], Void, Void> {
+
+        private Bitmap picture;
 
         @Override
-        protected Bitmap doInBackground(byte[]... params) {
-            final Bitmap picture;
+        protected Void doInBackground(byte[]... params) {
 
             // Recover picture from camera
             byte[] data = params[0];
@@ -602,13 +603,12 @@ public class PetTrackerFragment extends Fragment {
                 //release bitmap
                 mPetCapture.recycle();
             }
-
-            return picture;
+            return null;
         }
 
         @Override
-        protected void onPostExecute(final Bitmap picture) {
-            super.onPostExecute(picture);
+        protected void onPostExecute(Void params) {
+            super.onPostExecute(params);
 
             if (mOut == null) {
                 //retrieve out animation if not loaded yet
@@ -627,6 +627,7 @@ public class PetTrackerFragment extends Fragment {
                     mFaceDetectionPreview.setVisibility(View.GONE);
                     mGooglyPetView.setVisibility(View.GONE);
                     mCallbacks.onPictureTaken(picture);
+                    picture.recycle();
                 }
 
                 @Override
