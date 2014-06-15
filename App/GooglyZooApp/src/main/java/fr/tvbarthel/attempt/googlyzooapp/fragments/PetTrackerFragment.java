@@ -136,7 +136,12 @@ public class PetTrackerFragment extends Fragment {
      */
     private static Callbacks sDummyCallabacks = new Callbacks() {
         @Override
-        public void onPreviewReady(FrameLayout preview) {
+        public void onPreviewInitialized(FrameLayout preview) {
+
+        }
+
+        @Override
+        public void onPreviewDisplayed() {
 
         }
 
@@ -315,6 +320,22 @@ public class PetTrackerFragment extends Fragment {
         if (mIn == null) {
             //retrieve animation is not loaded yet
             mIn = AnimationUtils.loadAnimation(getActivity(), R.anim.in);
+            mIn.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    mCallbacks.onPreviewDisplayed();
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
         }
 
         //animate preview as well as googly pet view
@@ -500,6 +521,8 @@ public class PetTrackerFragment extends Fragment {
                                 public void onFaceDetectionStart(boolean supported) {
                                     if (!supported) {
                                         mCallbacks.onFaceDetectionUnsupported();
+                                    } else {
+                                        mGooglyPetView.setVisibility(View.VISIBLE);
                                     }
                                 }
                             }
@@ -508,10 +531,12 @@ public class PetTrackerFragment extends Fragment {
                     mPreview.addView(mFaceDetectionPreview, mPreviewParams);
 
                     //add pet view
+                    mGooglyPetView.setVisibility(View.GONE);
                     mPreview.addView(mGooglyPetView, mPetParams);
 
+
                     //inform preview is ready
-                    mCallbacks.onPreviewReady(mPreview);
+                    mCallbacks.onPreviewInitialized(mPreview);
 
                     //set face detection listener for face tracking
                     mCamera.setFaceDetectionListener(mSmoothFaceDetectionListener);
@@ -626,7 +651,14 @@ public class PetTrackerFragment extends Fragment {
          *
          * @param preview frame layout used to host camera preview
          */
-        public void onPreviewReady(FrameLayout preview);
+        public void onPreviewInitialized(FrameLayout preview);
+
+        /**
+         * called when preview showing animation is finished.
+         * <p/>
+         * Preview is now build and full displayed, take picture can be performed.
+         */
+        public void onPreviewDisplayed();
 
         /**
          * called when preview has been released. Added children must be removed here.

@@ -351,7 +351,7 @@ public class MainActivity extends DonateCheckActivity
                     //can't perform a screen if instruction are displayed
                     hideInstructions();
 
-                } else if (isDoubleTouch(event) && !mPreviewRequested) {
+                } else if (!mPreviewRequested && isDoubleTouch(event)) {
 
                     //capture preview requested
                     mPreviewRequested = true;
@@ -365,7 +365,7 @@ public class MainActivity extends DonateCheckActivity
     }
 
     @Override
-    public void onPreviewReady(FrameLayout preview) {
+    public void onPreviewInitialized(FrameLayout preview) {
         preview.addView(mRoundedOverlay);
         preview.addView(mCameraInstructions);
         preview.addView(mCapturePreview, mCapturePreviewParams);
@@ -373,6 +373,11 @@ public class MainActivity extends DonateCheckActivity
         preview.addView(mShareButton, mShareButtonParams);
         preview.addView(mCloseButton, mCloseButtonParams);
         preview.setOnTouchListener(MainActivity.this);
+    }
+
+    @Override
+    public void onPreviewDisplayed() {
+        mPreviewRequested = false;
     }
 
     @Override
@@ -492,8 +497,6 @@ public class MainActivity extends DonateCheckActivity
 
                     //show live preview
                     mPetTrackerFragment.showPreview();
-
-                    mPreviewRequested = false;
                 }
             }
         });
