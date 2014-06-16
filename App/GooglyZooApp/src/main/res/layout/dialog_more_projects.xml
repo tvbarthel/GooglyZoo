@@ -58,6 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/navigation_drawer_entry_height"
             android:background="@drawable/more_projects_entry"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:clickable="true">
 
             <TextView
@@ -78,6 +79,36 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/dialog_more_projects_simple_thermometer_ic"
                 android:src="@drawable/ic_simple_thermometer"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/dialog_more_projects_simple_weather_forecast"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/navigation_drawer_entry_height"
+            android:background="@drawable/more_projects_entry"
+            android:clickable="true">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/dialog_more_fragment_simple_weather_forecast_title"
+                android:fontFamily="sans-serif-light"
+                android:layout_marginTop="8dp"
+                android:layout_alignParentBottom="true"
+                android:textColor="@color/white"
+                android:background="@color/transparent_black"
+                android:gravity="left"
+                android:paddingLeft="@dimen/activity_horizontal_margin"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/dialog_more_projects_simple_simple_weather_forecast_ic"
+                android:src="@drawable/ic_simple_weather_forecast"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"/>
         </RelativeLayout>

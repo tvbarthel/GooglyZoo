@@ -44,6 +44,13 @@ public class MoreProjectDialogFragment extends DialogFragment {
                 }
             });
 
+            dialogView.findViewById(R.id.dialog_more_projects_simple_weather_forecast).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    launchPlayStoreDetails(getString(R.string.dialog_more_fragment_simple_weather_forecast_package_name));
+                }
+            });
+
         }
 
         dialogBuilder.setView(dialogView).setCancelable(true).setPositiveButton(R.string.dialog_ok, null);

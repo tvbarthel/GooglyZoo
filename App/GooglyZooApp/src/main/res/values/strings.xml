@@ -52,8 +52,10 @@
     <string name="dialog_more_fragment_title">Find more projects</string>
     <string name="dialog_more_fragment_chasy_title">Chase Whisply</string>
     <string name="dialog_more_fragment_simple_thermometer_title">Simple Thermometer</string>
+    <string name="dialog_more_fragment_simple_weather_forecast_title">Simple Weather Forecast</string>
     <string name="dialog_more_fragment_simplethermometer_package_name">fr.tvbarthel.apps.simplethermometer</string>
     <string name="dialog_more_fragment_chase_whisply_package_name">fr.tvbarthel.games.chasewhisply</string>
+    <string name="dialog_more_fragment_simple_weather_forecast_package_name">fr.tvbarthel.apps.simpleweatherforcast</string>
 
     <!-- License dialog Fragment -->
     <string name="dialog_license_title">License</string>
