@@ -292,7 +292,8 @@ public class PetTrackerFragment extends Fragment {
     /**
      * used to take a picture of the user
      */
-    public void captureScreenShot() {
+    public boolean captureScreenShot() {
+        boolean captureHasStarted = false;
         if (mGooglyPet.isAwake()) {
             if (mPictureCallback == null) {
                 initCameraPictureCallback();
@@ -304,6 +305,7 @@ public class PetTrackerFragment extends Fragment {
             mPetCapture = mGooglyPetView.getDrawingCache(true);
 
             mCamera.takePicture(null, null, mPictureCallback);
+            captureHasStarted = true;
         } else {
             //pet not awake = no face detected, don't take a screen
             if (mWiggleAnimation == null) {
@@ -311,6 +313,8 @@ public class PetTrackerFragment extends Fragment {
             }
             mGooglyPetView.startAnimation(mWiggleAnimation);
         }
+
+        return captureHasStarted;
     }
 
     /**

@@ -226,6 +226,8 @@ public class MainActivity extends DonateCheckActivity
 
         mLastTouchTimeStamp = 0;
 
+        mPreviewRequested = false;
+
         mPetTrackerFragment = new PetTrackerFragment();
 
         //set saved pet in shared preferences as arguments
@@ -330,11 +332,8 @@ public class MainActivity extends DonateCheckActivity
 
                 } else if (!mPreviewRequested && isDoubleTouch(event)) {
 
-                    //capture preview requested
-                    mPreviewRequested = true;
-
                     //process event to throw double touch
-                    mPetTrackerFragment.captureScreenShot();
+                    mPreviewRequested = mPetTrackerFragment.captureScreenShot();
                 }
                 break;
         }
