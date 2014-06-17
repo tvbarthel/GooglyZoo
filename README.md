@@ -5,9 +5,15 @@ GooglyZoo
 
 Googly Zoo is an augmented virtuality experience. Choose your favorite virtual Googly pet and simply move your face in front of your smartphone to wake it up. Once your virtual pet is awake, its Googly Eyes will track you for hours without blinking! Even if your new virtual pet doesn't show any signs of tiredness, it will automatically fall asleep as soon as you disappear from your screen.
 
-[Short video on YouTube](https://www.youtube.com/watch?v=hu4kZRP5mZA)
+[Short video on YouTube](https://www.youtube.com/watch?v=IDErHtuyOrU)
 
 [Available on the Google Play](https://play.google.com/store/apps/details?id=fr.tvbarthel.attempt.googlyzooapp)
+
+Last release
+=========
+
+[Version 2.0](https://github.com/tvbarthel/GooglyZoo/releases/tag/v2.0)
+
 
 SmoothFaceDetectionListener
 =========
@@ -87,8 +93,6 @@ TODO
 SmoothFaceDetectionListener : support multiple faces.
 
 SmoothFaceDetectionListener : return face object, not only position
-
-Googly Zoo : add capture / save / share features
 
 Credits and License
 ========
