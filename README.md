@@ -86,6 +86,9 @@ According to the [Official documentation](http://developer.android.com/reference
 
 You can also use our small app, which will prompt a Toast according to the code snippet above.
 
+Compile our code or....
+
+Contact us by mail and we will send you back an APK. Since Prod and Beta APK on the Google Play shared the same excluded devices list, we can no longer manage compatibility testing through Google Play Beta system...
 
 TODO
 =========
