@@ -5,9 +5,15 @@ GooglyZoo
 
 Googly Zoo is an augmented virtuality experience. Choose your favorite virtual Googly pet and simply move your face in front of your smartphone to wake it up. Once your virtual pet is awake, its Googly Eyes will track you for hours without blinking! Even if your new virtual pet doesn't show any signs of tiredness, it will automatically fall asleep as soon as you disappear from your screen.
 
-[Short video on YouTube](https://www.youtube.com/watch?v=hu4kZRP5mZA)
+[Short video on YouTube](https://www.youtube.com/watch?v=IDErHtuyOrU)
 
 [Available on the Google Play](https://play.google.com/store/apps/details?id=fr.tvbarthel.attempt.googlyzooapp)
+
+Last release
+=========
+
+[Version 2.0](https://github.com/tvbarthel/GooglyZoo/releases/tag/v2.0)
+
 
 SmoothFaceDetectionListener
 =========
@@ -80,6 +86,9 @@ According to the [Official documentation](http://developer.android.com/reference
 
 You can also use our small app, which will prompt a Toast according to the code snippet above.
 
+Compile our code or....
+
+Contact us by mail and we will send you back an APK. Since Prod and Beta APK on the Google Play shared the same excluded devices list, we can no longer manage compatibility testing through Google Play Beta system...
 
 TODO
 =========
@@ -88,15 +97,22 @@ SmoothFaceDetectionListener : support multiple faces.
 
 SmoothFaceDetectionListener : return face object, not only position
 
-Googly Zoo : add capture / save / share features
-
-Credits and License
+Credits
 ========
 Credits go to Thomas Barthélémy [https://github.com/tbarthel-fr](https://github.com/tbarthel-fr) and Vincent Barthélémy [https://github.com/vbarthel-fr](https://github.com/vbarthel-fr).
 
-Licensed under the Beerware License:
+License
+=====================
+Copyright (C) 2014 tvbarthel
 
-<pre>
-You can do whatever you want with this stuff.
-If we meet some day, and you think this stuff is worth it, you can buy us a beer (or basically anything else) in return.
-</pre>
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
