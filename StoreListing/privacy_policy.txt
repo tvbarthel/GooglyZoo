@@ -1,0 +1,16 @@
+Welcome to the GooglyZoo Privacy Policy
+
+Personal data:
+The app does not collect any personnal information.
+
+Camera usage:
+The camera is only used for the game purpose: the
+game assets are overlayed above the camera preview.
+
+If you have a doubt about what the app is doing, feel
+free to browse the code source: the app is 100% open source
+and has nothing to hide =)
+
+https://github.com/tvbarthel/GooglyZoo
+
+Feel free to contact us at tvbarthel@gmail.com
